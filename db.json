@@ -1,0 +1,25 @@
+{
+  "login": [
+    {
+      "id": "1a13",
+      "Email": "awd@gmail.com",
+      "Nama": "awd",
+      "Jenis": "Tagihan SPP",
+      "Harga": "390000"
+    },
+    {
+      "id": "74f2",
+      "Email": "awd@gmail.com",
+      "Nama": "awd",
+      "Jenis": "Tagihan SPP",
+      "Harga": "390000"
+    },
+    {
+      "id": "bc6b",
+      "Email": "awd@gmail.com",
+      "Nama": "awd",
+      "Jenis": "Uang Gedung",
+      "Harga": "2000000"
+    }
+  ]
+}
