@@ -6,6 +6,8 @@ import Register from './Components/Register'
 import Tambahdata from './Components/Tambahdata'
 import Tagihan from './Components/Tagihan'
 import Jenistagihan from './Components/Jenistagihan'
+import EditData from './Components/editdata'
+import TambahJenisTagihan from './Components/Tambahjenistagihan'
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
       <Route path="/Tambahdata" element={<Tambahdata />} />
       <Route path="/Tagihan" element={<Tagihan />} />
       <Route path="/Jenistagihan" element={<Jenistagihan />} />
+      <Route path="/Tambahjenistagihan" element={<TambahJenisTagihan />} />
+      <Route path="/Edit/:id" element={<EditData />} />
     </Routes>
   )
 }

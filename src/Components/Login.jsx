@@ -7,54 +7,73 @@ function Login() {
   const [formData, setFormData] = useState({
     Email: '',
     Nama: '',
-    Password: '',
+    Jenis: '',
+    Harga: ''
   });
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === "Jenis") {
+      let harga = "";
+      if (value === "Tagihan SPP") harga = "390000";
+      else if (value === "Uang Gedung") harga = "2000000";
+      else if (value === "Seragam Sekolah") harga = "30000";
+
+      setFormData({
+        ...formData,
+        Jenis: value,
+        Harga: harga,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  console.log("Submit form with:", formData);
-  try {
-    const response = await axios.post("http://localhost:5000/login", formData);
-    console.log("Respon server:", response.data);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    console.log("Submit form with:", formData);
+    try {
+      const response = await axios.post("http://localhost:5000/login", formData);
+      console.log("Respon server:", response.data);
 
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Data anda telah disimpan",
-      showConfirmButton: false,
-      timer: 1500
-    });
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Data anda telah disimpan",
+        showConfirmButton: false,
+        timer: 1500
+      });
 
-    localStorage.setItem("loginData", JSON.stringify(formData));
+      localStorage.setItem("loginData", JSON.stringify(formData));
 
-    setFormData({
-      Email: "",
-      Nama: "",
-      Password: "",
-    });
+      setFormData({
+        Email: "",
+        Nama: "",
+        Jenis: "",
+        Harga: ""
+      });
 
-    navigate("/Dashboard");
-  } catch (error) {
-    console.error("Axios error:", error);
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: error.response?.data?.message || "Something went wrong!",
-      footer: '<a href="#">Why do I have this issue?</a>'
-    });
-  } finally {
-    setLoading(false);
-  }
-};
-
+      navigate("/Dashboard");
+    } catch (error) {
+      console.error("Axios error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.message || "Something went wrong!",
+        footer: '<a href="#">Why do I have this issue?</a>'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-400 to-purple-600">
@@ -66,7 +85,7 @@ function Login() {
             <input
               id="Email"
               name="Email"
-              type="Email"
+              type="email"
               placeholder="Masukan Email anda"
               value={formData.Email}
               onChange={handleChange}
@@ -79,7 +98,7 @@ function Login() {
             <input
               id="Nama"
               name="Nama"
-              type="Nama"
+              type="text"
               placeholder="Masukan Nama anda"
               value={formData.Nama}
               onChange={handleChange}
@@ -88,31 +107,47 @@ function Login() {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="Password" className="block text-gray-700 mb-2">Password</label>
-            <input
-              id="Password"
-              name="Password"
-              type="Password"
-              placeholder="Masukan Password anda"
-              value={formData.Password}
+            <label htmlFor="Jenis" className="block text-gray-700 mb-2">Jenis</label>
+            <select
+              id="Jenis"
+              name="Jenis"
+              value={formData.Jenis}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
+            >
+              <option value="" disabled>Pilih Jenis Pembayaran</option>
+              <option value="Tagihan SPP">Tagihan SPP</option>
+              <option value="Uang Gedung">Uang Gedung</option>
+              <option value="Seragam Sekolah">Seragam Sekolah</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="Harga" className="block text-gray-700 mb-2">Harga</label>
+            <input
+              id="Harga"
+              name="Harga"
+              type="text"
+              placeholder="Harga akan muncul otomatis"
+              value={formData.Harga}
+              readOnly
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+              required
             />
           </div>
-
           <button
             type="submit"
             className="w-full font-bold bg-pink-500 text-white py-2 rounded-md hover:bg-pink-600 transition duration-200"
+            disabled={loading}
           >
-            Login
+            {loading ? 'Loading...' : 'Login'}
           </button>
         </form>
         <div className="text-center mt-8">
-      <a href="/Register" className="text-sm text-blue-700 hover:underline">
-        Belum punya akun? Daftar dulu!
-      </a>
-    </div>
+          <a href="/Register" className="text-sm text-blue-700 hover:underline">
+            Belum punya akun? Daftar dulu!
+          </a>
+        </div>
       </div>
     </div>
   );

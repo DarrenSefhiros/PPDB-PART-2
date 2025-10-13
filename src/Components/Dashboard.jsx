@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import Sidnav from "./sidnav";
 
@@ -22,7 +21,6 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  // Hitung total harga
   const totalHarga = data.reduce((acc, item) => acc + Number(item.Harga), 0);
 
   return (
@@ -30,10 +28,9 @@ function Dashboard() {
       <Sidnav />
       <div className="ml-60 min-h-screen bg-pink-50 flex flex-col items-center p-4 w-full">
         <div className="p-8 w-full max-w-3xl">
-          {/* Kotak Total Data dan Nominal Masuk */}
           <div className="flex justify-between mb-6 gap-4">
             <div className="bg-white shadow-md rounded-md p-6 flex-1 text-center">
-              <h3 className="text-lg font-semibold text-pink-700 mb-2">Total Data</h3>
+              <h3 className="text-lg font-semibold text-pink-700 mb-2">Total Dashboard</h3>
               <p className="text-2xl font-bold text-pink-600">{data.length} orang</p>
             </div>
             <div className="bg-white shadow-md rounded-md p-6 flex-1 text-center">
@@ -74,7 +71,9 @@ function Dashboard() {
                       <td className="border border-pink-200 px-4 py-2">{item.Nama}</td>
                       <td className="border border-pink-200 px-4 py-2">{item.Jenis}</td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Status}
+                        {item.Status && item.Status.toLowerCase() === "sudah dibayar"
+                          ? "Sudah Dibayar"
+                          : "Belum Dibayar"}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-right">
                         Rp {Number(item.Harga).toLocaleString("id-ID")}

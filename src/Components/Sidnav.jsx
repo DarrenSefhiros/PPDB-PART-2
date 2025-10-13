@@ -7,7 +7,8 @@ const Sidnav = () => {
       <ul className="space-y-4">
         <li><a href="/Dashboard" className="hover:text-pink-300">Dashboard</a></li>
         <li><a href="/Tagihan" className="hover:text-pink-300">Tagihan</a></li>
-        <li><a href="/JenisTagihan" className="hover:text-pink-300">Jenis Tagihan</a></li>
+        <li><a href="/JenisTagihan" className="hover:text-pink-300">Jenis Tagihan</a></li> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+        <li><a href="/" className="hover:text-pink-300 font-bold text-3xl">Logout</a></li>
       </ul>
     </div>
   );

@@ -7,7 +7,6 @@ function Register() {
   const [formData, setFormData] = useState({
     Nama: '',
     Email: '',
-    Password: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -38,7 +37,6 @@ function Register() {
     setFormData({
       Email: "",
       Nama: "",
-      Password: "",
     });
 
     navigate("/Login");
@@ -82,19 +80,6 @@ function Register() {
               type="Nama"
               placeholder="Masukan Nama anda"
               value={formData.Nama}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="Password" className="block text-gray-700 mb-2">Password</label>
-            <input
-              id="Password"
-              name="Password"
-              type="Password"
-              placeholder="Masukan Password anda"
-              value={formData.Password}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
