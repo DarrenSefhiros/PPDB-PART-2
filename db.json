@@ -1,81 +1,47 @@
 {
   "login": [
     {
-      "id": "7dad",
-      "Email": "awd@gmail.com",
-      "Nama": "awd",
-      "Jenis": "Seragam Sekolah",
-      "Harga": "300000",
-      "Status": "Sudah Dibayar"
+      "id": "f603",
+      "Nama": "awa",
+      "Jenis": "Tagihan SPP",
+      "Harga": "390000",
+      "Email": "d.sefh007@gmail.com",
+      "Password": "awa"
     },
     {
-      "id": "6d27",
-      "Email": "awd@gmail.com",
+      "id": "eccd",
       "Nama": "awd",
       "Jenis": "Uang Gedung",
       "Harga": "2000000",
-      "Status": "Belum Dibayar"
-    },
-    {
-      "id": "ad5d",
-      "Email": "awda@gmail.com",
-      "Nama": "awda",
-      "Jenis": "Uang Gedung",
-      "Harga": "2000000"
-    },
-    {
-      "id": "62a9",
-      "Email": "awda@gmail.com",
-      "Nama": "awda",
-      "Jenis": "Tagihan SPP",
-      "Harga": "390000"
-    },
-    {
-      "id": "9bde",
-      "Email": "awda@gmail.com",
-      "Nama": "awda",
-      "Jenis": "Tagihan SPP",
-      "Harga": "390000"
-    },
-    {
-      "id": "2773",
-      "Email": "awda@gmail.com",
-      "Nama": "awda",
-      "Jenis": "Tagihan SPP",
-      "Harga": "390000"
-    },
-    {
-      "id": "19be",
       "Email": "d.sefh007@gmail.com",
-      "Nama": "awda",
+      "Password": "awa"
+    },
+    {
+      "id": "b962",
+      "Nama": "awd",
       "Jenis": "Tagihan SPP",
-      "Harga": "390000"
-    },
-    {
-      "id": "80bb",
-      "Email": "d.sefh007@gmail.com",
-      "Nama": "Darren",
-      "Jenis": "Tagihan SPP",
-      "Harga": "390000"
-    },
-    {
-      "id": "d215",
-      "Email": "d.sefh007@gmail.com",
-      "Nama": "Darren",
-      "Jenis": "Uang Gedung",
-      "Harga": "2000000"
-    },
-    {
-      "id": "ca07",
-      "Email": "d.sefh007@gmail.com",
-      "Nama": "Darren",
-      "Jenis": "Seragam Sekolah",
-      "Harga": "30000"
+      "Harga": "390000",
+      "Email": "awd@gmail.com",
+      "Status": "Sudah Lunas"
     }
   ],
   "jenistagihan": [
     {
       "id": "d0f8"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "Email": "d.sefh007@gmail.com",
+      "Password": "123456",
+      "Nama": "awa"
+    },
+    {
+      "id": 2,
+      "Email": "awd@gmail.com",
+      "Password": "awd",
+      "Nama": ""
     }
   ]
 }

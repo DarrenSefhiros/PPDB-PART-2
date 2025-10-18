@@ -24,6 +24,41 @@ function Tagihan() {
     fetchData();
   }, []);
 
+  // Fungsi untuk toggle status belum lunas/sudah lunas
+  const handleToggleStatus = async (id) => {
+    const itemToUpdate = data.find((item) => item.id === id);
+    if (!itemToUpdate) return;
+
+    // Tentukan status baru
+    const newStatus =
+      itemToUpdate.Status && itemToUpdate.Status.toLowerCase() === "sudah lunas"
+        ? "Belum Lunas"
+        : "Sudah Lunas";
+
+    try {
+      // Update data di backend
+      await axios.patch(`http://localhost:5000/login/${id}`, {
+        Status: newStatus,
+      });
+
+      // Update state lokal supaya UI langsung berubah
+      setData((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, Status: newStatus } : item
+        )
+      );
+
+      Swal.fire("Berhasil!", `Status diubah menjadi "${newStatus}"`, "success");
+    } catch (err) {
+      Swal.fire(
+        "Error!",
+        "Terjadi kesalahan saat mengubah status.",
+        "error"
+      );
+      console.error(err);
+    }
+  };
+
   const handleDelete = async (id) => {
     const konfirmasi = await Swal.fire({
       title: "Serius Kamu?",
@@ -46,25 +81,6 @@ function Tagihan() {
     }
   };
 
-  const handleToggleStatus = async (item) => {
-    const updatedStatus = item.Status === "Sudah Dibayar" ? "Belum Dibayar" : "Sudah Dibayar";
-    try {
-      await axios.put(`http://localhost:5000/login/${item.id}`, {
-        ...item,
-        Status: updatedStatus,
-      });
-
-      setData((prev) =>
-        prev.map((d) =>
-          d.id === item.id ? { ...d, Status: updatedStatus } : d
-        )
-      );
-    } catch (error) {
-      console.error("Gagal mengubah status", error);
-      Swal.fire("Gagal!", "Gagal mengganti status.", "error");
-    }
-  };
-
   const filteredData = (() => {
     switch (selectedJenis) {
       case "spp":
@@ -84,15 +100,17 @@ function Tagihan() {
     }
   })();
 
-
   return (
     <div className="flex">
       <Sidnav />
       <div className="ml-60 min-h-screen bg-pink-50 flex flex-col items-center p-4 w-full">
         <div className="p-8 w-full max-w-5xl">
           <div className="flex flex-wrap items-end justify-between mb-4 gap-2">
-            <div> 
-              <label htmlFor="jenisPembayaran" className="block mb-1 font-semibold text-pink-700">
+            <div>
+              <label
+                htmlFor="jenisPembayaran"
+                className="block mb-1 font-semibold text-pink-700"
+              >
                 Jenis Tagihan
               </label>
               <select
@@ -135,21 +153,29 @@ function Tagihan() {
                     <th className="px-4 py-2 text-center">Jenis</th>
                     <th className="px-4 py-2 text-center">Status</th>
                     <th className="px-4 py-2 text-center">Harga</th>
-                    <th className="px-4 py-2 text-center">Ubah</th>
+                    <th className="px-4 py-2 text-center">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredData.map((item, index) => (
-                    <tr key={item.id} className="bg-pink-100 hover:bg-pink-200 transition">
-                      <td className="border border-pink-200 px-2 py-2 text-right">{index + 1}</td>
+                    <tr
+                      key={item.id}
+                      className="bg-pink-100 hover:bg-pink-200 transition"
+                    >
+                      <td className="border border-pink-200 px-2 py-2 text-right">
+                        {index + 1}
+                      </td>
                       <td className="border border-pink-200 px-4 py-2">{item.Nama}</td>
                       <td className="border border-pink-200 px-4 py-2">{item.Email}</td>
                       <td className="border border-pink-200 px-4 py-2">{item.Jenis}</td>
                       <td
-                        className={`border border-pink-200 px-4 py-2 text-center font-semibold ${item.Status === "Sudah Dibayar" ? "text-green-600" : "text-yellow-600"
-                          }`}
+                        className={`border border-pink-200 px-4 py-2 text-center font-semibold ${
+                          item.Status === "Sudah Lunas"
+                            ? "text-green-600"
+                            : "text-yellow-600"
+                        }`}
                       >
-                        {item.Status || "Belum Dibayar"}
+                        {item.Status || "Belum Lunas"}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-right">
                         Rp {Number(item.Harga).toLocaleString("id-ID")}
@@ -157,15 +183,21 @@ function Tagihan() {
                       <td className="border px-4 py-2 text-center">
                         <div className="flex justify-center space-x-2">
                           <Link to={`/Edit/${item.id}`}>
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded my-10">
                               Edit
                             </button>
                           </Link>
                           <button
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded"
+                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded my-auto"
                             onClick={() => handleDelete(item.id)}
                           >
                             Hapus
+                          </button>
+                          <button
+                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded my-auto h-9 text-nowrap"
+                            onClick={() => handleToggleStatus(item.id)}
+                          >
+                            Ubah Status
                           </button>
                         </div>
                       </td>

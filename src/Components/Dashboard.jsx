@@ -7,12 +7,17 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const loginData = JSON.parse(localStorage.getItem("loginData"));
+    if (!loginData?.Email) return;
+
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/login");
+        const res = await axios.get(
+          `http://localhost:5000/login?Email=${loginData.Email}`
+        );
         setData(res.data);
       } catch (err) {
-        console.error("Gagal mengambil data:", err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -30,11 +35,15 @@ function Dashboard() {
         <div className="p-8 w-full max-w-3xl">
           <div className="flex justify-between mb-6 gap-4">
             <div className="bg-white shadow-md rounded-md p-6 flex-1 text-center">
-              <h3 className="text-lg font-semibold text-pink-700 mb-2">Total Dashboard</h3>
+              <h3 className="text-lg font-semibold text-pink-700 mb-2">
+                Total Dashboard
+              </h3>
               <p className="text-2xl font-bold text-pink-600">{data.length} orang</p>
             </div>
             <div className="bg-white shadow-md rounded-md p-6 flex-1 text-center">
-              <h3 className="text-lg font-semibold text-pink-700 mb-2">Nominal Masuk</h3>
+              <h3 className="text-lg font-semibold text-pink-700 mb-2">
+                Nominal Masuk
+              </h3>
               <p className="text-2xl font-bold text-pink-600">
                 Rp {totalHarga.toLocaleString("id-ID")}
               </p>
@@ -71,9 +80,9 @@ function Dashboard() {
                       <td className="border border-pink-200 px-4 py-2">{item.Nama}</td>
                       <td className="border border-pink-200 px-4 py-2">{item.Jenis}</td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Status && item.Status.toLowerCase() === "sudah dibayar"
-                          ? "Sudah Dibayar"
-                          : "Belum Dibayar"}
+                        {item.Status && item.Status.toLowerCase() === "sudah lunas"
+                          ? "Sudah Lunas"
+                          : "Belum Lunas"}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-right">
                         Rp {Number(item.Harga).toLocaleString("id-ID")}

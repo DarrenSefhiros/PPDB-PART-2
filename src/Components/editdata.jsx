@@ -11,7 +11,7 @@ function EditData() {
     Nama: "",
     Jenis: "",
     Harga: "",
-    Status: "Belum Dibayar",
+    Status: "Belum Lunas",
   });
 
   const jenisHargaMap = {
@@ -117,32 +117,14 @@ function EditData() {
               <option value="Seragam Sekolah">Seragam Sekolah</option>
             </select>
           </div>
-
-<input
-  id="Harga"
-  name="Harga"
-  type="text"
-  value={formData.Harga}
-  onChange={handleChange}
-  className="w-full px-4 py-2 border border-gray-300 rounded-md"
-/>
-
-
-          <div className="mb-4">
-            <label htmlFor="Status" className="block text-gray-700 mb-2">Status</label>
-            <select
-              id="Status"
-              name="Status"
-              value={formData.Status}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
-              required
-            >
-              <option value="Belum Dibayar">Belum Dibayar</option>
-              <option value="Sudah Dibayar">Sudah Dibayar</option>
-            </select>
-          </div>
-
+          <input
+            id="Harga"
+            name="Harga"
+            type="text"
+            value={formData.Harga}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md"
+          />
           <div className="flex justify-between mt-6">
             <button
               type="submit"

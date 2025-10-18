@@ -5,8 +5,8 @@ import Swal from 'sweetalert2';
 
 function Register() {
   const [formData, setFormData] = useState({
-    Nama: '',
     Email: '',
+    Password: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -16,14 +16,11 @@ function Register() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  console.log("Submit form with:", formData);
-  try {
-    const response = await axios.post("http://localhost:5000/login", formData);
-    console.log("Respon server:", response.data);
-
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await axios.post(`http://localhost:5000/users`, formData);
     Swal.fire({
       position: "center",
       icon: "success",
@@ -36,10 +33,10 @@ function Register() {
 
     setFormData({
       Email: "",
-      Nama: "",
+      Password: "",
     });
 
-    navigate("/Login");
+    navigate("/");
   } catch (error) {
     console.error("Axios error:", error);
     Swal.fire({
@@ -57,14 +54,14 @@ function Register() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-400 to-purple-600">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Register</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="Email" className="block text-gray-700 mb-2">Email</label>
             <input
               id="Email"
               name="Email"
-              type="Email"
+              type="email"
               placeholder="Masukan Email anda"
               value={formData.Email}
               onChange={handleChange}
@@ -73,13 +70,13 @@ function Register() {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="Nama" className="block text-gray-700 mb-2">Nama</label>
+            <label htmlFor="Password" className="block text-gray-700 mb-2">Password</label>
             <input
-              id="Nama"
-              name="Nama"
-              type="Nama"
-              placeholder="Masukan Nama anda"
-              value={formData.Nama}
+              id="Password"
+              name="Password"
+              type="password"
+              placeholder="Masukan Password anda"
+              value={formData.Password}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required

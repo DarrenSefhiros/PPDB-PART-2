@@ -1,18 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Swal from 'sweetalert2';
 
 function Tambahdata() {
   const [formData, setFormData] = useState({
-    Email: '',
     Nama: '',
     Jenis: '',
     Harga: '',
+    Email: '',
   });
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const loginData = JSON.parse(localStorage.getItem("loginData"));
+    if (loginData && loginData.Email) {
+      setFormData((prev) => ({
+        ...prev,
+        Email: loginData.Email
+      }));
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +36,7 @@ function Tambahdata() {
       setFormData({
         ...formData,
         Jenis: value,
-        Harga: harga, // Harga otomatis berubah
+        Harga: harga,
       });
     } else {
       setFormData({
@@ -55,10 +65,10 @@ function Tambahdata() {
       localStorage.setItem("loginData", JSON.stringify(formData));
 
       setFormData({
-        Email: "",
         Nama: "",
         Jenis: "",
         Harga: "",
+        Email: "",
       });
 
       navigate("/Dashboard");
@@ -82,19 +92,6 @@ function Tambahdata() {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Tambah data</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="Email" className="block text-gray-700 mb-2">Email</label>
-            <input
-              id="Email"
-              name="Email"
-              type="email"
-              placeholder="Masukan Email anda"
-              value={formData.Email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-              required
-            />
-          </div>
-          <div className="mb-4">
             <label htmlFor="Nama" className="block text-gray-700 mb-2">Nama</label>
             <input
               id="Nama"
@@ -117,7 +114,7 @@ function Tambahdata() {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             >
-              <option value="" disabled>Pilih Jenis Pembayaran</option>
+              <option value="" disabled>Pilih Jenis Tagihan</option>
               <option value="Tagihan SPP">Tagihan SPP</option>
               <option value="Uang Gedung">Uang Gedung</option>
               <option value="Seragam Sekolah">Seragam Sekolah</option>

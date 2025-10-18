@@ -6,9 +6,7 @@ import Swal from 'sweetalert2';
 function Login() {
   const [formData, setFormData] = useState({
     Email: '',
-    Nama: '',
-    Jenis: '',
-    Harga: ''
+    Password: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -16,59 +14,38 @@ function Login() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "Jenis") {
-      let harga = "";
-      if (value === "Tagihan SPP") harga = "390000";
-      else if (value === "Uang Gedung") harga = "2000000";
-      else if (value === "Seragam Sekolah") harga = "30000";
-
-      setFormData({
-        ...formData,
-        Jenis: value,
-        Harga: harga,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log("Submit form with:", formData);
     try {
-      const response = await axios.post("http://localhost:5000/login", formData);
-      console.log("Respon server:", response.data);
+      const res = await axios.get(`http://localhost:5000/users?Email=${formData.Email}&Password=${formData.Password}`);
+      if (res.data.length > 0) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Login berhasil",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        localStorage.setItem("loginData", JSON.stringify(res.data[0]));
 
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Data anda telah disimpan",
-        showConfirmButton: false,
-        timer: 1500
-      });
-
-      localStorage.setItem("loginData", JSON.stringify(formData));
-
-      setFormData({
-        Email: "",
-        Nama: "",
-        Jenis: "",
-        Harga: ""
-      });
-
-      navigate("/Dashboard");
+        setFormData({ Email: "", Password: "" });
+        navigate("/Dashboard");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Login gagal",
+          text: "Email atau password salah"
+        });
+      }
     } catch (error) {
-      console.error("Axios error:", error);
       Swal.fire({
         icon: "error",
-        title: "Oops...",
-        text: error.response?.data?.message || "Something went wrong!",
-        footer: '<a href="#">Why do I have this issue?</a>'
+        title: "Error",
+        text: error.message
       });
     } finally {
       setLoading(false);
@@ -94,44 +71,15 @@ function Login() {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="Nama" className="block text-gray-700 mb-2">Nama</label>
+            <label htmlFor="Password" className="block text-gray-700 mb-2">Password</label>
             <input
-              id="Nama"
-              name="Nama"
-              type="text"
-              placeholder="Masukan Nama anda"
-              value={formData.Nama}
+              id="Password"
+              name="Password"
+              type="password"
+              placeholder="Masukan Password anda"
+              value={formData.Password}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="Jenis" className="block text-gray-700 mb-2">Jenis</label>
-            <select
-              id="Jenis"
-              name="Jenis"
-              value={formData.Jenis}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-              required
-            >
-              <option value="" disabled>Pilih Jenis Pembayaran</option>
-              <option value="Tagihan SPP">Tagihan SPP</option>
-              <option value="Uang Gedung">Uang Gedung</option>
-              <option value="Seragam Sekolah">Seragam Sekolah</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <label htmlFor="Harga" className="block text-gray-700 mb-2">Harga</label>
-            <input
-              id="Harga"
-              name="Harga"
-              type="text"
-              placeholder="Harga akan muncul otomatis"
-              value={formData.Harga}
-              readOnly
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             />
           </div>
