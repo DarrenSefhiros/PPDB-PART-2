@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Sidnav from "./sidnav";
+import { motion } from "framer-motion";
 
 function Tagihan() {
   const [data, setData] = useState([]);
@@ -24,24 +25,20 @@ function Tagihan() {
     fetchData();
   }, []);
 
-  // Fungsi untuk toggle status belum lunas/sudah lunas
   const handleToggleStatus = async (id) => {
     const itemToUpdate = data.find((item) => item.id === id);
     if (!itemToUpdate) return;
 
-    // Tentukan status baru
     const newStatus =
-      itemToUpdate.Status && itemToUpdate.Status.toLowerCase() === "sudah lunas"
+      itemToUpdate.Status?.toLowerCase() === "sudah lunas"
         ? "Belum Lunas"
         : "Sudah Lunas";
 
     try {
-      // Update data di backend
       await axios.patch(`http://localhost:5000/login/${id}`, {
         Status: newStatus,
       });
 
-      // Update state lokal supaya UI langsung berubah
       setData((prev) =>
         prev.map((item) =>
           item.id === id ? { ...item, Status: newStatus } : item
@@ -50,11 +47,7 @@ function Tagihan() {
 
       Swal.fire("Berhasil!", `Status diubah menjadi "${newStatus}"`, "success");
     } catch (err) {
-      Swal.fire(
-        "Error!",
-        "Terjadi kesalahan saat mengubah status.",
-        "error"
-      );
+      Swal.fire("Error!", "Terjadi kesalahan saat mengubah status.", "error");
       console.error(err);
     }
   };
@@ -103,8 +96,14 @@ function Tagihan() {
   return (
     <div className="flex">
       <Sidnav />
-      <div className="ml-60 min-h-screen bg-pink-50 flex flex-col items-center p-4 w-full">
-        <div className="p-8 w-full max-w-5xl">
+      <div className="ml-60 min-h-screen bg-pink-50 flex flex-col items-center p-5 w-full">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="p-8 w-full max-w-5xl"
+        >
+          {/* Filter dan Tombol Tambah */}
           <div className="flex flex-wrap items-end justify-between mb-4 gap-2">
             <div>
               <label
@@ -132,12 +131,14 @@ function Tagihan() {
 
             <div>
               <Link to="/TambahData">
-                <button className="bg-pink-500 hover:bg-pink-600 rounded-md text-white font-bold py-2 px-4">
+                <button className="bg-pink-500 hover:bg-pink-600 rounded-md text-white font-bold py-2 px-4 transition hover:scale-[1.06]">
                   + Tambah Data
                 </button>
               </Link>
             </div>
           </div>
+
+          {/* Tabel */}
           <div className="overflow-x-auto">
             {loading ? (
               <div className="text-center py-4 text-pink-600">Memuat data...</div>
@@ -152,14 +153,17 @@ function Tagihan() {
                     <th className="px-4 py-2 text-center">Email</th>
                     <th className="px-4 py-2 text-center">Jenis</th>
                     <th className="px-4 py-2 text-center">Status</th>
-                    <th className="px-4 py-2 text-center">Harga</th>
+                    <th className="px-4 py-2 text-center">Tagihan</th>
                     <th className="px-4 py-2 text-center">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredData.map((item, index) => (
-                    <tr
+                    <motion.tr
                       key={item.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
                       className="bg-pink-100 hover:bg-pink-200 transition"
                     >
                       <td className="border border-pink-200 px-2 py-2 text-right">
@@ -178,36 +182,36 @@ function Tagihan() {
                         {item.Status || "Belum Lunas"}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-right">
-                        Rp {Number(item.Harga).toLocaleString("id-ID")}
+                        Rp {Number(item.Tagihan).toLocaleString("id-ID")}
                       </td>
                       <td className="border px-4 py-2 text-center">
                         <div className="flex justify-center space-x-2">
                           <Link to={`/Edit/${item.id}`}>
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded my-10">
-                              Edit
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white transition font-bold py-1 px-3 rounded my-10 hover:scale-[1.09]">
+                              ✍️
                             </button>
                           </Link>
                           <button
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded my-auto"
+                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 transition rounded my-auto hover:scale-[1.09]"
                             onClick={() => handleDelete(item.id)}
                           >
-                            Hapus
+                            🗑
                           </button>
                           <button
-                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded my-auto h-9 text-nowrap"
+                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded my-auto h-9 text-nowrap transition hover:scale-[1.09]"
                             onClick={() => handleToggleStatus(item.id)}
                           >
                             Ubah Status
                           </button>
                         </div>
                       </td>
-                    </tr>
+                    </motion.tr>
                   ))}
                 </tbody>
               </table>
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

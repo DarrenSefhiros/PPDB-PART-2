@@ -7,7 +7,7 @@ function Tambahdata() {
   const [formData, setFormData] = useState({
     Nama: '',
     Jenis: '',
-    Harga: '',
+    Tagihan: '',
     Email: '',
   });
 
@@ -28,15 +28,15 @@ function Tambahdata() {
     const { name, value } = e.target;
 
     if (name === "Jenis") {
-      let harga = "";
-      if (value === "Tagihan SPP") harga = "390000";
-      else if (value === "Uang Gedung") harga = "2000000";
-      else if (value === "Seragam Sekolah") harga = "30000";
+      let Tagihan = "";
+      if (value === "Tagihan SPP") Tagihan = "390000";
+      else if (value === "Uang Gedung") Tagihan = "2000000";
+      else if (value === "Seragam Sekolah") Tagihan = "30000";
 
       setFormData({
         ...formData,
         Jenis: value,
-        Harga: harga,
+        Tagihan: Tagihan,
       });
     } else {
       setFormData({
@@ -67,7 +67,7 @@ function Tambahdata() {
       setFormData({
         Nama: "",
         Jenis: "",
-        Harga: "",
+        Tagihan: "",
         Email: "",
       });
 
@@ -121,13 +121,13 @@ function Tambahdata() {
             </select>
           </div>
           <div className="mb-4">
-            <label htmlFor="Harga" className="block text-gray-700 mb-2">Harga</label>
+            <label htmlFor="Tagihan" className="block text-gray-700 mb-2">Tagihan</label>
             <input
-              id="Harga"
-              name="Harga"
+              id="Tagihan"
+              name="Tagihan"
               type="text"
-              placeholder="Jumlah"
-              value={formData.Harga}
+              placeholder="Total tagihan"
+              value={formData.Tagihan}
               readOnly
               className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
             />

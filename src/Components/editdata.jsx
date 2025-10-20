@@ -10,11 +10,11 @@ function EditData() {
     Email: "",
     Nama: "",
     Jenis: "",
-    Harga: "",
+    Tagihan: "",
     Status: "Belum Lunas",
   });
 
-  const jenisHargaMap = {
+  const jenisTagihanMap = {
     "Tagihan SPP": "390000",
     "Uang Gedung": "2000000",
     "Seragam Sekolah": "30000",
@@ -40,7 +40,7 @@ function EditData() {
       setFormData({
         ...formData,
         Jenis: value,
-        Harga: jenisHargaMap[value] || "",
+        Tagihan: jenisTagihanMap[value] || "",
       });
     } else {
       setFormData({
@@ -76,19 +76,6 @@ function EditData() {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Edit Data</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="Email" className="block text-gray-700 mb-2">Email</label>
-            <input
-              id="Email"
-              name="Email"
-              type="email"
-              value={formData.Email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
             <label htmlFor="Nama" className="block text-gray-700 mb-2">Nama</label>
             <input
               id="Nama"
@@ -118,10 +105,10 @@ function EditData() {
             </select>
           </div>
           <input
-            id="Harga"
-            name="Harga"
+            id="Tagihan"
+            name="Tagihan"
             type="text"
-            value={formData.Harga}
+            value={formData.Tagihan}
             onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md"
           />

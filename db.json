@@ -1,28 +1,11 @@
 {
   "login": [
     {
-      "id": "f603",
-      "Nama": "awa",
-      "Jenis": "Tagihan SPP",
-      "Harga": "390000",
-      "Email": "d.sefh007@gmail.com",
-      "Password": "awa"
-    },
-    {
-      "id": "eccd",
-      "Nama": "awd",
+      "id": "6da9",
+      "Nama": "awda",
       "Jenis": "Uang Gedung",
-      "Harga": "2000000",
-      "Email": "d.sefh007@gmail.com",
-      "Password": "awa"
-    },
-    {
-      "id": "b962",
-      "Nama": "awd",
-      "Jenis": "Tagihan SPP",
-      "Harga": "390000",
-      "Email": "awd@gmail.com",
-      "Status": "Sudah Lunas"
+      "Tagihan": "2000000",
+      "Email": "d.sefh007@gmail.com"
     }
   ],
   "jenistagihan": [
@@ -32,16 +15,26 @@
   ],
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "Email": "d.sefh007@gmail.com",
       "Password": "123456",
       "Nama": "awa"
     },
     {
-      "id": 2,
+      "id": "2",
       "Email": "awd@gmail.com",
       "Password": "awd",
       "Nama": ""
+    },
+    {
+      "id": "df1b",
+      "Email": "awd@gmail.com",
+      "Password": "awd"
+    },
+    {
+      "id": "7fe6",
+      "Email": "d.sefh007@gmail.com",
+      "Password": "awd"
     }
   ]
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidnav from "./sidnav";
+import { motion } from 'framer-motion';
 
 function Dashboard() {
   const [data, setData] = useState([]);
@@ -26,31 +27,40 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  const totalHarga = data.reduce((acc, item) => acc + Number(item.Harga), 0);
+  const totalTagihan = data.reduce((acc, item) => acc + Number(item.Tagihan), 0);
 
   return (
     <div className="flex">
       <Sidnav />
       <div className="ml-60 min-h-screen bg-pink-50 flex flex-col items-center p-4 w-full">
         <div className="p-8 w-full max-w-3xl">
-          <div className="flex justify-between mb-6 gap-4">
-            <div className="bg-white shadow-md rounded-md p-6 flex-1 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex justify-between mb-6 gap-4"
+          >
+            <div className="bg-white shadow-md rounded-md p-6 flex-1 text-center hover:scale-[1.03]">
               <h3 className="text-lg font-semibold text-pink-700 mb-2">
                 Total Dashboard
               </h3>
               <p className="text-2xl font-bold text-pink-600">{data.length} orang</p>
             </div>
-            <div className="bg-white shadow-md rounded-md p-6 flex-1 text-center">
+            <div className="bg-white shadow-md rounded-md p-6 flex-1 text-center hover:scale-[1.03]">
               <h3 className="text-lg font-semibold text-pink-700 mb-2">
                 Nominal Masuk
               </h3>
               <p className="text-2xl font-bold text-pink-600">
-                Rp {totalHarga.toLocaleString("id-ID")}
+                Rp {totalTagihan.toLocaleString("id-ID")}
               </p>
             </div>
-          </div>
-
-          <div className="overflow-x-auto">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="overflow-x-auto"
+          >
             <table className="min-w-full border border-pink-200 rounded-md overflow-hidden">
               <thead className="bg-purple-200 text-purple-800">
                 <tr>
@@ -58,7 +68,7 @@ function Dashboard() {
                   <th className="px-4 py-2 text-center">Nama</th>
                   <th className="px-4 py-2 text-center">Jenis</th>
                   <th className="px-4 py-2 text-center">Status</th>
-                  <th className="px-4 py-2 text-center w-13">Harga</th>
+                  <th className="px-4 py-2 text-center w-13">Tagihan</th>
                 </tr>
               </thead>
               <tbody>
@@ -70,8 +80,11 @@ function Dashboard() {
                   </tr>
                 ) : data.length > 0 ? (
                   data.map((item, index) => (
-                    <tr
+                    <motion.tr
                       key={item.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
                       className="bg-pink-100 hover:bg-pink-200 transition"
                     >
                       <td className="border border-pink-200 px-2 py-2 text-right w-12">
@@ -79,15 +92,19 @@ function Dashboard() {
                       </td>
                       <td className="border border-pink-200 px-4 py-2">{item.Nama}</td>
                       <td className="border border-pink-200 px-4 py-2">{item.Jenis}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Status && item.Status.toLowerCase() === "sudah lunas"
-                          ? "Sudah Lunas"
-                          : "Belum Lunas"}
+                      <td
+                        className={`border border-pink-200 px-4 py-2 text-center font-semibold ${
+                          item.Status === "Sudah Lunas"
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {item.Status || "Belum Lunas"}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-right">
-                        Rp {Number(item.Harga).toLocaleString("id-ID")}
+                        Rp {Number(item.Tagihan).toLocaleString("id-ID")}
                       </td>
-                    </tr>
+                    </motion.tr>
                   ))
                 ) : (
                   <tr>
@@ -98,7 +115,7 @@ function Dashboard() {
                 )}
               </tbody>
             </table>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

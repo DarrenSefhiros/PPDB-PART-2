@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidnav from "./sidnav";
+import { motion } from "framer-motion";
 
 function JenisTagihan() {
   const [data, setData] = useState([]);
@@ -45,7 +46,13 @@ function JenisTagihan() {
     <div className="flex">
       <Sidnav />
       <div className="ml-60 min-h-screen bg-pink-50 flex flex-col items-center p-4 w-full">
-        <div className="p-8 w-full max-w-5xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="p-8 w-full max-w-5xl"
+        >
+          {/* Filter */}
           <div className="flex flex-wrap items-end justify-between mb-4 gap-2">
             <div>
               <label
@@ -71,6 +78,8 @@ function JenisTagihan() {
               Total Data: {filteredData.length} orang
             </div>
           </div>
+
+          {/* Tabel */}
           <div className="overflow-x-auto">
             {loading ? (
               <div className="text-center py-4 text-pink-600">Memuat data...</div>
@@ -89,8 +98,11 @@ function JenisTagihan() {
                 </thead>
                 <tbody>
                   {filteredData.map((item, index) => (
-                    <tr
+                    <motion.tr
                       key={item.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.03 }}
                       className="bg-pink-100 hover:bg-pink-200 transition"
                     >
                       <td className="border border-pink-200 px-2 py-2 text-right">
@@ -103,18 +115,18 @@ function JenisTagihan() {
                         className={`border border-pink-200 px-4 py-2 text-center font-semibold ${
                           item.Status === "Sudah Lunas"
                             ? "text-green-600"
-                            : "text-yellow-600"
+                            : "text-red-600"
                         }`}
                       >
                         {item.Status || "Belum Lunas"}
                       </td>
-                    </tr>
+                    </motion.tr>
                   ))}
                 </tbody>
               </table>
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
