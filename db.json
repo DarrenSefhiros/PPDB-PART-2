@@ -1,11 +1,12 @@
 {
   "login": [
     {
-      "id": "6da9",
-      "Nama": "awda",
-      "Jenis": "Uang Gedung",
-      "Tagihan": "2000000",
-      "Email": "d.sefh007@gmail.com"
+      "id": "6a65",
+      "Nama": "awd",
+      "Jenis": "Seragam Sekolah",
+      "Tagihan": "30000",
+      "Email": "awd@gmail.com",
+      "Status": "Sudah Lunas"
     }
   ],
   "jenistagihan": [
@@ -34,6 +35,31 @@
     {
       "id": "7fe6",
       "Email": "d.sefh007@gmail.com",
+      "Password": "awd"
+    },
+    {
+      "id": "172d",
+      "Email": "rehan@gmail.com",
+      "Password": "awd"
+    },
+    {
+      "id": "95d4",
+      "Email": "law@gmail.com",
+      "Password": "awd"
+    },
+    {
+      "id": "9ef0",
+      "Email": "vin@gmail.com",
+      "Password": "awd"
+    },
+    {
+      "id": "0df0",
+      "Email": "awd2@gmail.com",
+      "Password": "awd"
+    },
+    {
+      "id": "0893",
+      "Email": "awd@gmail.com",
       "Password": "awd"
     }
   ]

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from 'sweetalert2';
 
 function Login() {
@@ -8,6 +9,10 @@ function Login() {
     Email: '',
     Password: '',
   });
+
+     const [show, setShow] = useState(false);
+  
+       const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -70,19 +75,25 @@ function Login() {
               required
             />
           </div>
-          <div className="mb-4">
-            <label htmlFor="Password" className="block text-gray-700 mb-2">Password</label>
-            <input
-              id="Password"
-              name="Password"
-              type="password"
-              placeholder="Masukan Password anda"
-              value={formData.Password}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-              required
-            />
-          </div>
+ <div className="mb-4 relative">
+  <label htmlFor="Password" className="block text-gray-700 mb-2">Password</label>
+  <input
+    id="Password"
+    name="Password"
+    type={showPassword ? "text" : "password"}
+    placeholder="Masukan Password anda"
+    value={formData.Password}
+    onChange={handleChange}
+    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400 pr-10" // ⬅️ padding kanan biar icon gak nabrak
+    required
+  />
+  <span
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute right-3 top-[45px] text-gray-600 cursor-pointer"
+  >
+    {showPassword ? <FaEyeSlash /> : <FaEye />}
+  </span>
+</div>
           <button
             type="submit"
             className="w-full font-bold bg-pink-500 text-white py-2 rounded-md hover:bg-pink-600 transition duration-200"

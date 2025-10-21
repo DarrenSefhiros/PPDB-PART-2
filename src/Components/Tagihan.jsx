@@ -25,32 +25,54 @@ function Tagihan() {
     fetchData();
   }, []);
 
-  const handleToggleStatus = async (id) => {
-    const itemToUpdate = data.find((item) => item.id === id);
-    if (!itemToUpdate) return;
+const handleToggleStatus = async (id) => {
+  const itemToUpdate = data.find((item) => item.id === id);
+  if (!itemToUpdate) return;
 
-    const newStatus =
-      itemToUpdate.Status?.toLowerCase() === "sudah lunas"
-        ? "Belum Lunas"
-        : "Sudah Lunas";
+  const newStatus =
+    itemToUpdate.Status?.toLowerCase() === "sudah lunas"
+      ? "Belum Lunas"
+      : "Sudah Lunas";
 
+  // 1. TAMPILKAN Swal konfirmasi DULU
+  const konfirmasi = await Swal.fire({
+    title: "Ubah Status Pembayaran?",
+    text: `Status akan diubah menjadi: ${newStatus}`,
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#28a745",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ya, ubah",
+    cancelButtonText: "Batal",
+  });
+
+  if (konfirmasi.isConfirmed) {
     try {
+      // 2. BARU ubah status di backend
       await axios.patch(`http://localhost:5000/login/${id}`, {
         Status: newStatus,
       });
 
+      // 3. Update state lokal
       setData((prev) =>
         prev.map((item) =>
           item.id === id ? { ...item, Status: newStatus } : item
         )
       );
 
-      Swal.fire("Berhasil!", `Status diubah menjadi "${newStatus}"`, "success");
+      // 4. Beri feedback
+      Swal.fire({
+        title: "Berhasil!",
+        text: `Status berhasil diubah ke "${newStatus}"`,
+        icon: "success",
+      });
     } catch (err) {
-      Swal.fire("Error!", "Terjadi kesalahan saat mengubah status.", "error");
+      Swal.fire("Gagal!", "Terjadi kesalahan saat mengubah status.", "error");
       console.error(err);
     }
-  };
+  }
+};
+
 
   const handleDelete = async (id) => {
     const konfirmasi = await Swal.fire({
@@ -103,7 +125,6 @@ function Tagihan() {
           transition={{ duration: 0.6 }}
           className="p-8 w-full max-w-5xl"
         >
-          {/* Filter dan Tombol Tambah */}
           <div className="flex flex-wrap items-end justify-between mb-4 gap-2">
             <div>
               <label
@@ -137,8 +158,6 @@ function Tagihan() {
               </Link>
             </div>
           </div>
-
-          {/* Tabel */}
           <div className="overflow-x-auto">
             {loading ? (
               <div className="text-center py-4 text-pink-600">Memuat data...</div>
@@ -185,26 +204,26 @@ function Tagihan() {
                         Rp {Number(item.Tagihan).toLocaleString("id-ID")}
                       </td>
                       <td className="border px-4 py-2 text-center">
-                        <div className="flex justify-center space-x-2">
-                          <Link to={`/Edit/${item.id}`}>
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white transition font-bold py-1 px-3 rounded my-10 hover:scale-[1.09]">
-                              ✍️
-                            </button>
-                          </Link>
-                          <button
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 transition rounded my-auto hover:scale-[1.09]"
-                            onClick={() => handleDelete(item.id)}
-                          >
-                            🗑
-                          </button>
-                          <button
-                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded my-auto h-9 text-nowrap transition hover:scale-[1.09]"
-                            onClick={() => handleToggleStatus(item.id)}
-                          >
-                            Ubah Status
-                          </button>
-                        </div>
-                      </td>
+                         <div className="flex justify-center space-x-2">
+                           <Link to={`/Edit/${item.id}`}>
+                             <button className="bg-blue-500 hover:bg-blue-700 text-white transition font-bold py-1 px-3 rounded hover:scale-[1.09]">
+                               ✍️
+                             </button>
+                           </Link>
+                           <button
+                             className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 transition rounded hover:scale-[1.09]"
+                             onClick={() => handleDelete(item.id)}
+                           >
+                             🗑
+                           </button>
+                           <button
+                             className="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded hover:scale-[1.09]"
+                             onClick={() => handleToggleStatus(item.id)}
+                           >
+                             Ubah Status
+                           </button>
+                         </div>
+                       </td>
                     </motion.tr>
                   ))}
                 </tbody>

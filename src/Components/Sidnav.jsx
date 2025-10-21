@@ -7,8 +7,10 @@ const Sidnav = () => {
       <ul className="space-y-4">
         <li><a href="/Dashboard" className="hover:text-pink-300">Dashboard</a></li>
         <li><a href="/Tagihan" className="hover:text-pink-300">Tagihan</a></li>
-        <li><a href="/JenisTagihan" className="hover:text-pink-300">Jenis Tagihan</a></li> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
-        <li><a href="/" className="hover:text-pink-300 font-bold text-3xl">Logout</a></li>
+        <li><a href="/JenisTagihan" className="hover:text-pink-300">Jenis Tagihan</a></li> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+        <button className="bg-pink-600 hover:bg-pink-800 rounded px-4 py-2">
+        <li><a href="/" className="hover:text-pink-300 text-2xl">Logout</a></li>
+        </button>
       </ul>
     </div>
   );
