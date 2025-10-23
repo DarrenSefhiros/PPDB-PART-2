@@ -1,17 +1,20 @@
 {
   "login": [
     {
-      "id": "6a65",
-      "Nama": "awd",
-      "Jenis": "Seragam Sekolah",
-      "Tagihan": "30000",
-      "Email": "awd@gmail.com",
-      "Status": "Sudah Lunas"
+      "id": "a4e0",
+      "Nama": "aa",
+      "Jenis": "spp bulanan",
+      "Tagihan": "1.000.000",
+      "Email": "awd@gmail.com"
     }
   ],
   "jenistagihan": [
     {
-      "id": "d0f8"
+      "id": "dbd5",
+      "JenisTagihan": "spp bulanan",
+      "Tagihan": "1.000.000",
+      "JatuhTempo": "",
+      "Keterangan": "aaa"
     }
   ],
   "users": [

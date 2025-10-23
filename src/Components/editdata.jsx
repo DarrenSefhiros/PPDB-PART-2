@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 function EditData() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     Email: "",
     Nama: "",
@@ -14,17 +15,20 @@ function EditData() {
     Status: "Belum Lunas",
   });
 
-  const jenisTagihanMap = {
-    "Tagihan SPP": "390000",
-    "Uang Gedung": "2000000",
-    "Seragam Sekolah": "30000",
-  };
+  // 🔧 Tambahkan ini
+  const [jenisTagihanList, setJenisTagihanList] = useState([]);
 
+  // 🔧 Ambil data tagihan yang mau diedit + data jenis tagihan dari server
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Ambil data tagihan yang mau diedit
         const res = await axios.get(`http://localhost:5000/login/${id}`);
         setFormData(res.data);
+
+        // Ambil semua jenis tagihan
+        const jenisRes = await axios.get("http://localhost:5000/jenistagihan");
+        setJenisTagihanList(jenisRes.data);
       } catch (err) {
         console.error("Gagal mengambil data:", err);
       }
@@ -33,14 +37,19 @@ function EditData() {
     fetchData();
   }, [id]);
 
+  // 🔧 Saat jenis dipilih, otomatis ubah nominal Tagihan sesuai data dari backend
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (name === "Jenis") {
+      const selectedJenis = jenisTagihanList.find(
+        (item) => item.JenisTagihan === value
+      );
+
       setFormData({
         ...formData,
         Jenis: value,
-        Tagihan: jenisTagihanMap[value] || "",
+        Tagihan: selectedJenis ? selectedJenis.Tagihan || "" : "",
       });
     } else {
       setFormData({
@@ -55,6 +64,7 @@ function EditData() {
 
     try {
       await axios.put(`http://localhost:5000/login/${id}`, formData);
+
       await Swal.fire({
         position: "center",
         icon: "success",
@@ -73,10 +83,15 @@ function EditData() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-400 to-purple-600">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Edit Data</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Edit Data
+        </h2>
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="Nama" className="block text-gray-700 mb-2">Nama</label>
+            <label htmlFor="Nama" className="block text-gray-700 mb-2">
+              Nama
+            </label>
             <input
               id="Nama"
               name="Nama"
@@ -89,29 +104,40 @@ function EditData() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="Jenis" className="block text-gray-700 mb-2">Jenis Pembayaran</label>
+            <label htmlFor="Jenis" className="block text-gray-700 mb-2">
+              Jenis Tagihan
+            </label>
             <select
               id="Jenis"
               name="Jenis"
               value={formData.Jenis}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             >
-              <option value="">Pilih Jenis</option>
-              <option value="Tagihan SPP">Tagihan SPP</option>
-              <option value="Uang Gedung">Uang Gedung</option>
-              <option value="Seragam Sekolah">Seragam Sekolah</option>
+              <option value="">Pilih Jenis Tagihan</option>
+              {jenisTagihanList.map((jenis) => (
+                <option key={jenis.id} value={jenis.JenisTagihan}>
+                  {jenis.JenisTagihan}
+                </option>
+              ))}
             </select>
           </div>
-          <input
-            id="Tagihan"
-            name="Tagihan"
-            type="text"
-            value={formData.Tagihan}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md"
-          />
+
+          <div className="mb-4">
+            <label htmlFor="Tagihan" className="block text-gray-700 mb-2">
+              Tagihan
+            </label>
+            <input
+              id="Tagihan"
+              name="Tagihan"
+              type="text"
+              value={formData.Tagihan}
+              readOnly
+              className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md"
+            />
+          </div>
+
           <div className="flex justify-between mt-6">
             <button
               type="submit"

@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import Sidnav from "./sidnav"; // Sidebar
+import Sidnav from "./sidnav";
 
 function TambahJenisTagihan() {
   const [formData, setFormData] = useState({
-    Nama: "",
     JenisTagihan: "",
+    Tagihan: "",
     JatuhTempo: "",
     Keterangan: "",
   });
@@ -35,7 +35,7 @@ function TambahJenisTagihan() {
         showConfirmButton: false,
       });
 
-      navigate("/TabelJenisTagihan");
+      navigate("/JenisTagihan");
     } catch (error) {
       console.error("Gagal tambah data:", error);
       Swal.fire("Error", "Gagal menambahkan data!", "error");
@@ -46,23 +46,11 @@ function TambahJenisTagihan() {
     <div className="flex">
       <Sidnav />
       <div className="ml-60 p-6 w-full min-h-screen bg-pink-50">
-        <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-center text-pink-700 mb-4">
+        <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 my-14">
+          <h2 className="text-2xl font-bold text-center text-pink-700 mb-6">
             Tambah Jenis Tagihan
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-gray-700 mb-1">Nama</label>
-              <input
-                type="text"
-                name="Nama"
-                value={formData.Nama}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:ring-pink-400 focus:outline-none"
-              />
-            </div>
-
             <div>
               <label className="block text-gray-700 mb-1">Jenis Tagihan</label>
               <input
@@ -74,19 +62,17 @@ function TambahJenisTagihan() {
                 className="w-full border border-gray-300 px-4 py-2 rounded-md focus:ring-pink-400 focus:outline-none"
               />
             </div>
-
             <div>
-              <label className="block text-gray-700 mb-1">Jatuh Tempo</label>
+              <label className="block text-gray-700 mb-1">Tagihan</label>
               <input
-                type="date"
-                name="JatuhTempo"
-                value={formData.JatuhTempo}
+                type="text"
+                name="Tagihan"
+                value={formData.Tagihan}
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-300 px-4 py-2 rounded-md focus:ring-pink-400 focus:outline-none"
               />
             </div>
-
             <div>
               <label className="block text-gray-700 mb-1">Keterangan</label>
               <textarea

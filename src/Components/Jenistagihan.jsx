@@ -1,19 +1,22 @@
+// File: JenisTagihan.jsx (Komponen Utamamu - Sekarang sudah lengkap R & D, dan siap untuk C & U)
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidnav from "./sidnav";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import Swal from "sweetalert2"; // ✅ Tambahkan ini
+import Swal from "sweetalert2";
 
 function JenisTagihan() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedJenis, setSelectedJenis] = useState("all");
 
+  // READ (R) - Mengambil data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/login");
+        // Pastikan endpoint sesuai data jenis tagihan
+        const res = await axios.get("http://localhost:5000/jenistagihan");
         setData(res.data);
       } catch (err) {
         console.error("Gagal mengambil data:", err);
@@ -25,7 +28,7 @@ function JenisTagihan() {
     fetchData();
   }, []);
 
-  // ✅ Handler untuk hapus data
+  // DELETE (D) - Menghapus data
   const handleDelete = async (id) => {
     const konfirmasi = await Swal.fire({
       title: "Serius Kamu?",
@@ -35,76 +38,22 @@ function JenisTagihan() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Hapus data",
+      cancelButtonText: "Batal", // Menambah text Batal
     });
 
     if (konfirmasi.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/login/${id}`);
+        // Pastikan endpoint sesuai
+        await axios.delete(`http://localhost:5000/jenistagihan/${id}`);
         setData((prev) => prev.filter((item) => item.id !== id));
         Swal.fire("Deleted!", "Data anda telah dihapus", "success");
       } catch (err) {
-        Swal.fire("Error!", "Terjadi kesalahan saat menghapus data.", "error");
+        // Menampilkan error dari server jika ada, atau error umum
+        const errorMessage = err.response?.data?.message || "Terjadi kesalahan saat menghapus data.";
+        Swal.fire("Error!", errorMessage, "error");
       }
     }
   };
-
-  // ✅ Handler untuk ubah status setelah konfirmasi
-  const handleToggleStatus = async (id) => {
-    const itemToUpdate = data.find((item) => item.id === id);
-    if (!itemToUpdate) return;
-
-    const newStatus =
-      itemToUpdate.Status?.toLowerCase() === "sudah lunas"
-        ? "Belum Lunas"
-        : "Sudah Lunas";
-
-    const konfirmasi = await Swal.fire({
-      title: "Yakin ingin ubah status?",
-      text: `Status akan diubah menjadi "${newStatus}"`,
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Ya, ubah",
-      cancelButtonText: "Batal",
-    });
-
-    if (konfirmasi.isConfirmed) {
-      try {
-        await axios.patch(`http://localhost:5000/login/${id}`, {
-          Status: newStatus,
-        });
-
-        setData((prev) =>
-          prev.map((item) =>
-            item.id === id ? { ...item, Status: newStatus } : item
-          )
-        );
-
-        Swal.fire("Berhasil!", "Status berhasil diubah.", "success");
-      } catch (err) {
-        Swal.fire("Error!", "Gagal mengubah status.", "error");
-        console.error(err);
-      }
-    }
-  };
-
-  const filteredData = (() => {
-    switch (selectedJenis) {
-      case "spp":
-        return data.filter(
-          (item) => item.Jenis?.trim().toLowerCase() === "tagihan spp"
-        );
-      case "uangGedung":
-        return data.filter(
-          (item) => item.Jenis?.trim().toLowerCase() === "uang gedung"
-        );
-      case "seragamSekolah":
-        return data.filter(
-          (item) => item.Jenis?.trim().toLowerCase() === "seragam sekolah"
-        );
-      default:
-        return data;
-    }
-  })();
 
   return (
     <div className="flex">
@@ -116,43 +65,41 @@ function JenisTagihan() {
           transition={{ duration: 0.5 }}
           className="p-8 w-full max-w-5xl"
         >
-          <div className="flex flex-wrap items-end justify-between mb-4 gap-2">
+          <h1 className="text-3xl font-bold text-pink-800 mb-6">Kelola Jenis Tagihan</h1>
+          
+          <div className="flex justify-between items-center mb-4 gap-2">
             <div className="text-pink-700 font-semibold">
-              Total Data: {filteredData.length} orang
+              Total Data: {data.length} jenis tagihan
             </div>
 
+            {/* CREATE (C) - Tombol Tambah */}
             <div>
-              <Link to="/TambahData">
+              <Link to="/TambahJenisTagihan">
                 <button className="bg-pink-500 hover:bg-pink-600 rounded-md text-white font-bold py-2 px-4 transition hover:scale-[1.06]">
-                  + Tambah Data
+                  + Tambah Jenis Tagihan
                 </button>
               </Link>
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto shadow-lg">
             {loading ? (
-              <div className="text-center py-4 text-pink-600">
-                Memuat data...
-              </div>
-            ) : filteredData.length === 0 ? (
-              <div className="text-center py-4 text-pink-600">
-                Belum ada data
-              </div>
+              <div className="text-center py-4 text-pink-600">Memuat data...</div>
+            ) : data.length === 0 ? (
+              <div className="text-center py-4 text-pink-600">Belum ada data</div>
             ) : (
+              // READ (R) - Tampilan Tabel
               <table className="min-w-full border border-pink-200 rounded-md overflow-hidden">
                 <thead className="bg-purple-200 text-purple-800">
                   <tr>
                     <th className="px-2 py-2 text-right">No</th>
-                    <th className="px-4 py-2 text-center">Nama</th>
-                    <th className="px-4 py-2 text-center">Email</th>
-                    <th className="px-4 py-2 text-center">Jenis</th>
-                    <th className="px-4 py-2 text-center">Status</th>
+                    <th className="px-4 py-2 text-center">Jenis Tagihan</th>
+                    <th className="px-4 py-2 text-center">Keterangan</th>
                     <th className="px-4 py-2 text-center">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredData.map((item, index) => (
+                  {data.map((item, index) => (
                     <motion.tr
                       key={item.id}
                       initial={{ opacity: 0, y: 10 }}
@@ -163,36 +110,28 @@ function JenisTagihan() {
                       <td className="border border-pink-200 px-2 py-2 text-right">
                         {index + 1}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2">{item.Nama}</td>
-                      <td className="border border-pink-200 px-4 py-2">{item.Email}</td>
-                      <td className="border border-pink-200 px-4 py-2">{item.Jenis}</td>
-                      <td
-                        className={`border border-pink-200 px-3 py-2 text-center font-semibold ${
-                          item.Status === "Sudah Lunas"
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }`}
-                      >
-                        {item.Status || "Belum Lunas"}
+                      <td className="border border-pink-200 px-4 py-2 text-center">
+                        {item.JenisTagihan}
                       </td>
-                      <td className="border px-4 py-2 text-center">
+                      <td className="border border-pink-200 px-4 py-2 text-center">
+                        {item.Keterangan}
+                      </td>
+                      <td className="border border-pink-200 px-4 py-2 text-center">
                         <div className="flex justify-center space-x-2">
-                          <Link to={`/Edit/${item.id}`}>
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white transition font-bold py-1 px-3 rounded hover:scale-[1.09]">
-                              ✍️
+                          
+                          {/* UPDATE (U) - Tombol Edit */}
+                          <Link to={`/EditJenisTagihan/${item.id}`}>
+                            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded transition hover:scale-[1.09]">
+                              ✍ Edit
                             </button>
                           </Link>
+
+                          {/* DELETE (D) - Tombol Hapus */}
                           <button
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 transition rounded hover:scale-[1.09]"
+                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded transition hover:scale-[1.09]"
                             onClick={() => handleDelete(item.id)}
                           >
-                            🗑
-                          </button>
-                          <button
-                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded hover:scale-[1.09]"
-                            onClick={() => handleToggleStatus(item.id)}
-                          >
-                            Ubah Status
+                            🗑 Hapus
                           </button>
                         </div>
                       </td>

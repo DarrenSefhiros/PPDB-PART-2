@@ -27,7 +27,11 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  const totalTagihan = data.reduce((acc, item) => acc + Number(item.Tagihan), 0);
+  const totalTagihan = data.reduce(
+    (acc, item) => acc + Number(String(item.Tagihan).replace(/\./g, "") || 0),
+    0
+  );
+
 
   return (
     <div className="flex">
@@ -101,9 +105,10 @@ function Dashboard() {
                       >
                         {item.Status || "Belum Lunas"}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2 text-right">
-                        Rp {Number(item.Tagihan).toLocaleString("id-ID")}
-                      </td>
+<td className="border border-pink-200 px-4 py-2 text-right">
+  Rp {Number(String(item.Tagihan).replace(/\./g, "") || 0).toLocaleString("id-ID")}
+</td>
+
                     </motion.tr>
                   ))
                 ) : (

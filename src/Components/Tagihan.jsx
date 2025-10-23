@@ -200,9 +200,10 @@ const handleToggleStatus = async (id) => {
                       >
                         {item.Status || "Belum Lunas"}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2 text-right">
-                        Rp {Number(item.Tagihan).toLocaleString("id-ID")}
-                      </td>
+<td className="border border-pink-200 px-4 py-2 text-right">
+  Rp {Number(String(item.Tagihan).replace(/\./g, "") || 0).toLocaleString("id-ID")}
+</td>
+
                       <td className="border px-4 py-2 text-center">
                          <div className="flex justify-center space-x-2">
                            <Link to={`/Edit/${item.id}`}>
