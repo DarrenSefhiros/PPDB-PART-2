@@ -1,20 +1,42 @@
 {
   "login": [
     {
-      "id": "a4e0",
-      "Nama": "aa",
-      "Jenis": "spp bulanan",
+      "id": "3efd",
+      "Nama": "Moreno",
+      "Jenis": "uang gedung",
       "Tagihan": "1.000.000",
-      "Email": "awd@gmail.com"
+      "Email": "d.sefh007@gmail.com",
+      "Status": "Sudah Lunas"
+    },
+    {
+      "id": "5492",
+      "Nama": "Ayas",
+      "Jenis": "uang gedung",
+      "Tagihan": "1.000.000",
+      "Email": "d.sefh007@gmail.com"
+    },
+    {
+      "id": "e76c",
+      "Nama": "Duren",
+      "Jenis": "spp bulanan",
+      "Tagihan": "2000000",
+      "Email": "d.sefh007@gmail.com"
     }
   ],
   "jenistagihan": [
     {
-      "id": "dbd5",
-      "JenisTagihan": "spp bulanan",
+      "id": "9798",
+      "JenisTagihan": "uang gedung",
       "Tagihan": "1.000.000",
       "JatuhTempo": "",
-      "Keterangan": "aaa"
+      "Keterangan": "pembayaran uang gedung"
+    },
+    {
+      "id": "898d",
+      "JenisTagihan": "spp bulanan",
+      "Tagihan": "2000000",
+      "JatuhTempo": "",
+      "Keterangan": "pembayaran spp"
     }
   ],
   "users": [

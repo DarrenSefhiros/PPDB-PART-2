@@ -1,5 +1,3 @@
-// File: JenisTagihan.jsx (Komponen Utamamu - Sekarang sudah lengkap R & D, dan siap untuk C & U)
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidnav from "./sidnav";
@@ -11,11 +9,10 @@ function JenisTagihan() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // READ (R) - Mengambil data
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Pastikan endpoint sesuai data jenis tagihan
         const res = await axios.get("http://localhost:5000/jenistagihan");
         setData(res.data);
       } catch (err) {
@@ -38,17 +35,15 @@ function JenisTagihan() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Hapus data",
-      cancelButtonText: "Batal", // Menambah text Batal
+      cancelButtonText: "Batal", 
     });
 
     if (konfirmasi.isConfirmed) {
       try {
-        // Pastikan endpoint sesuai
         await axios.delete(`http://localhost:5000/jenistagihan/${id}`);
         setData((prev) => prev.filter((item) => item.id !== id));
         Swal.fire("Deleted!", "Data anda telah dihapus", "success");
       } catch (err) {
-        // Menampilkan error dari server jika ada, atau error umum
         const errorMessage = err.response?.data?.message || "Terjadi kesalahan saat menghapus data.";
         Swal.fire("Error!", errorMessage, "error");
       }
@@ -69,10 +64,8 @@ function JenisTagihan() {
           
           <div className="flex justify-between items-center mb-4 gap-2">
             <div className="text-pink-700 font-semibold">
-              Total Data: {data.length} jenis tagihan
+              Total Jenis Tagihan: {data.length}
             </div>
-
-            {/* CREATE (C) - Tombol Tambah */}
             <div>
               <Link to="/TambahJenisTagihan">
                 <button className="bg-pink-500 hover:bg-pink-600 rounded-md text-white font-bold py-2 px-4 transition hover:scale-[1.06]">
@@ -88,7 +81,6 @@ function JenisTagihan() {
             ) : data.length === 0 ? (
               <div className="text-center py-4 text-pink-600">Belum ada data</div>
             ) : (
-              // READ (R) - Tampilan Tabel
               <table className="min-w-full border border-pink-200 rounded-md overflow-hidden">
                 <thead className="bg-purple-200 text-purple-800">
                   <tr>
@@ -118,15 +110,11 @@ function JenisTagihan() {
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
                         <div className="flex justify-center space-x-2">
-                          
-                          {/* UPDATE (U) - Tombol Edit */}
                           <Link to={`/EditJenisTagihan/${item.id}`}>
                             <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded transition hover:scale-[1.09]">
                               ✍ Edit
                             </button>
                           </Link>
-
-                          {/* DELETE (D) - Tombol Hapus */}
                           <button
                             className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded transition hover:scale-[1.09]"
                             onClick={() => handleDelete(item.id)}

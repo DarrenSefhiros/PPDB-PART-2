@@ -44,8 +44,7 @@ function TambahJenisTagihan() {
 
   return (
     <div className="flex">
-      <Sidnav />
-      <div className="ml-60 p-6 w-full min-h-screen bg-pink-50">
+      <div className="ml-30 p-6 w-full min-h-screen bg-gradient-to-br from-pink-400 to-purple-600">
         <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 my-14">
           <h2 className="text-2xl font-bold text-center text-pink-700 mb-6">
             Tambah Jenis Tagihan
@@ -89,14 +88,14 @@ function TambahJenisTagihan() {
                 type="submit"
                 className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded font-bold"
               >
-                Simpan
+                Tambah
               </button>
               <button
                 type="button"
                 onClick={() => navigate("/JenisTagihan")}
                 className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded font-bold"
               >
-                Batal
+                Kembali
               </button>
             </div>
           </form>

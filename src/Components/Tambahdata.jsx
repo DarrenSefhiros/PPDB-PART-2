@@ -150,11 +150,7 @@ function TambahData() {
               className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
             />
           </div>
-
-          {/* EMAIL */}
           <input type="hidden" name="Email" value={formData.Email} />
-
-          {/* TOMBOL */}
           <div className="flex justify-between mt-6">
             <button
               type="submit"
@@ -167,7 +163,7 @@ function TambahData() {
             </button>
             <button
               type="button"
-              onClick={() => navigate('/Dashboard')}
+              onClick={() => navigate('/Tagihan')}
               className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded"
             >
               Kembali

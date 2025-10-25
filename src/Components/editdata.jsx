@@ -133,7 +133,7 @@ function EditData() {
               name="Tagihan"
               type="text"
               value={formData.Tagihan}
-              readOnly
+              onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md"
             />
           </div>

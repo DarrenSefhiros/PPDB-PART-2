@@ -8,6 +8,8 @@ import Tagihan from './Components/Tagihan'
 import Jenistagihan from './Components/Jenistagihan'
 import EditData from './Components/editdata'
 import TambahJenisTagihan from './Components/Tambahjenistagihan'
+import EditJenisTagihan from './Components/Editjenistagihan'
+
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
       <Route path="/Tagihan" element={<Tagihan />} />
       <Route path="/Jenistagihan" element={<Jenistagihan />} />
       <Route path="/Tambahjenistagihan" element={<TambahJenisTagihan />} />
+      <Route path="/EditJenisTagihan/:id" element={<EditJenisTagihan />} />
       <Route path="/Edit/:id" element={<EditData />} />
     </Routes>
   )
