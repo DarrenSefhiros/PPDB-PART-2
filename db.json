@@ -1,42 +1,27 @@
 {
   "login": [
     {
-      "id": "3efd",
-      "Nama": "Moreno",
-      "Jenis": "uang gedung",
+      "id": "2d14",
+      "Nama": "awd",
+      "Jenis": "uang seragam",
       "Tagihan": "1.000.000",
-      "Email": "d.sefh007@gmail.com",
-      "Status": "Sudah Lunas"
+      "Email": "abb@gmail.com"
     },
     {
-      "id": "5492",
-      "Nama": "Ayas",
-      "Jenis": "uang gedung",
+      "id": "4a9a",
+      "Nama": "aaaa",
+      "Jenis": "uang seragam",
       "Tagihan": "1.000.000",
-      "Email": "d.sefh007@gmail.com"
-    },
-    {
-      "id": "e76c",
-      "Nama": "Duren",
-      "Jenis": "spp bulanan",
-      "Tagihan": "2000000",
-      "Email": "d.sefh007@gmail.com"
+      "Email": "abb@gmail.com"
     }
   ],
   "jenistagihan": [
     {
-      "id": "9798",
-      "JenisTagihan": "uang gedung",
+      "id": "f203",
+      "JenisTagihan": "uang seragam",
       "Tagihan": "1.000.000",
       "JatuhTempo": "",
-      "Keterangan": "pembayaran uang gedung"
-    },
-    {
-      "id": "898d",
-      "JenisTagihan": "spp bulanan",
-      "Tagihan": "2000000",
-      "JatuhTempo": "",
-      "Keterangan": "pembayaran spp"
+      "Keterangan": "aaaa"
     }
   ],
   "users": [
@@ -85,6 +70,21 @@
     {
       "id": "0893",
       "Email": "awd@gmail.com",
+      "Password": "awd"
+    },
+    {
+      "id": "b3b0",
+      "Email": "Ren@gmail.com",
+      "Password": "awwd"
+    },
+    {
+      "id": "6db9",
+      "Email": "awd@gmail.com",
+      "Password": "awd"
+    },
+    {
+      "id": "64fe",
+      "Email": "abb@gmail.com",
       "Password": "awd"
     }
   ]

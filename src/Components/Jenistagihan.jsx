@@ -25,7 +25,7 @@ function JenisTagihan() {
     fetchData();
   }, []);
 
-  // DELETE (D) - Menghapus data
+
   const handleDelete = async (id) => {
     const konfirmasi = await Swal.fire({
       title: "Serius Kamu?",
@@ -42,7 +42,7 @@ function JenisTagihan() {
       try {
         await axios.delete(`http://localhost:5000/jenistagihan/${id}`);
         setData((prev) => prev.filter((item) => item.id !== id));
-        Swal.fire("Deleted!", "Data anda telah dihapus", "success");
+        Swal.fire("Terhapus!", "Data anda telah dihapus", "success");
       } catch (err) {
         const errorMessage = err.response?.data?.message || "Terjadi kesalahan saat menghapus data.";
         Swal.fire("Error!", errorMessage, "error");

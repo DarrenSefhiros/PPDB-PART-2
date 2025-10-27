@@ -155,82 +155,79 @@ function Tagihan() {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            {loading ? (
-              <div className="text-center py-4 text-pink-600">Memuat data...</div>
-            ) : filteredData.length === 0 ? (
-              <div className="text-center py-4 text-pink-600">Belum ada data</div>
-            ) : (
-              <table className="min-w-full border border-pink-200 rounded-md overflow-hidden">
-                <thead className="bg-purple-200 text-purple-800">
-                  <tr>
-                    <th className="px-2 py-2 text-right">No</th>
-                    <th className="px-4 py-2 text-center">Nama</th>
-                    <th className="px-4 py-2 text-center">Email</th>
-                    <th className="px-4 py-2 text-center">Jenis</th>
-                    <th className="px-4 py-2 text-center">Status</th>
-                    <th className="px-4 py-2 text-center">Tagihan</th>
-                    <th className="px-4 py-2 text-center">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredData.map((item, index) => (
-                    <motion.tr
-                      key={item.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="bg-pink-100 hover:bg-pink-200 transition"
-                    >
-                      <td className="border border-pink-200 px-2 py-2 text-right">
-                        {index + 1}
-                      </td>
-                      <td className="border border-pink-200 px-4 py-2">{item.Nama}</td>
-                      <td className="border border-pink-200 px-4 py-2">{item.Email}</td>
-                      <td className="border border-pink-200 px-4 py-2">{item.Jenis}</td>
-                      <td
-                        className={`border border-pink-200 px-4 py-2 text-center font-semibold ${
-                          item.Status === "Sudah Lunas"
-                            ? "text-green-600"
-                            : "text-yellow-600"
-                        }`}
-                      >
-                        {item.Status || "Belum Lunas"}
-                      </td>
-                      <td className="border border-pink-200 px-4 py-2 text-right">
-                        Rp{" "}
-                        {Number(
-                          String(item.Tagihan).replace(/\./g, "") || 0
-                        ).toLocaleString("id-ID")}
-                      </td>
+<div className="overflow-x-auto w-full">
+  {loading ? (
+    <div className="text-center py-4 text-pink-600 font-semibold">Memuat data...</div>
+  ) : filteredData.length === 0 ? (
+    <div className="text-center py-4 text-pink-600 font-semibold">Belum ada data</div>
+  ) : (
+    <table className="min-w-full bg-white rounded-lg overflow-hidden shadow-lg border border-pink-200">
+      <thead className="bg-pink-200 text-pink-900 uppercase text-sm font-semibold">
+        <tr>
+          <th className="px-3 py-2 text-center">No</th>
+          <th className="px-4 py-2 text-center">Nama</th>
+          <th className="px-4 py-2 text-center">Email</th>
+          <th className="px-4 py-2 text-center">Jenis</th>
+          <th className="px-4 py-2 text-center">Status</th>
+          <th className="px-4 py-2 text-center">Tagihan</th>
+          <th className="px-4 py-2 text-center">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {filteredData.map((item, index) => (
+          <motion.tr
+            key={item.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05 }}
+            className={`transition hover:bg-pink-100 ${
+              index % 2 === 0 ? "bg-pink-50" : "bg-pink-100"
+            }`}
+          >
+            <td className="px-3 py-2 text-center text-pink-700 font-medium">{index + 1}</td>
+            <td className="px-4 py-2 text-pink-700 font-medium">{item.Nama}</td>
+            <td className="px-4 py-2 text-pink-600">{item.Email}</td>
+            <td className="px-4 py-2 text-pink-700">{item.Jenis}</td>
+            <td
+              className={`px-4 py-2 text-center font-semibold ${
+                item.Status === "Sudah Lunas"
+                  ? "text-green-600"
+                  : "text-yellow-600"
+              }`}
+            >
+              {item.Status || "Belum Lunas"}
+            </td>
+            <td className="px-4 py-2 text-right text-pink-700 font-medium">
+              Rp {Number(String(item.Tagihan).replace(/\./g, "") || 0).toLocaleString("id-ID")}
+            </td>
+            <td className="px-4 py-2 text-center">
+              <div className="flex justify-center gap-2">
+                <Link to={`/Edit/${item.id}`}>
+                  <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded transition transform hover:scale-105">
+                    ✍️
+                  </button>
+                </Link>
+                <button
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded transition transform hover:scale-105"
+                  onClick={() => handleDelete(item.id)}
+                >
+                  🗑
+                </button>
+                <button
+                  className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-1 px-3 rounded transition transform hover:scale-105"
+                  onClick={() => handleToggleStatus(item.id)}
+                >
+                  Ubah Status
+                </button>
+              </div>
+            </td>
+          </motion.tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</div>
 
-                      <td className="border px-4 py-2 text-center">
-                        <div className="flex justify-center space-x-2">
-                          <Link to={`/Edit/${item.id}`}>
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white transition font-bold py-1 px-3 rounded hover:scale-[1.09]">
-                              ✍️
-                            </button>
-                          </Link>
-                          <button
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 transition rounded hover:scale-[1.09]"
-                            onClick={() => handleDelete(item.id)}
-                          >
-                            🗑
-                          </button>
-                          <button
-                            className="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded hover:scale-[1.09]"
-                            onClick={() => handleToggleStatus(item.id)}
-                          >
-                            Ubah Status
-                          </button>
-                        </div>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
         </motion.div>
       </div>
     </div>

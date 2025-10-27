@@ -39,7 +39,7 @@ function TambahData() {
     const { name, value } = e.target;
 
     if (name === 'Jenis') {
-      // 🔹 Cari data jenis yang dipilih
+
       const selectedJenis = jenisTagihanList.find(
         (item) => item.JenisTagihan === value
       );
@@ -47,7 +47,7 @@ function TambahData() {
       setFormData({
         ...formData,
         Jenis: value,
-        // 🔹 Isi otomatis nominal tagihan
+
         Tagihan: selectedJenis ? selectedJenis.Tagihan || '' : '',
       });
     } else {

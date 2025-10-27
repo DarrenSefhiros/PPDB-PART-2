@@ -63,7 +63,7 @@ function Register() {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Register</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="Email" className="block text-gray-700 mb-2">Email</label>
+            <label htmlFor="Email" className="block text-gray-700 mb-2 font-bold">Email</label>
             <input
               id="Email"
               name="Email"
@@ -76,7 +76,7 @@ function Register() {
             />
           </div>
  <div className="mb-4 relative">
-  <label htmlFor="Password" className="block text-gray-700 mb-2">Password</label>
+  <label htmlFor="Password" className="block text-gray-700 mb-2 font-bold">Password</label>
   <input
     id="Password"
     name="Password"
@@ -91,7 +91,7 @@ function Register() {
     onClick={() => setShowPassword(!showPassword)}
     className="absolute right-3 top-[45px] text-gray-600 cursor-pointer"
   >
-    {showPassword ? <FaEyeSlash /> : <FaEye />}
+    {showPassword ? <FaEye /> : <FaEyeSlash />}
   </span>
 </div>
 
@@ -106,7 +106,8 @@ function Register() {
 </div>
         </form>
                 <div className="text-center mt-6">
-                  <a href="/" className="text-sm text-blue-700 hover:underline">Sudah punya akun? login</a>
+                  <span>Sudah punya akun?</span>
+                  <a href="/" className="text-blue-700 underline"> login</a>
         </div>
       </div>
     </div>

@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
-import Sidnav from "./sidnav";
 
 function EditJenisTagihan() {
   const { id } = useParams();
@@ -17,7 +16,6 @@ function EditJenisTagihan() {
 
   const [loading, setLoading] = useState(true);
 
-  // Ambil data jenis tagihan berdasarkan ID
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,32 +32,41 @@ function EditJenisTagihan() {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [id]);
 
-  // Handle input
   const handleChange = (e) => {
     let { name, value } = e.target;
 
-    // Kalau input Tagihan, pastikan hanya angka
     if (name === "Tagihan") {
-      value = value.replace(/[^0-9]/g, ""); // Hapus karakter non-angka
+      value = value.replace(/[^0-9]/g, ""); // hanya angka
     }
 
     setFormData({ ...formData, [name]: value });
   };
 
-  // Simpan perubahan
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // Update Jenis Tagihan
       await axios.put(`http://localhost:5000/jenistagihan/${id}`, formData);
+
+      // Update semua siswa yang memakai jenis tagihan ini
+      const siswaRes = await axios.get(
+        `http://localhost:5000/login?Jenis=${formData.JenisTagihan}`
+      );
+
+      for (const siswa of siswaRes.data) {
+        await axios.patch(`http://localhost:5000/login/${siswa.id}`, {
+          Tagihan: formData.Tagihan,
+        });
+      }
+
       await Swal.fire({
         icon: "success",
         title: "Berhasil!",
-        text: "Data jenis tagihan telah diperbarui.",
+        text: "Data jenis tagihan dan nominal siswa telah diperbarui.",
         timer: 1500,
         showConfirmButton: false,
       });
@@ -81,8 +88,7 @@ function EditJenisTagihan() {
 
   return (
     <div className="flex">
-      <Sidnav />
-      <div className="ml-60 min-h-screen bg-gradient-to-br from-pink-400 to-purple-600 flex flex-col items-center p-6 w-full">
+      <div className="ml-30 min-h-screen bg-gradient-to-br from-pink-400 to-purple-600 flex flex-col items-center p-6 w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -94,7 +100,6 @@ function EditJenisTagihan() {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Jenis Tagihan */}
             <div>
               <label
                 htmlFor="JenisTagihan"
@@ -113,7 +118,6 @@ function EditJenisTagihan() {
               />
             </div>
 
-            {/* Keterangan */}
             <div>
               <label
                 htmlFor="Keterangan"
@@ -131,7 +135,6 @@ function EditJenisTagihan() {
               ></textarea>
             </div>
 
-            {/* Nominal Tagihan */}
             <div>
               <label
                 htmlFor="Tagihan"
@@ -151,13 +154,12 @@ function EditJenisTagihan() {
               />
             </div>
 
-            {/* Tombol */}
             <div className="flex justify-between mt-6">
               <button
                 type="submit"
                 className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded transition"
               >
-             Simpan
+                Simpan
               </button>
               <button
                 type="button"
