@@ -9,7 +9,7 @@ function TambahData() {
     Nama: '',
     Jenis: '',
     Tagihan: '',
-    Email: '',
+    Tanggal: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,6 @@ function TambahData() {
 
     fetchJenisTagihan();
 
-    // 🔹 Ambil Email dari localStorage (jangan diubah)
     const loginData = JSON.parse(localStorage.getItem('loginData'));
     if (loginData?.Email) {
       setFormData((prev) => ({ ...prev, Email: loginData.Email }));
@@ -77,7 +76,7 @@ function TambahData() {
         Nama: '',
         Jenis: '',
         Tagihan: '',
-        Email: formData.Email, // tetap simpan email
+        Tanggal: '',
       });
 
       navigate('/Dashboard');
@@ -150,14 +149,29 @@ function TambahData() {
               className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
             />
           </div>
+          {/* TANGGAL TAGIHAN */}
+          <div className="mb-4">
+            <label htmlFor="Tanggal" className="block text-gray-700 mb-2">
+              Tanggal Tagihan
+            </label>
+            <input
+              id="Tanggal"
+              name="Tanggal"
+              type="date"
+              value={formData.Tanggal}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+              required
+            />
+          </div>
+
           <input type="hidden" name="Email" value={formData.Email} />
           <div className="flex justify-between mt-6">
             <button
               type="submit"
               disabled={loading}
-              className={`bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded ${
-                loading ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              className={`bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded ${loading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
             >
               {loading ? 'Memproses...' : 'Tambah'}
             </button>

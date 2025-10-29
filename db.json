@@ -1,18 +1,12 @@
 {
   "login": [
     {
-      "id": "2d14",
-      "Nama": "awd",
+      "id": "5c4c",
+      "Nama": "paprika",
       "Jenis": "uang seragam",
       "Tagihan": "1.000.000",
-      "Email": "abb@gmail.com"
-    },
-    {
-      "id": "4a9a",
-      "Nama": "aaaa",
-      "Jenis": "uang seragam",
-      "Tagihan": "1.000.000",
-      "Email": "abb@gmail.com"
+      "Tanggal": "2025-05-06",
+      "Email": "awd@gmail.com"
     }
   ],
   "jenistagihan": [
@@ -22,6 +16,13 @@
       "Tagihan": "1.000.000",
       "JatuhTempo": "",
       "Keterangan": "aaaa"
+    },
+    {
+      "id": "d342",
+      "JenisTagihan": "spp bulanan",
+      "Tagihan": "390000",
+      "JatuhTempo": "",
+      "Keterangan": "konichiwa"
     }
   ],
   "users": [

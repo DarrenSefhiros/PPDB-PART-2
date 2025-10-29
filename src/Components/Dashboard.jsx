@@ -4,7 +4,6 @@ import Sidnav from "./sidnav";
 import { motion } from "framer-motion";
 import { FaCheckCircle, FaTimesCircle, FaMoneyBillWave, FaWallet } from "react-icons/fa";
 
-// Simple Card component
 function Card({ title, value, icon }) {
   return (
     <div className="bg-white shadow-md rounded-md p-6 text-center hover:scale-[1.03] transition flex flex-col items-center justify-center gap-2">
@@ -23,18 +22,23 @@ function Dashboard() {
     const loginData = JSON.parse(localStorage.getItem("loginData"));
     if (!loginData?.Email) return;
 
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:5000/login?Email=${loginData.Email}`
-        );
-        setData(res.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+const fetchData = async () => {
+  try {
+    const res = await axios.get(
+      `http://localhost:5000/login?Email=${loginData.Email}`
+    );
+
+    // ✅ Biar data baru muncul paling atas
+    const sortedData = [...res.data].reverse();
+    setData(sortedData);
+
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
     fetchData();
   }, []);
