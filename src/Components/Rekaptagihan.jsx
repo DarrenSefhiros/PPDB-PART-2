@@ -5,9 +5,9 @@
   import Sidnav from "./Sidnav";
   import { motion } from "framer-motion";
 
-  function Tagihan() {
+  function Rekaptagihan() {
     const [data, setData] = useState([]);
-    const [jenisTagihan, setJenisTagihan] = useState([]); // ✅ daftar jenis dari backend
+    const [jenisTagihan, setJenisTagihan] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedJenis, setSelectedJenis] = useState("all");
 
@@ -31,48 +31,6 @@
     }, []);
 
 
-    const handleToggleStatus = async (id) => {
-      const itemToUpdate = data.find((item) => item.id === id);
-      if (!itemToUpdate) return;
-
-      const newStatus =
-        itemToUpdate.Status?.toLowerCase() === "sudah lunas"
-          ? "Belum Lunas"
-          : "Sudah Lunas";
-
-      const konfirmasi = await Swal.fire({
-        title: "Ubah Status Pembayaran?",
-        text: `Status akan diubah menjadi: ${newStatus}`,
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#28a745",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Ya, ubah",
-        cancelButtonText: "Batal",
-      });
-
-      if (konfirmasi.isConfirmed) {
-        try {
-          await axios.patch(`http://localhost:5000/login/${id}`, {
-            Status: newStatus,
-          });
-
-          setData((prev) =>
-            prev.map((item) =>
-              item.id === id ? { ...item, Status: newStatus } : item
-            )
-          );
-
-          Swal.fire({
-            title: "Berhasil!",
-            text: `Status berhasil diubah ke "${newStatus}"`,
-            icon: "success",
-          });
-        } catch (err) {
-          Swal.fire("Gagal!", "Terjadi kesalahan saat mengubah status.", "error");
-        }
-      }
-    };
 
 
     const handleDelete = async (id) => {
@@ -144,16 +102,9 @@
                 Total Data: {filteredData.length} orang
               </div>
 
-              <div>
-                <Link to="/TambahData">
-                  <button className="bg-pink-500 hover:bg-pink-600 rounded-md text-white font-bold py-2 px-4 transition hover:scale-[1.06]">
-                    + Tambah Data
-                  </button>
-                </Link>
-              </div>
             </div>
 
-            <div className="">
+            <div className="overflow-x-auto">
               {loading ? (
                 <div className="text-center py-4 text-pink-600">Memuat data...</div>
               ) : filteredData.length === 0 ? (
@@ -168,8 +119,6 @@
         <th className="px-4 py-2 w-36">Jenis</th>
         <th className="px-4 py-2 w-32">Tagihan</th>
         <th className="px-4 py-2 w-36">Tanggal</th>
-        <th className="px-4 py-2 w-32">Status</th>
-        <th className="px-4 py-2 w-48">Aksi</th>
       </tr>
     </thead>
 
@@ -203,42 +152,10 @@
           <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
             {item.Tanggal}
           </td>
-            <td
-              className={`border border-pink-200 px-4 py-2 text-center font-semibold text-nowrap align-middle ${
-                item.Status === "Sudah Lunas"
-                  ? "text-green-600"
-                  : "text-yellow-600"
-              }`}
-            >
-              {item.Status || "Belum Lunas"}
-            </td>
-              
-          <td className="border border-pink-200 px-4 py-2 text-center align-middle">
-            <div className="flex justify-center items-center gap-2">
-              <Link to={`/Edit/${item.id}`}>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105">
-                  ✏️
-                </button>
-              </Link>
-              <button
-                onClick={() => handleDelete(item.id)}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold w-12 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105"
-              >
-                🗑️
-              </button>
-              <button
-                onClick={() => handleToggleStatus(item.id)}
-                className="bg-green-500 hover:bg-green-600 text-white text-nowrap font-bold text-xs py-2 px-3 font-sans text-2xl rounded-md transition-transform hover:scale-105"
-              >
-                Ubah Status
-              </button>
-            </div>
-          </td>
         </motion.tr>
       ))}
     </tbody>
-  </table>
-
+  </table>  
               )}
             </div>
           </motion.div>
@@ -247,4 +164,4 @@
     );
   }
 
-  export default Tagihan;
+  export default Rekaptagihan;

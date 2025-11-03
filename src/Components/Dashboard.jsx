@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Sidnav from "./sidnav";
+import Sidnav from "./Sidnav";
 import { motion } from "framer-motion";
 import { FaCheckCircle, FaTimesCircle, FaMoneyBillWave, FaWallet } from "react-icons/fa";
 

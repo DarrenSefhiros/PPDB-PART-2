@@ -9,6 +9,9 @@ import Jenistagihan from './Components/Jenistagihan'
 import EditData from './Components/editdata'
 import TambahJenisTagihan from './Components/Tambahjenistagihan'
 import EditJenisTagihan from './Components/Editjenistagihan'
+import Rekaptagihan from './Components/Rekaptagihan'
+import Tabelsiswa from './Datasiswa/Tabelsiswa'
+import TambahDataKategori from './Datasiswa/Tambahdatakategori'
 
 
 function App() {
@@ -19,8 +22,11 @@ function App() {
       <Route path="/Register" element={<Register />} />
       <Route path="/Tambahdata" element={<Tambahdata />} />
       <Route path="/Tagihan" element={<Tagihan />} />
+      <Route path="/Rekaptagihan" element={<Rekaptagihan />} />
       <Route path="/Jenistagihan" element={<Jenistagihan />} />
+      <Route path="/KategoriData" element={<Tabelsiswa />} />
       <Route path="/Tambahjenistagihan" element={<TambahJenisTagihan />} />
+      <Route path="/TambahDataKategori" element={<TambahDataKategori />} />
       <Route path="/EditJenisTagihan/:id" element={<EditJenisTagihan />} />
       <Route path="/Edit/:id" element={<EditData />} />
     </Routes>

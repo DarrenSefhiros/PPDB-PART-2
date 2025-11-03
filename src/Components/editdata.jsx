@@ -18,7 +18,6 @@ function EditData() {
   // 🔧 Tambahkan ini
   const [jenisTagihanList, setJenisTagihanList] = useState([]);
 
-  // 🔧 Ambil data tagihan yang mau diedit + data jenis tagihan dari server
   useEffect(() => {
     const fetchData = async () => {
       try {

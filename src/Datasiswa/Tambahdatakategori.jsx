@@ -3,23 +3,23 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
-function TambahData() {
+function TambahDataKategori() {
   const [jenisTagihanList, setJenisTagihanList] = useState([]);
   const [formData, setFormData] = useState({
     Nama: '',
-    Jenis: '',
-    Tagihan: '',
-    Tanggal: '',
+    Email: '',
+    Jabatan: '',
+    Kategori: '',
   });
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 🔹 Ambil data dari tabel JenisTagihan
+    // 🔹 Ambil data dari tabel Kesiswaan
     const fetchJenisTagihan = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/jenistagihan');
+        const res = await axios.get('http://localhost:5000/Kesiswaan');
         setJenisTagihanList(res.data);
       } catch (error) {
         console.error('Gagal fetch jenis tagihan:', error);
@@ -36,57 +36,61 @@ function TambahData() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === 'Jenis') {
-
-      const selectedJenis = jenisTagihanList.find(
-        (item) => item.JenisTagihan === value
-      );
-
-      setFormData({
-        ...formData,
-        Jenis: value,
-
-        Tagihan: selectedJenis ? selectedJenis.Tagihan || '' : '',
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+ // Tambahkan helper function untuk validasi email
+const isValidGmail = (email) => {
+  const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  return gmailRegex.test(email);
+};
 
-    try {
-      await axios.post('http://localhost:5000/login', formData);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-      await Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: 'Data anda telah disimpan.',
-        timer: 1500,
-        showConfirmButton: false,
-      });
+  // Validasi Email
+  if (!formData.Email) {
+    Swal.fire('Error', 'Email wajib diisi!', 'error');
+    setLoading(false);
+    return;
+  }
+  if (!isValidGmail(formData.Email)) {
+    Swal.fire('Error', 'Email harus berupa Gmail yang valid!', 'error');
+    setLoading(false);
+    return;
+  }
 
-      setFormData({
-        Nama: '',
-        Jenis: '',
-        Tagihan: '',
-        Tanggal: '',
-      });
+  try {
+    // 🔹 Ganti endpoint POST agar tidak nabrak login
+    await axios.post('http://localhost:5000/users', formData);
 
-      navigate('/Tagihan');
-    } catch (error) {
-      console.error('Error saat submit:', error);
-      Swal.fire('Error', 'Gagal menyimpan data!', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
+    await Swal.fire({
+      icon: 'success',
+      title: 'Berhasil!',
+      text: 'Data anda telah disimpan.',
+      timer: 1500,
+      showConfirmButton: false,
+    });
+
+    setFormData({
+      Nama: '',
+      Email: '',
+      Jabatan: '',
+      Kategori: '',
+    });
+
+    navigate('/KategoriData');
+  } catch (error) {
+    console.error('Error saat submit:', error);
+    Swal.fire('Error', 'Gagal menyimpan data!', 'error');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-400 to-purple-600">
@@ -112,60 +116,60 @@ function TambahData() {
             />
           </div>
 
-          {/* JENIS TAGIHAN */}
+          {/* EMAIL */}
           <div className="mb-4">
-            <label htmlFor="Jenis" className="block text-gray-700 mb-2">
-              Jenis Tagihan
+            <label htmlFor="Email" className="block text-gray-700 mb-2">
+              Email
             </label>
-            <select
-              id="Jenis"
-              name="Jenis"
-              value={formData.Jenis}
+            <input
+              id="Email"
+              name="Email"
+              type="email"
+              placeholder="Masukan Email anda"
+              value={formData.Email}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
+            />
+          </div>
+
+          {/* KATEGORI (Dropdown) */}
+          <div className="mb-4">
+            <label htmlFor="Kategori" className="block text-gray-700 mb-2">
+              Kategori
+            </label>
+            <select
+              id="Kategori"
+              name="Kategori"
+              value={formData.Kategori}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pink-400"
+              required
             >
-              <option value="">Pilih Jenis Tagihan</option>
-              {jenisTagihanList.map((jenis) => (
-                <option key={jenis.id} value={jenis.JenisTagihan}>
-                  {jenis.JenisTagihan}
-                </option>
-              ))}
+              <option value="">-- Pilih Kategori --</option>
+              <option value="Guru">Guru</option>
+              <option value="Siswa">Siswa</option>
+              <option value="Karyawan">Karyawan</option>
             </select>
           </div>
 
-          {/* TOTAL TAGIHAN (otomatis muncul) */}
           <div className="mb-4">
-            <label htmlFor="Tagihan" className="block text-gray-700 mb-2">
-              Total Tagihan
+            <label htmlFor="Jabatan" className="block text-gray-700 mb-2">
+              Jabatan
             </label>
             <input
-              id="Tagihan"
-              name="Tagihan"
+              id="Jabatan"
+              name="Jabatan"
               type="text"
-              placeholder="Total tagihan"
-              value={formData.Tagihan}
-              readOnly
-              className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-            />
-          </div>
-          {/* TANGGAL TAGIHAN */}
-          <div className="mb-4">
-            <label htmlFor="Tanggal" className="block text-gray-700 mb-2">
-              Tanggal Tagihan
-            </label>
-            <input
-              id="Tanggal"
-              name="Tanggal"
-              type="date"
-              value={formData.Tanggal}
+              placeholder="Masukan Jabatan anda"
+              value={formData.Jabatan}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             />
           </div>
 
-          <input type="hidden" name="Email" value={formData.Email} />
+          {/* BUTTONS */}
           <div className="flex justify-between mt-6">
             <button
               type="submit"
@@ -175,6 +179,7 @@ function TambahData() {
             >
               {loading ? 'Memproses...' : 'Tambah'}
             </button>
+
             <button
               type="button"
               onClick={() => navigate('/Tagihan')}
@@ -189,4 +194,4 @@ function TambahData() {
   );
 }
 
-export default TambahData;
+export default TambahDataKategori;

@@ -1,28 +1,21 @@
 {
   "login": [
     {
-      "id": "5c4c",
-      "Nama": "paprika",
-      "Jenis": "uang seragam",
-      "Tagihan": "1.000.000",
-      "Tanggal": "2025-05-06",
-      "Email": "awd@gmail.com"
+      "id": "d6a9",
+      "Nama": "sakti kecap manis",
+      "Jenis": "spp sayang",
+      "Tagihan": "100000",
+      "Tanggal": "2025-12-05",
+      "Email": "abb@gmail.com"
     }
   ],
   "jenistagihan": [
     {
-      "id": "f203",
-      "JenisTagihan": "uang seragam",
-      "Tagihan": "1.000.000",
+      "id": "f4b5",
+      "JenisTagihan": "spp sayang",
+      "Tagihan": "100000",
       "JatuhTempo": "",
-      "Keterangan": "aaaa"
-    },
-    {
-      "id": "d342",
-      "JenisTagihan": "spp bulanan",
-      "Tagihan": "390000",
-      "JatuhTempo": "",
-      "Keterangan": "konichiwa"
+      "Keterangan": "a"
     }
   ],
   "users": [
@@ -87,6 +80,22 @@
       "id": "64fe",
       "Email": "abb@gmail.com",
       "Password": "awd"
+    },
+    {
+      "id": "2ddb",
+      "Email": "abb@gmail.com",
+      "Password": "awd",
+      "Konfirmasi": "awd"
+    },
+    {
+      "id": "e783",
+      "Nama": "awd",
+      "Email": "abb@gmail.com",
+      "Jabatan": "a",
+      "Kategori": "Siswa"
     }
+  ],
+  "Kesiswaan": [
+    {}
   ]
 }
