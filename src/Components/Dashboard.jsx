@@ -88,8 +88,8 @@ const fetchData = async () => {
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mb-6 w-full max-w-6xl"
         >
           <Card
-            title="Nominal Belum Lunas"
-            value={`Rp ${totalBelumLunas.toLocaleString("id-ID")}`}
+            title="Total Siswa"
+            value={`${totalBelumLunas.toLocaleString("id-ID")}`}
             icon={<FaTimesCircle className="text-red-500 text-2xl" />}
           />
           <Card
@@ -98,15 +98,15 @@ const fetchData = async () => {
             icon={<FaCheckCircle className="text-green-500 text-2xl" />}
           />
           <Card
-            title="Total Nominal"
-            value={`Rp ${totalTagihan.toLocaleString("id-ID")}`}
-            icon={<FaMoneyBillWave className="text-pink-500 text-2xl" />}
-          />
-          <Card
-            title="Orang Belum Lunas"
+            title="Total Belum Lunas"
             value={`${totalOrangBelumLunas} orang`}
             icon={<FaTimesCircle className="text-red-500 text-2xl" />}
           />
+            <Card
+              title="Total Tagihan"
+              value={`Rp ${totalTagihan.toLocaleString("id-ID")}`}
+              icon={<FaMoneyBillWave className="text-pink-500 text-2xl" />}
+            />
           <Card
             title="Orang Sudah Lunas"
             value={`${totalOrangSudahLunas} orang`}

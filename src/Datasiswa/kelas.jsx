@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
 
-function TabelKategori() {
+function Kelas() {
   const [data, setData] = useState([]);
   const [kategoriList, setKategoriList] = useState([]); // untuk dropdown kategori
   const [loading, setLoading] = useState(true);
@@ -16,7 +16,7 @@ function TabelKategori() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/Kesiswaan");
+        const res = await axios.get("http://localhost:5000/Kelas");
         const reversedData = res.data.reverse();
         setData(reversedData);
 
@@ -60,7 +60,7 @@ function TabelKategori() {
 
     if (konfirmasi.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/Kesiswaan/${id}`);
+        await axios.delete(`http://localhost:5000/Kelas/${id}`);
         setData((prev) => prev.filter((item) => item.id !== id));
         Swal.fire("Berhasil!", "Data telah dihapus.", "success");
       } catch (err) {
@@ -79,7 +79,7 @@ function TabelKategori() {
           transition={{ duration: 0.6 }}
           className="p-8 w-full max-w-6xl"
         >
-          <h2 className="text-2xl font-bold text-pink-700 mb-6">Data Kategori</h2>
+          <h2 className="text-2xl font-bold text-pink-700 mb-6">Data Kelas</h2>
 
           {/* Box putih berisi search dan dropdown */}
           <div className="bg-white p-5 rounded-md shadow-md mb-8 flex flex-wrap items-center gap-6 justify-between">
@@ -121,7 +121,7 @@ function TabelKategori() {
             </div>
 
             <div>
-              <Link to="/TambahDataKategori">
+              <Link to="/TambahDataKelas">
                 <button className="bg-pink-500 hover:bg-pink-600 rounded-md text-white font-bold py-2 px-4 transition hover:scale-[1.06]">
                   + Tambah Data
                 </button>
@@ -141,9 +141,8 @@ function TabelKategori() {
                   <tr className="text-center">
                     <th className="px-3 py-2 w-10">No</th>
                     <th className="px-4 py-2 w-40 text-left">Nama</th>
-                    <th className="px-4 py-2 w-52">Email</th>
-                    <th className="px-4 py-2 w-32">Kategori</th>
-                    <th className="px-4 py-2 w-32">Jabatan</th>
+                    <th className="px-4 py-2 w-52">Kelas</th>
+                    <th className="px-4 py-2 w-32">Jurusan</th>
                     <th className="px-4 py-2 w-48">Aksi</th>
                   </tr>
                 </thead>
@@ -164,13 +163,10 @@ function TabelKategori() {
                         {item.Nama}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Email}
+                        {item.Kelas}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Kategori}
-                      </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Jabatan}
+                        {item.Jurusan}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center align-middle">
                         <div className="flex justify-center items-center gap-2">
@@ -199,4 +195,4 @@ function TabelKategori() {
   );
 }
 
-export default TabelKategori;
+export default Kelas;

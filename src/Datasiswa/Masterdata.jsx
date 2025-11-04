@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
 
-function TabelKategori() {
+function Masterdata() {
   const [data, setData] = useState([]);
   const [kategoriList, setKategoriList] = useState([]); // untuk dropdown kategori
   const [loading, setLoading] = useState(true);
@@ -79,7 +79,7 @@ function TabelKategori() {
           transition={{ duration: 0.6 }}
           className="p-8 w-full max-w-6xl"
         >
-          <h2 className="text-2xl font-bold text-pink-700 mb-6">Data Kategori</h2>
+          <h2 className="text-2xl font-bold text-pink-700 mb-6">Master Data</h2>
 
           {/* Box putih berisi search dan dropdown */}
           <div className="bg-white p-5 rounded-md shadow-md mb-8 flex flex-wrap items-center gap-6 justify-between">
@@ -97,35 +97,8 @@ function TabelKategori() {
               />
             </div>
 
-            <div className="flex flex-col">
-              <label htmlFor="kategoriFilter" className="mb-1 font-semibold text-pink-700">
-                Filter Kategori
-              </label>
-              <select
-                id="kategoriFilter"
-                value={selectedKategori}
-                onChange={(e) => setSelectedKategori(e.target.value)}
-                className="border border-pink-300 rounded-md p-2 w-48 focus:outline-none focus:ring-2 focus:ring-pink-400"
-              >
-                <option value="all">Semua Data</option>
-                {kategoriList.map((kat) => (
-                  <option key={kat} value={kat}>
-                    {kat}
-                  </option>
-                ))}
-              </select>
-            </div>
-
             <div className="text-pink-700 font-semibold text-lg whitespace-nowrap">
               Total Data: {filteredData.length} orang
-            </div>
-
-            <div>
-              <Link to="/TambahDataKategori">
-                <button className="bg-pink-500 hover:bg-pink-600 rounded-md text-white font-bold py-2 px-4 transition hover:scale-[1.06]">
-                  + Tambah Data
-                </button>
-              </Link>
             </div>
           </div>
 
@@ -144,7 +117,6 @@ function TabelKategori() {
                     <th className="px-4 py-2 w-52">Email</th>
                     <th className="px-4 py-2 w-32">Kategori</th>
                     <th className="px-4 py-2 w-32">Jabatan</th>
-                    <th className="px-4 py-2 w-48">Aksi</th>
                   </tr>
                 </thead>
 
@@ -172,21 +144,6 @@ function TabelKategori() {
                       <td className="border border-pink-200 px-4 py-2 text-center">
                         {item.Jabatan}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center align-middle">
-                        <div className="flex justify-center items-center gap-2">
-                          <Link to={`/EditKategori/${item.id}`}>
-                            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105">
-                              ✏️
-                            </button>
-                          </Link>
-                          <button
-                            onClick={() => handleDelete(item.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105"
-                          >
-                            🗑️
-                          </button>
-                        </div>
-                      </td>
                     </motion.tr>
                   ))}
                 </tbody>
@@ -199,4 +156,4 @@ function TabelKategori() {
   );
 }
 
-export default TabelKategori;
+export default Masterdata;

@@ -1,23 +1,4 @@
 {
-  "login": [
-    {
-      "id": "d6a9",
-      "Nama": "sakti kecap manis",
-      "Jenis": "spp sayang",
-      "Tagihan": "100000",
-      "Tanggal": "2025-12-05",
-      "Email": "abb@gmail.com"
-    }
-  ],
-  "jenistagihan": [
-    {
-      "id": "f4b5",
-      "JenisTagihan": "spp sayang",
-      "Tagihan": "100000",
-      "JatuhTempo": "",
-      "Keterangan": "a"
-    }
-  ],
   "users": [
     {
       "id": "1",
@@ -95,7 +76,74 @@
       "Kategori": "Siswa"
     }
   ],
+  "jenistagihan": [
+    {
+      "id": "f4b5",
+      "JenisTagihan": "SPP Sayang",
+      "Tagihan": "100000",
+      "JatuhTempo": "",
+      "Keterangan": "SPP Bulanan"
+    }
+  ],
   "Kesiswaan": [
-    {}
+    {
+      "id": "6ae4",
+      "Nama": "awd",
+      "Email": "abb@gmail.com",
+      "Jabatan": "a",
+      "Kategori": "Guru"
+    },
+    {
+      "id": "d4ad",
+      "Nama": "awd",
+      "Email": "abb@gmail.com",
+      "Jabatan": "Osisd",
+      "Kategori": "Karyawan"
+    },
+    {
+      "id": "1c4d",
+      "Nama": "bebek duyung",
+      "Email": "abb@gmail.com",
+      "Jabatan": "A",
+      "Kategori": "Guru"
+    },
+    {
+      "id": "f9da",
+      "Nama": "dsfd",
+      "Email": "abb@gmail.com",
+      "Jabatan": "aa",
+      "Kategori": "Siswa"
+    }
+  ],
+  "Tagihan": [
+    {
+      "id": "T001",
+      "Nama": "Sakti Kecap Manis",
+      "Email": "abb@gmail.com",
+      "Jenis": "SPP Sayang",
+      "Tagihan": "100000",
+      "Tanggal": "2025-11-04",
+      "Status": "Belum Lunas"
+    }
+  ],
+  "login": [
+    {
+      "id": "76a0",
+      "Nama": "sakti kecap manis",
+      "Jenis": "SPP Sayang",
+      "Tagihan": "100000",
+      "Tanggal": "2025-12-05",
+      "Email": "abb@gmail.com",
+      "Status": "Sudah Lunas"
+    }
+  ],
+  "Kelas": [
+    {
+      "id": "9d04",
+      "Nama": "Kudanil Terbang",
+      "Kelas": "XI",
+      "Jurusan": "DPB",
+      "Email": "abb@gmail.com"
+    }
   ]
 }

@@ -3,13 +3,12 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
-function TambahDataKategori() {
+function TambahDataKelas() {
   const [jenisTagihanList, setJenisTagihanList] = useState([]);
   const [formData, setFormData] = useState({
     Nama: '',
-    Email: '',
-    Jabatan: '',
-    Kategori: '',
+    Kelas: '',
+    Jurusan: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -19,7 +18,7 @@ function TambahDataKategori() {
     // 🔹 Ambil data dari tabel Kesiswaan
     const fetchJenisTagihan = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/Kesiswaan');
+        const res = await axios.get('http://localhost:5000/Kelas');
         setJenisTagihanList(res.data);
       } catch (error) {
         console.error('Gagal fetch jenis tagihan:', error);
@@ -65,7 +64,7 @@ const handleSubmit = async (e) => {
   }
 
   try {
-    await axios.post('http://localhost:5000/Kesiswaan', formData);
+    await axios.post('http://localhost:5000/Kelas', formData);
 
     await Swal.fire({
       icon: 'success',
@@ -77,12 +76,11 @@ const handleSubmit = async (e) => {
 
     setFormData({
       Nama: '',
-      Email: '',
-      Jabatan: '',
-      Kategori: '',
+      Kelas: '',
+      Jurusan: '',
     });
 
-    navigate('/KategoriData');
+    navigate('/Kelas');
   } catch (error) {
     console.error('Error saat submit:', error);
     Swal.fire('Error', 'Gagal menyimpan data!', 'error');
@@ -115,59 +113,44 @@ const handleSubmit = async (e) => {
             />
           </div>
 
-          {/* EMAIL */}
-          <div className="mb-4">
-            <label htmlFor="Email" className="block text-gray-700 mb-2">
-              Email
-            </label>
-            <input
-              id="Email"
-              name="Email"
-              type="email"
-              placeholder="Masukan Email anda"
-              value={formData.Email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-              required
-            />
-          </div>
-
-          {/* KATEGORI (Dropdown) */}
-          <div className="mb-4">
-            <label htmlFor="Kategori" className="block text-gray-700 mb-2">
-              Kategori
+           <div className="mb-4">
+            <label htmlFor="Kelas" className="block text-gray-700 mb-2">
+              Kelas
             </label>
             <select
-              id="Kategori"
-              name="Kategori"
-              value={formData.Kategori}
+              id="Kelas"
+              name="Kelas"
+              value={formData.Kelas}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             >
-              <option value="">-- Pilih Kategori --</option>
-              <option value="Guru">Guru</option>
-              <option value="Siswa">Siswa</option>
-              <option value="Karyawan">Karyawan</option>
+              <option value="">-- Pilih Kelas --</option>
+              <option value="X">X</option>
+              <option value="XI">XI</option>
+              <option value="XII">XII</option>
             </select>
           </div>
 
-          <div className="mb-4">
-            <label htmlFor="Jabatan" className="block text-gray-700 mb-2">
-              Jabatan
+           <div className="mb-4">
+            <label htmlFor="Jurusan" className="block text-gray-700 mb-2">
+              Jurusan
             </label>
-            <input
-              id="Jabatan"
-              name="Jabatan"
-              type="text"
-              placeholder="Masukan Jabatan anda"
-              value={formData.Jabatan}
+            <select
+              id="Jurusan"
+              name="Jurusan"
+              value={formData.Jurusan}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
-            />
+            >
+              <option value="">-- Pilih Jurusan --</option>
+              <option value="TKJ">TKJ</option>
+              <option value="DPB">DPB</option>
+              <option value="AKL">AKL</option>
+              <option value="TSM">TSM</option>
+            </select>
           </div>
-
           {/* BUTTONS */}
           <div className="flex justify-between mt-6">
             <button
@@ -181,7 +164,7 @@ const handleSubmit = async (e) => {
 
             <button
               type="button"
-              onClick={() => navigate('/KategoriData')}
+              onClick={() => navigate('/Kelas')}
               className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded"
             >
               Kembali
@@ -193,4 +176,4 @@ const handleSubmit = async (e) => {
   );
 }
 
-export default TambahDataKategori;
+export default TambahDataKelas;

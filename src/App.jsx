@@ -12,6 +12,10 @@ import EditJenisTagihan from './Components/Editjenistagihan'
 import Rekaptagihan from './Components/Rekaptagihan'
 import Tabelsiswa from './Datasiswa/Tabelsiswa'
 import TambahDataKategori from './Datasiswa/Tambahdatakategori'
+import Editkategori from './Datasiswa/Editkategori'
+import Masterdata from './Datasiswa/Masterdata'
+import Kelas from './Datasiswa/kelas'
+import TambahDataKelas from './Datasiswa/Tambahdatakelas'
 
 
 function App() {
@@ -25,9 +29,13 @@ function App() {
       <Route path="/Rekaptagihan" element={<Rekaptagihan />} />
       <Route path="/Jenistagihan" element={<Jenistagihan />} />
       <Route path="/KategoriData" element={<Tabelsiswa />} />
+      <Route path="/MasterData" element={<Masterdata />} />
+      <Route path="/Kelas" element={<Kelas />} />
       <Route path="/Tambahjenistagihan" element={<TambahJenisTagihan />} />
       <Route path="/TambahDataKategori" element={<TambahDataKategori />} />
+      <Route path="/TambahDataKelas" element={<TambahDataKelas />} />
       <Route path="/EditJenisTagihan/:id" element={<EditJenisTagihan />} />
+      <Route path="/EditKategori/:id" element={<Editkategori />} />
       <Route path="/Edit/:id" element={<EditData />} />
     </Routes>
   )
