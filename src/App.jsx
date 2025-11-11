@@ -16,6 +16,9 @@ import Editkategori from './Datasiswa/Editkategori'
 import Masterdata from './Datasiswa/Masterdata'
 import Kelas from './Datasiswa/kelas'
 import TambahDataKelas from './Datasiswa/Tambahdatakelas'
+import EditKelas from './Datasiswa/EditKelas'
+import TambahData2 from './Datasiswa/TambahData2'
+import EditMasterData from './Datasiswa/Editmasterdata'
 
 
 function App() {
@@ -25,6 +28,7 @@ function App() {
       <Route path="/Dashboard" element={<Dashboard />} />
       <Route path="/Register" element={<Register />} />
       <Route path="/Tambahdata" element={<Tambahdata />} />
+      <Route path="/Tambahdata2" element={<TambahData2 />} />
       <Route path="/Tagihan" element={<Tagihan />} />
       <Route path="/Rekaptagihan" element={<Rekaptagihan />} />
       <Route path="/Jenistagihan" element={<Jenistagihan />} />
@@ -35,6 +39,8 @@ function App() {
       <Route path="/TambahDataKategori" element={<TambahDataKategori />} />
       <Route path="/TambahDataKelas" element={<TambahDataKelas />} />
       <Route path="/EditJenisTagihan/:id" element={<EditJenisTagihan />} />
+      <Route path="/EditMasterData/:id" element={<EditMasterData />} />
+      <Route path="/EditKelas/:id" element={<EditKelas />} />
       <Route path="/EditKategori/:id" element={<Editkategori />} />
       <Route path="/Edit/:id" element={<EditData />} />
     </Routes>

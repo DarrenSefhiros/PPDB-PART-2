@@ -3,22 +3,20 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-function Editkategori() {
+function EditKelas() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    Nama: "",
-    Email: "",
-    Kategori: "",
-    Jabatan: "",
+    Kelas: "",
+    Jurusan: "",
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Ambil data kategori yang mau diedit
-        const res = await axios.get(`http://localhost:5000/Kesiswaan/${id}`);
+        const res = await axios.get(`http://localhost:5000/Kelas/${id}`);
         setFormData(res.data);
       } catch (err) {
         console.error("Gagal mengambil data:", err);
@@ -39,7 +37,7 @@ function Editkategori() {
     e.preventDefault();
     try {
       // Update data kategori
-      await axios.put(`http://localhost:5000/Kesiswaan/${id}`, formData);
+      await axios.put(`http://localhost:5000/Kelas/${id}`, formData);
 
       await Swal.fire({
         position: "center",
@@ -49,86 +47,47 @@ function Editkategori() {
         timer: 1500,
       });
 
-      navigate("/MasterData");
+      navigate("/Kelas");
     } catch (error) {
       console.error("Gagal update:", error);
       Swal.fire("Error!", "Gagal menyimpan perubahan", "error");
     }
   };
 
-    const jabatanLabel = formData.Kategori === 'Siswa' ? 'Kelas' : 'Jabatan';
-  const jabatanPlaceholder = formData.Kategori === 'Siswa' 
-    ? 'Masukan Kelas anda' 
-    : 'Masukan Jabatan anda';
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-400 to-purple-600">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Edit Kategori
+          Edit Kelas    
         </h2>
 
         <form onSubmit={handleSubmit}>
+
           <div className="mb-4">
-            <label htmlFor="Nama" className="block text-gray-700 mb-2">
-              Nama
+            <label htmlFor="Kelas" className="block text-gray-700 mb-2">
+              Kelas
             </label>
             <input
-              id="Nama"
-              name="Nama"
-              type="text"
-              value={formData.Nama}
+              id="Kelas"
+              name="Kelas"
+              type="Kelas"
+              value={formData.Kelas}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
               required
             />
           </div>
-
           <div className="mb-4">
-            <label htmlFor="Email" className="block text-gray-700 mb-2">
-              Email
+            <label htmlFor="Jurusan" className="block text-gray-700 mb-2">
+              Jurusan
             </label>
             <input
-              id="Email"
-              name="Email"
-              type="email"
-              value={formData.Email}
+              id="Jurusan"
+              name="Jurusan"
+              type="Jurusan"
+              value={formData.Jurusan}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="Kategori" className="block text-gray-700 mb-2">
-              Pilih Kategori
-            </label>
-            <select
-              id="Kategori"
-              name="Kategori"
-              value={formData.Kategori}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
-              required
-            >
-              <option value="">-- Pilih Kategori --</option>
-              <option value="Guru">Guru</option>
-              <option value="Karyawan">Karyawan</option>
-              <option value="Siswa">Siswa</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <label htmlFor="Jabatan" className="block text-gray-700 mb-2">
-              {jabatanLabel}
-            </label>
-            <input
-              id="Jabatan"
-              name="Jabatan"
-              type="text"
-              placeholder={jabatanPlaceholder}
-              value={formData.Jabatan}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             />
           </div>
@@ -142,7 +101,7 @@ function Editkategori() {
             </button>
             <button
               type="button"
-              onClick={() => navigate("/MasterData")}
+              onClick={() => navigate("/Kelas   ")}
               className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
             >
               Batal
@@ -154,4 +113,4 @@ function Editkategori() {
   );
 }
 
-export default Editkategori;
+export default EditKelas;

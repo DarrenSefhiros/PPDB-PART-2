@@ -5,55 +5,67 @@
   import Sidnav from "./Sidnav";
   import { motion } from "framer-motion";
 
-  function Rekaptagihan() {
-    const [data, setData] = useState([]);
-    const [jenisTagihan, setJenisTagihan] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [selectedJenis, setSelectedJenis] = useState("all");
+ function Rekaptagihan() {
+  const [data, setData] = useState([]);
+  const [jenisTagihan, setJenisTagihan] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedJenis, setSelectedJenis] = useState("all");
 
-    useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/login");
-      setData(res.data.reverse());
+  // Pindahkan fungsi formatDate ke sini
+  function formatDate(dateString) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date)) return dateString;
 
-      const jenisRes = await axios.get("http://localhost:5000/jenistagihan");
-      setJenisTagihan(jenisRes.data);
-    } catch (err) {
-      console.error("Gagal mengambil data:", err);
-    } finally {
-      setLoading(false);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // bulan mulai dari 0
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/login");
+        setData(res.data.reverse());
+
+        const jenisRes = await axios.get("http://localhost:5000/jenistagihan");
+        setJenisTagihan(jenisRes.data);
+      } catch (err) {
+        console.error("Gagal mengambil data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleDelete = async (id) => {
+    const konfirmasi = await Swal.fire({
+      title: "Serius Kamu?",
+      text: "Data tidak akan bisa dikembalikan jika telah dihapus",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Hapus data",
+    });
+
+    if (konfirmasi.isConfirmed) {
+      try {
+        await axios.delete(`http://localhost:5000/login/${id}`);
+        setData((prev) => prev.filter((item) => item.id !== id));
+        Swal.fire("Terhapus!", "Data anda telah dihapus", "success");
+      } catch (err) {
+        Swal.fire("Error!", "Terjadi kesalahan saat menghapus data.", "error");
+      }
     }
   };
 
+  // ...sisa kode tetap sama
 
-      fetchData();
-    }, []);
-
-
-
-
-    const handleDelete = async (id) => {
-      const konfirmasi = await Swal.fire({
-        title: "Serius Kamu?",
-        text: "Data tidak akan bisa dikembalikan jika telah dihapus",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Hapus data",
-      });
-
-      if (konfirmasi.isConfirmed) {
-        try {
-          await axios.delete(`http://localhost:5000/login/${id}`);
-          setData((prev) => prev.filter((item) => item.id !== id));
-          Swal.fire("Terhapus!", "Data anda telah dihapus", "success");
-        } catch (err) {
-          Swal.fire("Error!", "Terjadi kesalahan saat menghapus data.", "error");
-        }
-      }
-    };
 
     // ✅ Filter berdasarkan jenis tagihan yang dipilih
     const filteredData =
@@ -150,7 +162,7 @@
             )}
           </td>
           <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
-            {item.Tanggal}
+            {formatDate(item.Tanggal)}
           </td>
         </motion.tr>
       ))}

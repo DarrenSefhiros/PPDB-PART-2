@@ -5,18 +5,20 @@ import { useNavigate } from 'react-router-dom';
 
 function TambahData() {
   const [jenisTagihanList, setJenisTagihanList] = useState([]);
+  const [masterDataList, setMasterDataList] = useState([]); // Ambil master data untuk Nama & Email
   const [formData, setFormData] = useState({
     Nama: '',
     Jenis: '',
     Tagihan: '',
     Tanggal: '',
+    Email: '',
   });
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 🔹 Ambil data dari tabel JenisTagihan
+    // Ambil data Jenis Tagihan
     const fetchJenisTagihan = async () => {
       try {
         const res = await axios.get('http://localhost:5000/jenistagihan');
@@ -26,27 +28,39 @@ function TambahData() {
       }
     };
 
-    fetchJenisTagihan();
+    // Ambil Master Data (misal: Siswa/Guru)
+    const fetchMasterData = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/Kesiswaan'); // endpoint master data
+        setMasterDataList(res.data);
+      } catch (error) {
+        console.error('Gagal fetch master data:', error);
+      }
+    };
 
-    const loginData = JSON.parse(localStorage.getItem('loginData'));
-    if (loginData?.Email) {
-      setFormData((prev) => ({ ...prev, Email: loginData.Email }));
-    }
+    fetchJenisTagihan();
+    fetchMasterData();
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'Jenis') {
-
-      const selectedJenis = jenisTagihanList.find(
-        (item) => item.JenisTagihan === value
-      );
+    if (name === 'Nama') {
+      // Cari master data yang dipilih
+      const selectedUser = masterDataList.find((item) => item.Nama === value);
 
       setFormData({
         ...formData,
+        Nama: value,
+        Email: selectedUser ? selectedUser.Email : '',
+      });
+    } else if (name === 'Jenis') {
+      const selectedJenis = jenisTagihanList.find(
+        (item) => item.JenisTagihan === value
+      );
+      setFormData({
+        ...formData,
         Jenis: value,
-
         Tagihan: selectedJenis ? selectedJenis.Tagihan || '' : '',
       });
     } else {
@@ -77,6 +91,7 @@ function TambahData() {
         Jenis: '',
         Tagihan: '',
         Tanggal: '',
+        Email: '',
       });
 
       navigate('/Tagihan');
@@ -95,20 +110,46 @@ function TambahData() {
           Tambah Data
         </h2>
         <form onSubmit={handleSubmit}>
-          {/* NAMA */}
+          {/* NAMA (dropdown dari master data) */}
+    {/* NAMA (dropdown dari master data) */}
+{/* NAMA (dropdown hanya untuk siswa) */}
+<div className="mb-4">
+  <label htmlFor="Nama" className="block text-gray-700 mb-2">
+    Nama Siswa
+  </label>
+  <select
+    id="Nama"
+    name="Nama"
+    value={formData.Nama}
+    onChange={handleChange}
+    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+    required
+  >
+    <option value="">Pilih Nama Siswa</option>
+    {masterDataList
+      .filter(item => item.Kategori === "Siswa" && item.Nama && item.Nama.trim() !== '') // filter siswa dan nama tidak kosong
+      .map((item) => (
+        <option key={item.id} value={item.Nama}>
+          {item.Nama}
+        </option>
+      ))}
+  </select>
+</div>
+
+
+
+          {/* Email otomatis dari master data */}
           <div className="mb-4">
-            <label htmlFor="Nama" className="block text-gray-700 mb-2">
-              Nama
+            <label htmlFor="Email" className="block text-gray-700 mb-2">
+              Email
             </label>
             <input
-              id="Nama"
-              name="Nama"
-              type="text"
-              placeholder="Masukan Nama anda"
-              value={formData.Nama}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-              required
+              id="Email"
+              name="Email"
+              type="email"
+              value={formData.Email}
+              readOnly
+              className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
             />
           </div>
 
@@ -134,7 +175,7 @@ function TambahData() {
             </select>
           </div>
 
-          {/* TOTAL TAGIHAN (otomatis muncul) */}
+          {/* TOTAL TAGIHAN */}
           <div className="mb-4">
             <label htmlFor="Tagihan" className="block text-gray-700 mb-2">
               Total Tagihan
@@ -149,6 +190,7 @@ function TambahData() {
               className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
             />
           </div>
+
           {/* TANGGAL TAGIHAN */}
           <div className="mb-4">
             <label htmlFor="Tanggal" className="block text-gray-700 mb-2">
@@ -165,13 +207,13 @@ function TambahData() {
             />
           </div>
 
-          <input type="hidden" name="Email" value={formData.Email} />
           <div className="flex justify-between mt-6">
             <button
               type="submit"
               disabled={loading}
-              className={`bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded ${loading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
+              className={`bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
               {loading ? 'Memproses...' : 'Tambah'}
             </button>

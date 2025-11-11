@@ -5,24 +5,27 @@ import Swal from "sweetalert2";
 import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
 
-function Masterdata() {
+function MasterData() {
   const [data, setData] = useState([]);
-  const [kategoriList, setKategoriList] = useState([]); // untuk dropdown kategori
+  const [kategoriList, setKategoriList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedKategori, setSelectedKategori] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Ambil data utama dan daftar kategori unik dari backend
+  // Ambil data utama dan kategori unik
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get("http://localhost:5000/Kesiswaan");
-        const reversedData = res.data.reverse();
-        setData(reversedData);
 
-        // Ambil kategori unik dari data langsung
+        const cleanedData = (res.data || [])
+          .filter((item) => item && item.Nama)
+          .reverse();
+
+        setData(cleanedData);
+
         const uniqueKategori = [
-          ...new Set(reversedData.map((item) => item.Kategori)),
+          ...new Set(cleanedData.map((item) => item.Kategori).filter(Boolean)),
         ];
         setKategoriList(uniqueKategori);
       } catch (err) {
@@ -35,11 +38,12 @@ function Masterdata() {
     fetchData();
   }, []);
 
-  // Filter data berdasarkan kategori dan searchTerm
+  // Filter data
   const filteredData = data.filter((item) => {
+    const nama = (item.Nama || "").toLowerCase();
     const matchesKategori =
       selectedKategori === "all" ? true : item.Kategori === selectedKategori;
-    const matchesSearch = item.Nama.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = nama.includes(searchTerm.toLowerCase());
     return matchesKategori && matchesSearch;
   });
 
@@ -69,6 +73,20 @@ function Masterdata() {
     }
   };
 
+  // Label header untuk kolom Jabatan/Kelas/Mata Pelajaran
+  const getJabatanHeader = () => {
+    if (selectedKategori === "Siswa") return "Kelas";
+    if (selectedKategori === "Guru") return "Mata Pelajaran";
+    return "Jabatan";
+  };
+
+  // Tampilkan value sesuai kategori
+  const getJabatanValue = (item) => {
+    if (item.Kategori === "Siswa") return item.Jabatan || "-";
+    if (item.Kategori === "Guru") return item.Jabatan || "-";
+    return item.Jabatan || "-";
+  };
+
   return (
     <div className="flex">
       <Sidnav />
@@ -81,7 +99,7 @@ function Masterdata() {
         >
           <h2 className="text-2xl font-bold text-pink-700 mb-6">Master Data</h2>
 
-          {/* Box putih berisi search dan dropdown */}
+          {/* Filter & Search */}
           <div className="bg-white p-5 rounded-md shadow-md mb-8 flex flex-wrap items-center gap-6 justify-between">
             <div className="flex flex-col">
               <label htmlFor="searchNama" className="mb-1 font-semibold text-pink-700">
@@ -97,12 +115,39 @@ function Masterdata() {
               />
             </div>
 
+            <div className="flex flex-col">
+              <label htmlFor="kategoriFilter" className="mb-1 font-semibold text-pink-700">
+                Filter Kategori
+              </label>
+              <select
+                id="kategoriFilter"
+                value={selectedKategori}
+                onChange={(e) => setSelectedKategori(e.target.value)}
+                className="border border-pink-300 rounded-md p-2 w-48 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              >
+                <option value="all">Semua Data</option>
+                {kategoriList.map((kat) => (
+                  <option key={kat} value={kat}>
+                    {kat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div className="text-pink-700 font-semibold text-lg whitespace-nowrap">
               Total Data: {filteredData.length} orang
             </div>
+
+            <div>
+              <Link to="/TambahDataKategori">
+                <button className="bg-pink-500 hover:bg-pink-600 rounded-md text-white font-bold py-2 px-4 transition hover:scale-[1.06]">
+                  + Tambah Data
+                </button>
+              </Link>
+            </div>
           </div>
 
-          {/* Tabel utama */}
+          {/* Tabel */}
           <div className="overflow-x-auto">
             {loading ? (
               <div className="text-center py-4 text-pink-600">Memuat data...</div>
@@ -116,10 +161,10 @@ function Masterdata() {
                     <th className="px-4 py-2 w-40 text-left">Nama</th>
                     <th className="px-4 py-2 w-52">Email</th>
                     <th className="px-4 py-2 w-32">Kategori</th>
-                    <th className="px-4 py-2 w-32">Jabatan</th>
+                    <th className="px-4 py-2 w-32">{getJabatanHeader()}</th>
+                    <th className="px-4 py-2 w-48">Aksi</th>
                   </tr>
                 </thead>
-
                 <tbody>
                   {filteredData.map((item, index) => (
                     <motion.tr
@@ -129,20 +174,25 @@ function Masterdata() {
                       transition={{ delay: index * 0.05 }}
                       className="bg-pink-100 hover:bg-pink-200 transition"
                     >
-                      <td className="border border-pink-200 px-2 py-2 text-right">
-                        {index + 1}
-                      </td>
-                      <td className="border border-pink-200 px-4 py-2 text-left">
-                        {item.Nama}
-                      </td>
+                      <td className="border border-pink-200 px-2 py-2 text-right">{index + 1}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-left">{item.Nama || "-"}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-center">{item.Email || "-"}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-center">{item.Kategori || "-"}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-center">{getJabatanValue(item)}</td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Email}
-                      </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Kategori}
-                      </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Jabatan}
+                        <div className="flex justify-center items-center gap-2">
+                          <Link to={`/EditMasterData/${item.id}`}>
+                            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105">
+                              ✏️
+                            </button>
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(item.id)}
+                            className="bg-red-500 hover:bg-red-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105"
+                          >
+                            🗑️
+                          </button>
+                        </div>
                       </td>
                     </motion.tr>
                   ))}
@@ -156,4 +206,4 @@ function Masterdata() {
   );
 }
 
-export default Masterdata;
+export default MasterData;

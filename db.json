@@ -83,35 +83,50 @@
       "Tagihan": "100000",
       "JatuhTempo": "",
       "Keterangan": "SPP Bulanan"
+    },
+    {
+      "id": "16c6",
+      "JenisTagihan": "uang seragam",
+      "Tagihan": "10000",
+      "JatuhTempo": "",
+      "Keterangan": "uang seragam"
     }
   ],
   "Kesiswaan": [
     {
-      "id": "6ae4",
-      "Nama": "awd",
-      "Email": "abb@gmail.com",
-      "Jabatan": "a",
+      "id": "310c",
+      "Status": "Guru",
+      "Keterangan": "aa"
+    },
+    {
+      "id": "ad7e",
+      "Status": "Siswa",
+      "Keterangan": "aaa"
+    },
+    {
+      "id": "c8c6",
+      "Status": "Karyawan",
+      "Keterangan": "Karyawan sekolah"
+    },
+    {
+      "id": "0ab6",
+      "Nama": "widodo",
+      "Email": "awd@gmail.com",
+      "Jabatan": "b indo",
       "Kategori": "Guru"
     },
     {
-      "id": "d4ad",
-      "Nama": "awd",
-      "Email": "abb@gmail.com",
-      "Jabatan": "Osisd",
-      "Kategori": "Karyawan"
-    },
-    {
-      "id": "1c4d",
-      "Nama": "bebek duyung",
-      "Email": "abb@gmail.com",
-      "Jabatan": "A",
+      "id": "8519",
+      "Nama": "Ayas",
+      "Email": "mmm@gmail.com",
+      "Jabatan": "Informatika",
       "Kategori": "Guru"
     },
     {
-      "id": "f9da",
-      "Nama": "dsfd",
-      "Email": "abb@gmail.com",
-      "Jabatan": "aa",
+      "id": "4ac4",
+      "Nama": "awda",
+      "Email": "awd@gmail.com",
+      "Jabatan": "XI",
       "Kategori": "Siswa"
     }
   ],
@@ -128,13 +143,29 @@
   ],
   "login": [
     {
-      "id": "76a0",
-      "Nama": "sakti kecap manis",
+      "id": "337e",
+      "Nama": "widodo",
       "Jenis": "SPP Sayang",
       "Tagihan": "100000",
-      "Tanggal": "2025-12-05",
-      "Email": "abb@gmail.com",
+      "Tanggal": "2025-11-19",
+      "Email": "awd@gmail.com"
+    },
+    {
+      "id": "d28b",
+      "Nama": "Ayas",
+      "Jenis": "uang seragam",
+      "Tagihan": "10000",
+      "Tanggal": "2025-10-31",
+      "Email": "mmm@gmail.com",
       "Status": "Sudah Lunas"
+    },
+    {
+      "id": "2680",
+      "Nama": "awda",
+      "Jenis": "uang seragam",
+      "Tagihan": "10000",
+      "Tanggal": "2025-11-09",
+      "Email": "awd@gmail.com"
     }
   ],
   "Kelas": [
@@ -144,6 +175,37 @@
       "Kelas": "XI",
       "Jurusan": "DPB",
       "Email": "abb@gmail.com"
+    },
+    {
+      "id": "8e1a",
+      "Nama": "dugong",
+      "Kelas": "x",
+      "Jurusan": "DPB",
+      "Email": "abb@gmail.com"
+    },
+    {
+      "id": "0f13",
+      "Kelas": "10",
+      "Jurusan": "DPB",
+      "Email": "awd@gmail.com"
+    }
+  ],
+  "Kategori": [
+    {
+      "id": "b47f",
+      "Level": "ustadz",
+      "Keterangan": "aaa",
+      "Status": "awdadwa"
+    },
+    {
+      "id": "704d",
+      "Level": "Guru",
+      "Keterangan": "aaa"
+    },
+    {
+      "id": "1a1b",
+      "Level": "Siswa",
+      "Keterangan": "aa"
     }
   ]
 }

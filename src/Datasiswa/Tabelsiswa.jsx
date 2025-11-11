@@ -1,32 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
-import Swal from "sweetalert2";
 import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function TabelKategori() {
   const [data, setData] = useState([]);
-  const [kategoriList, setKategoriList] = useState([]); // untuk dropdown kategori
   const [loading, setLoading] = useState(true);
-  const [selectedKategori, setSelectedKategori] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
 
-  // Ambil data utama dan daftar kategori unik dari backend
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/Kesiswaan");
-        const reversedData = res.data.reverse();
-        setData(reversedData);
+        const res = await axios.get("http://localhost:5001/Kategori");
+        console.log("Kategori data:", res.data); // debug cek data
 
-        // Ambil kategori unik dari data langsung
-        const uniqueKategori = [
-          ...new Set(reversedData.map((item) => item.Kategori)),
-        ];
-        setKategoriList(uniqueKategori);
+        // Jika data tidak array atau kosong, set default empty array
+        if (!Array.isArray(res.data)) {
+          console.error("Data Kategori bukan array:", res.data);
+          setData([]);
+        } else {
+          setData(res.data);
+        }
       } catch (err) {
-        console.error("Gagal mengambil data:", err);
+        if (err.response && err.response.status === 404) {
+          console.error("Error 404: Endpoint /Kategori tidak ditemukan");
+          Swal.fire({
+            icon: "error",
+            title: "Data tidak ditemukan",
+            text: "Endpoint API /Kategori tidak tersedia.",
+          });
+        } else {
+          console.error("Gagal mengambil data:", err);
+          Swal.fire({
+            icon: "error",
+            title: "Gagal mengambil data",
+            text: err.message || "Terjadi kesalahan saat mengambil data.",
+          });
+        }
+        setData([]); // fallback supaya UI tetap jalan
       } finally {
         setLoading(false);
       }
@@ -35,36 +47,28 @@ function TabelKategori() {
     fetchData();
   }, []);
 
-  // Filter data berdasarkan kategori dan searchTerm
-  const filteredData = data.filter((item) => {
-    const matchesKategori =
-      selectedKategori === "all" ? true : item.Kategori === selectedKategori;
-    const matchesSearch = item.Nama.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesKategori && matchesSearch;
-  });
-
-  // Hapus data
   const handleDelete = async (id) => {
-    if (!id) return;
-
     const konfirmasi = await Swal.fire({
-      title: "Yakin ingin menghapus?",
-      text: "Data yang dihapus tidak bisa dikembalikan!",
+      title: "Serius Kamu?",
+      text: "Data tidak akan bisa dikembalikan jika telah dihapus",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#aaa",
-      confirmButtonText: "Ya, hapus",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Hapus data",
       cancelButtonText: "Batal",
     });
 
     if (konfirmasi.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/Kesiswaan/${id}`);
+        await axios.delete(`http://localhost:5000/Kategori/${id}`);
         setData((prev) => prev.filter((item) => item.id !== id));
-        Swal.fire("Berhasil!", "Data telah dihapus.", "success");
+        Swal.fire("Terhapus!", "Data anda telah dihapus", "success");
       } catch (err) {
-        Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
+        const errorMessage =
+          err.response?.data?.message ||
+          "Terjadi kesalahan saat menghapus data.";
+        Swal.fire("Error!", errorMessage, "error");
       }
     }
   };
@@ -72,118 +76,70 @@ function TabelKategori() {
   return (
     <div className="flex">
       <Sidnav />
-      <div className="ml-60 min-h-screen bg-pink-50 flex flex-col items-center p-5 w-full">
+      <div className="ml-60 min-h-screen bg-pink-50 flex flex-col items-center p-4 w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="p-8 w-full max-w-6xl"
+          transition={{ duration: 0.5 }}
+          className="p-8 w-full max-w-5xl"
         >
-          <h2 className="text-2xl font-bold text-pink-700 mb-6">Data Kategori</h2>
+          <h1 className="text-3xl font-bold text-pink-800 mb-6">Kelola Status</h1>
 
-          {/* Box putih berisi search dan dropdown */}
-          <div className="bg-white p-5 rounded-md shadow-md mb-8 flex flex-wrap items-center gap-6 justify-between">
-            <div className="flex flex-col">
-              <label htmlFor="searchNama" className="mb-1 font-semibold text-pink-700">
-                Cari Nama
-              </label>
-              <input
-                type="text"
-                id="searchNama"
-                placeholder="Cari berdasarkan nama..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="border border-pink-300 rounded-md p-2 w-64 focus:outline-none focus:ring-2 focus:ring-pink-400"
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label htmlFor="kategoriFilter" className="mb-1 font-semibold text-pink-700">
-                Filter Kategori
-              </label>
-              <select
-                id="kategoriFilter"
-                value={selectedKategori}
-                onChange={(e) => setSelectedKategori(e.target.value)}
-                className="border border-pink-300 rounded-md p-2 w-48 focus:outline-none focus:ring-2 focus:ring-pink-400"
-              >
-                <option value="all">Semua Data</option>
-                {kategoriList.map((kat) => (
-                  <option key={kat} value={kat}>
-                    {kat}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="text-pink-700 font-semibold text-lg whitespace-nowrap">
-              Total Data: {filteredData.length} orang
-            </div>
-
+          <div className="flex justify-between items-center mb-4 gap-2">
+            <div className="text-pink-700 font-semibold">Total Status: {data.length}</div>
             <div>
-              <Link to="/TambahDataKategori">
+              <Link to="/TambahData2">
                 <button className="bg-pink-500 hover:bg-pink-600 rounded-md text-white font-bold py-2 px-4 transition hover:scale-[1.06]">
-                  + Tambah Data
+                  + Tambah Status
                 </button>
               </Link>
             </div>
           </div>
 
-          {/* Tabel utama */}
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto shadow-lg">
             {loading ? (
               <div className="text-center py-4 text-pink-600">Memuat data...</div>
-            ) : filteredData.length === 0 ? (
-              <div className="text-center py-4 text-pink-600">Data tidak ditemukan.</div>
+            ) : data.length === 0 ? (
+              <div className="text-center py-4 text-pink-600">Belum ada data</div>
             ) : (
-              <table className="min-w-full border border-pink-200 rounded-md overflow-hidden text-sm">
+              <table className="min-w-full border border-pink-200 rounded-md overflow-hidden">
                 <thead className="bg-purple-200 text-purple-800">
-                  <tr className="text-center">
-                    <th className="px-3 py-2 w-10">No</th>
-                    <th className="px-4 py-2 w-40 text-left">Nama</th>
-                    <th className="px-4 py-2 w-52">Email</th>
-                    <th className="px-4 py-2 w-32">Kategori</th>
-                    <th className="px-4 py-2 w-32">Jabatan</th>
-                    <th className="px-4 py-2 w-48">Aksi</th>
+                  <tr>
+                    <th className="px-2 py-2 text-right">No</th>
+                    <th className="px-4 py-2 text-center">Level</th>
+                    <th className="px-4 py-2 text-center">Keterangan</th>
+                    <th className="px-4 py-2 text-center">Aksi</th>
                   </tr>
                 </thead>
-
                 <tbody>
-                  {filteredData.map((item, index) => (
+                  {data.map((item, index) => (
                     <motion.tr
-                      key={item.id || index}
+                      key={item.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
+                      transition={{ delay: index * 0.03 }}
                       className="bg-pink-100 hover:bg-pink-200 transition"
                     >
-                      <td className="border border-pink-200 px-2 py-2 text-right">
-                        {index + 1}
-                      </td>
-                      <td className="border border-pink-200 px-4 py-2 text-left">
-                        {item.Nama}
+                      <td className="border border-pink-200 px-2 py-2 text-right">{index + 1}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-center">
+                        {/* Jika item.Level undefined, tampilkan fallback */}
+                        {item.Level || item.Status || "—"}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Email}
+                        {item.Keterangan || "—"}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Kategori}
-                      </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Jabatan}
-                      </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center align-middle">
-                        <div className="flex justify-center items-center gap-2">
-                          <Link to={`/EditKategori/${item.id}`}>
-                            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105">
-                              ✏️
+                        <div className="flex justify-center space-x-2">
+                          <Link to={`/Editkategori/${item.id}`}>
+                            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded transition hover:scale-[1.09]">
+                              ✍ Edit
                             </button>
                           </Link>
                           <button
+                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded transition hover:scale-[1.09]"
                             onClick={() => handleDelete(item.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105"
                           >
-                            🗑️
+                            🗑 Hapus
                           </button>
                         </div>
                       </td>

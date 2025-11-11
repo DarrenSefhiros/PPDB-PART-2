@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function TambahDataKategori() {
+function EditMasterData() {
+  const { id } = useParams(); // Ambil ID dari route
   const [kategoriList, setKategoriList] = useState([]);
-  const [kelasList, setKelasList] = useState([]);
   const [formData, setFormData] = useState({
     Nama: '',
     Email: '',
@@ -15,8 +15,8 @@ function TambahDataKategori() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Ambil data kategori dan data awal form
   useEffect(() => {
-    // Ambil kategori
     const fetchKategori = async () => {
       try {
         const res = await axios.get('http://localhost:5000/Kategori');
@@ -26,29 +26,32 @@ function TambahDataKategori() {
       }
     };
 
-    // Ambil kelas
-    const fetchKelas = async () => {
+    const fetchDataById = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/Kelas');
-        setKelasList(res.data);
+        const res = await axios.get(`http://localhost:5000/Kesiswaan/${id}`);
+        setFormData({
+          Nama: res.data.Nama || '',
+          Email: res.data.Email || '',
+          Jabatan: res.data.Jabatan || '',
+          Kategori: res.data.Kategori || '',
+        });
       } catch (error) {
-        console.error('Gagal fetch data kelas:', error);
+        console.error('Gagal fetch data:', error);
+        Swal.fire('Error', 'Data tidak ditemukan!', 'error');
+        navigate('/MasterData');
       }
     };
 
     fetchKategori();
-    fetchKelas();
-
-    // Ambil Email user dari localStorage
-    const loginData = JSON.parse(localStorage.getItem('loginData'));
-    if (loginData?.Email) {
-      setFormData((prev) => ({ ...prev, Email: loginData.Email }));
-    }
-  }, []);
+    fetchDataById();
+  }, [id, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const isValidGmail = (email) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
@@ -70,100 +73,51 @@ function TambahDataKategori() {
     }
 
     try {
-      await axios.post('http://localhost:5000/Kesiswaan', formData);
+      await axios.put(`http://localhost:5000/Kesiswaan/${id}`, formData);
 
       await Swal.fire({
         icon: 'success',
         title: 'Berhasil!',
-        text: 'Data anda telah disimpan.',
+        text: 'Data anda telah diperbarui.',
         timer: 1500,
         showConfirmButton: false,
       });
 
-      setFormData({
-        Nama: '',
-        Email: '',
-        Jabatan: '',
-        Kategori: '',
-      });
-
       navigate('/MasterData');
     } catch (error) {
-      console.error('Error saat submit:', error);
-      Swal.fire('Error', 'Gagal menyimpan data!', 'error');
+      console.error('Error saat update:', error);
+      Swal.fire('Error', 'Gagal memperbarui data!', 'error');
     } finally {
       setLoading(false);
     }
   };
 
-  // 🔹 Label dan placeholder / type dinamis
+  // Label dan placeholder dinamis sesuai kategori
   let jabatanLabel = 'Jabatan';
-  let jabatanInput = (
-    <input
-      id="Jabatan"
-      name="Jabatan"
-      type="text"
-      placeholder="Masukkan Jabatan"
-      value={formData.Jabatan}
-      onChange={handleChange}
-      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-      required
-    />
-  );
-
+  let jabatanPlaceholder = 'Masukkan Jabatan anda';
   if (formData.Kategori === 'Siswa') {
     jabatanLabel = 'Kelas';
-    // Gunakan select dropdown untuk kelas
-    jabatanInput = (
-      <select
-        id="Jabatan"
-        name="Jabatan"
-        value={formData.Jabatan}
-        onChange={handleChange}
-        className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pink-400"
-        required
-      >
-        <option value="">Pilih Kelas</option>
-        {kelasList.map((item) => (
-          <option key={item.id} value={item.Kelas}>
-            {item.Kelas}
-          </option>
-        ))}
-      </select>
-    );
+    jabatanPlaceholder = 'Masukkan Kelas';
   } else if (formData.Kategori === 'Guru') {
     jabatanLabel = 'Mata Pelajaran';
-    jabatanInput = (
-      <input
-        id="Jabatan"
-        name="Jabatan"
-        type="text"
-        placeholder="Masukkan Mata Pelajaran anda"
-        value={formData.Jabatan}
-        onChange={handleChange}
-        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-        required
-      />
-    );
+    jabatanPlaceholder = 'Masukkan Mata Pelajaran';
   }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-400 to-purple-600">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Tambah Data Kategori
+          Edit Master Data
         </h2>
         <form onSubmit={handleSubmit}>
-          {/* NAMA */}
+          {/* Nama */}
           <div className="mb-4">
-            <label htmlFor="Nama" className="block text-gray-700 mb-2">
-              Nama
-            </label>
+            <label htmlFor="Nama" className="block text-gray-700 mb-2">Nama</label>
             <input
               id="Nama"
               name="Nama"
               type="text"
-              placeholder="Masukan Nama anda"
+              placeholder="Masukkan Nama"
               value={formData.Nama}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
@@ -171,16 +125,14 @@ function TambahDataKategori() {
             />
           </div>
 
-          {/* EMAIL */}
+          {/* Email */}
           <div className="mb-4">
-            <label htmlFor="Email" className="block text-gray-700 mb-2">
-              Email
-            </label>
+            <label htmlFor="Email" className="block text-gray-700 mb-2">Email</label>
             <input
               id="Email"
               name="Email"
               type="email"
-              placeholder="Masukan Email anda"
+              placeholder="Masukkan Email"
               value={formData.Email}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
@@ -188,11 +140,9 @@ function TambahDataKategori() {
             />
           </div>
 
-          {/* KATEGORI */}
+          {/* Kategori */}
           <div className="mb-4">
-            <label htmlFor="Kategori" className="block text-gray-700 mb-2">
-              Kategori
-            </label>
+            <label htmlFor="Kategori" className="block text-gray-700 mb-2">Kategori</label>
             <select
               id="Kategori"
               name="Kategori"
@@ -203,22 +153,27 @@ function TambahDataKategori() {
             >
               <option value="">Pilih Kategori</option>
               {kategoriList.map((item) => (
-                <option key={item.id} value={item.Level}>
-                  {item.Level}
-                </option>
+                <option key={item.id} value={item.Level}>{item.Level}</option>
               ))}
             </select>
           </div>
 
-          {/* JABATAN / KELAS / MAPEL */}
+          {/* Jabatan/Kelas/Mapel */}
           <div className="mb-4">
-            <label htmlFor="Jabatan" className="block text-gray-700 mb-2">
-              {jabatanLabel}
-            </label>
-            {jabatanInput}
+            <label htmlFor="Jabatan" className="block text-gray-700 mb-2">{jabatanLabel}</label>
+            <input
+              id="Jabatan"
+              name="Jabatan"
+              type="text"
+              placeholder={jabatanPlaceholder}
+              value={formData.Jabatan}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+              required
+            />
           </div>
 
-          {/* BUTTONS */}
+          {/* Buttons */}
           <div className="flex justify-between mt-6">
             <button
               type="submit"
@@ -227,7 +182,7 @@ function TambahDataKategori() {
                 loading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              {loading ? 'Memproses...' : 'Tambah'}
+              {loading ? 'Memproses...' : 'Update'}
             </button>
 
             <button
@@ -244,4 +199,4 @@ function TambahDataKategori() {
   );
 }
 
-export default TambahDataKategori;
+export default EditMasterData;

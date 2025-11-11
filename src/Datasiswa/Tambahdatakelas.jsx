@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 function TambahDataKelas() {
   const [jenisTagihanList, setJenisTagihanList] = useState([]);
   const [formData, setFormData] = useState({
-    Nama: '',
     Kelas: '',
     Jurusan: '',
   });
@@ -75,7 +74,6 @@ const handleSubmit = async (e) => {
     });
 
     setFormData({
-      Nama: '',
       Kelas: '',
       Jurusan: '',
     });
@@ -96,60 +94,35 @@ const handleSubmit = async (e) => {
           Tambah Data
         </h2>
         <form onSubmit={handleSubmit}>
-          {/* NAMA */}
           <div className="mb-4">
             <label htmlFor="Nama" className="block text-gray-700 mb-2">
-              Nama
+              Kelas
             </label>
             <input
-              id="Nama"
-              name="Nama"
+              id="Kelas"
+              name="Kelas"
               type="text"
-              placeholder="Masukan Nama anda"
-              value={formData.Nama}
+              placeholder="Kelas yang ingin ditambahkan"
+              value={formData.Kelas}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             />
           </div>
-
-           <div className="mb-4">
-            <label htmlFor="Kelas" className="block text-gray-700 mb-2">
-              Kelas
-            </label>
-            <select
-              id="Kelas"
-              name="Kelas"
-              value={formData.Kelas}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pink-400"
-              required
-            >
-              <option value="">-- Pilih Kelas --</option>
-              <option value="X">X</option>
-              <option value="XI">XI</option>
-              <option value="XII">XII</option>
-            </select>
-          </div>
-
-           <div className="mb-4">
+          <div className="mb-4">
             <label htmlFor="Jurusan" className="block text-gray-700 mb-2">
               Jurusan
             </label>
-            <select
+            <input
               id="Jurusan"
               name="Jurusan"
+              type="text"
+              placeholder="Jurusan yang ingin ditambahkan"
               value={formData.Jurusan}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
-            >
-              <option value="">-- Pilih Jurusan --</option>
-              <option value="TKJ">TKJ</option>
-              <option value="DPB">DPB</option>
-              <option value="AKL">AKL</option>
-              <option value="TSM">TSM</option>
-            </select>
+            />
           </div>
           {/* BUTTONS */}
           <div className="flex justify-between mt-6">
