@@ -128,6 +128,13 @@
       "Email": "awd@gmail.com",
       "Jabatan": "XI",
       "Kategori": "Siswa"
+    },
+    {
+      "id": "5de7",
+      "Nama": "awd",
+      "Email": "awd@gmail.com",
+      "Jabatan": "XI",
+      "Kategori": "Siswa"
     }
   ],
   "Tagihan": [
@@ -192,10 +199,9 @@
   ],
   "Kategori": [
     {
-      "id": "b47f",
-      "Level": "ustadz",
+      "Level": "ww",
       "Keterangan": "aaa",
-      "Status": "awdadwa"
+      "id": "b47f"
     },
     {
       "id": "704d",
@@ -206,6 +212,20 @@
       "id": "1a1b",
       "Level": "Siswa",
       "Keterangan": "aa"
+    },
+    {
+      "id": "70aa",
+      "Level": "Siswa",
+      "Keterangan": "aa"
+    },
+    {
+      "id": "437a",
+      "Level": "Satpam",
+      "Keterangan": "www"
+    },
+    {
+      "id": "95a3",
+      "Level": "Ustadzah"
     }
   ]
 }

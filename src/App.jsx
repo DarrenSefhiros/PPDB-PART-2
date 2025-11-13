@@ -19,6 +19,7 @@ import TambahDataKelas from './Datasiswa/Tambahdatakelas'
 import EditKelas from './Datasiswa/EditKelas'
 import TambahData2 from './Datasiswa/TambahData2'
 import EditMasterData from './Datasiswa/Editmasterdata'
+import EditKategoriData from './Datasiswa/EditKategoriData'
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
       <Route path="/TambahDataKelas" element={<TambahDataKelas />} />
       <Route path="/EditJenisTagihan/:id" element={<EditJenisTagihan />} />
       <Route path="/EditMasterData/:id" element={<EditMasterData />} />
+      <Route path="/EditKategoriData/:id" element={<EditKategoriData />} />
       <Route path="/EditKelas/:id" element={<EditKelas />} />
       <Route path="/EditKategori/:id" element={<Editkategori />} />
       <Route path="/Edit/:id" element={<EditData />} />

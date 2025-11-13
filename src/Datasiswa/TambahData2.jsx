@@ -7,7 +7,6 @@ import Sidnav from "../Components/Sidnav";
 function TambahData2() {
   const [formData, setFormData] = useState({
     Level: "",
-    Keterangan: "",
   });
 
   const [kategoriOptions, setKategoriOptions] = useState([]);
@@ -98,18 +97,6 @@ function TambahData2() {
                 value={formData.Level}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:ring-pink-400 focus:outline-none"
-              />
-            </div>
-
-            {/* Keterangan */}
-            <div>
-              <label className="block text-gray-700 mb-1">Keterangan</label>
-              <textarea
-                name="Keterangan"
-                value={formData.Keterangan}
-                onChange={handleChange}
-                rows={3}
                 className="w-full border border-gray-300 px-4 py-2 rounded-md focus:ring-pink-400 focus:outline-none"
               />
             </div>

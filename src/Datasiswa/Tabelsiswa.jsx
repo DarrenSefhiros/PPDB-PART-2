@@ -12,7 +12,7 @@ function TabelKategori() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5001/Kategori");
+        const res = await axios.get("http://localhost:5000/Kategori");
         console.log("Kategori data:", res.data); // debug cek data
 
         // Jika data tidak array atau kosong, set default empty array
@@ -107,7 +107,6 @@ function TabelKategori() {
                   <tr>
                     <th className="px-2 py-2 text-right">No</th>
                     <th className="px-4 py-2 text-center">Level</th>
-                    <th className="px-4 py-2 text-center">Keterangan</th>
                     <th className="px-4 py-2 text-center">Aksi</th>
                   </tr>
                 </thead>
@@ -126,11 +125,8 @@ function TabelKategori() {
                         {item.Level || item.Status || "—"}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Keterangan || "—"}
-                      </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">
                         <div className="flex justify-center space-x-2">
-                          <Link to={`/Editkategori/${item.id}`}>
+                          <Link to={`/EditkategoriData/${item.id}`}>
                             <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded transition hover:scale-[1.09]">
                               ✍ Edit
                             </button>
