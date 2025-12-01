@@ -78,18 +78,39 @@
   ],
   "jenistagihan": [
     {
-      "id": "f4b5",
-      "JenisTagihan": "SPP Sayang",
-      "Tagihan": "100000",
+      "id": "5014",
+      "JenisTagihan": "SPP",
+      "Tagihan": "10.000",
       "JatuhTempo": "",
-      "Keterangan": "SPP Bulanan"
+      "Keterangan": "spp sekolah"
     },
     {
-      "id": "16c6",
-      "JenisTagihan": "uang seragam",
-      "Tagihan": "10000",
+      "id": "ed94",
+      "JenisTagihan": "Uang Gedung",
+      "Tagihan": "20.000.000",
       "JatuhTempo": "",
-      "Keterangan": "uang seragam"
+      "Keterangan": "uang gedung"
+    },
+    {
+      "id": "6f35",
+      "JenisTagihan": "Uang Kemah",
+      "Tagihan": "30.000",
+      "JatuhTempo": "",
+      "Keterangan": "uang untuk berkemah kelas 10"
+    },
+    {
+      "id": "3e88",
+      "JenisTagihan": "uang praktek",
+      "Tagihan": "70.000",
+      "JatuhTempo": "",
+      "Keterangan": "uang praktek"
+    },
+    {
+      "id": "e3e2",
+      "JenisTagihan": "Biaya Piknik",
+      "Tagihan": "1.500.000",
+      "JatuhTempo": "",
+      "Keterangan": "biaya untuk piknik"
     }
   ],
   "Kesiswaan": [
@@ -109,32 +130,39 @@
       "Keterangan": "Karyawan sekolah"
     },
     {
-      "id": "0ab6",
-      "Nama": "widodo",
+      "id": "3fb8",
+      "Nama": "Darren",
+      "Email": "Duren@gmail.com",
+      "Jabatan": "XII",
+      "Kategori": "Siswa"
+    },
+    {
+      "id": "aa83",
+      "Nama": "Sakti",
+      "Email": "Levander@gmail.com",
+      "Jabatan": "XII",
+      "Kategori": "Siswa"
+    },
+    {
+      "id": "e173",
+      "Nama": "Pak Bondan",
+      "Email": "bla@gmail.com",
+      "Jabatan": "Satpam",
+      "Kategori": "Karyawan"
+    },
+    {
+      "Nama": "Pak Boros",
+      "Email": "awd@gmail.com",
+      "Jabatan": "IPA",
+      "Kategori": "Guru",
+      "id": "0d12"
+    },
+    {
+      "Nama": "bla",
       "Email": "awd@gmail.com",
       "Jabatan": "b indo",
-      "Kategori": "Guru"
-    },
-    {
-      "id": "8519",
-      "Nama": "Ayas",
-      "Email": "mmm@gmail.com",
-      "Jabatan": "Informatika",
-      "Kategori": "Guru"
-    },
-    {
-      "id": "4ac4",
-      "Nama": "awda",
-      "Email": "awd@gmail.com",
-      "Jabatan": "XI",
-      "Kategori": "Siswa"
-    },
-    {
-      "id": "5de7",
-      "Nama": "awd",
-      "Email": "awd@gmail.com",
-      "Jabatan": "XI",
-      "Kategori": "Siswa"
+      "Kategori": "Guru",
+      "id": "ccae"
     }
   ],
   "Tagihan": [
@@ -150,82 +178,111 @@
   ],
   "login": [
     {
-      "id": "337e",
-      "Nama": "widodo",
-      "Jenis": "SPP Sayang",
-      "Tagihan": "100000",
+      "id": "7ee2",
+      "Nama": "Darren",
+      "Jenis": "Uang Gedung",
+      "Tagihan": "20.000.000",
       "Tanggal": "2025-11-19",
-      "Email": "awd@gmail.com"
+      "Email": "Duren@gmail.com"
     },
     {
-      "id": "d28b",
-      "Nama": "Ayas",
-      "Jenis": "uang seragam",
-      "Tagihan": "10000",
-      "Tanggal": "2025-10-31",
-      "Email": "mmm@gmail.com",
+      "id": "1e56",
+      "Nama": "Sakti",
+      "Jenis": "SPP",
+      "Tagihan": "10.000",
+      "Tanggal": "2025-11-28",
+      "Email": "Levander@gmail.com"
+    },
+    {
+      "id": "095e",
+      "Nama": "Darren",
+      "Jenis": "uang praktek",
+      "Tagihan": "70.000",
+      "Tanggal": "2025-10-07",
+      "Email": "Duren@gmail.com"
+    },
+    {
+      "id": "f4cf",
+      "Nama": "Darren",
+      "Jenis": "Uang Gedung",
+      "Tagihan": "20.000.000",
+      "Tanggal": "2025-08-31",
+      "Email": "Duren@gmail.com",
       "Status": "Sudah Lunas"
     },
     {
-      "id": "2680",
-      "Nama": "awda",
-      "Jenis": "uang seragam",
-      "Tagihan": "10000",
-      "Tanggal": "2025-11-09",
-      "Email": "awd@gmail.com"
+      "id": "93f7",
+      "Nama": "Darren",
+      "Jenis": "Uang Kemah",
+      "Tagihan": "30.000",
+      "Tanggal": "2025-11-27",
+      "Email": "Duren@gmail.com",
+      "Status": "Belum Lunas"
+    },
+    {
+      "id": "d74c",
+      "Nama": "Sakti",
+      "Jenis": "Biaya Piknik",
+      "Tagihan": "1.725.000",
+      "Tanggal": "2025-12-26",
+      "Email": "Levander@gmail.com",
+      "Status": "Sudah Lunas"
     }
   ],
   "Kelas": [
     {
-      "id": "9d04",
-      "Nama": "Kudanil Terbang",
+      "id": "5ad1",
+      "Kelas": "X",
+      "Jurusan": "TKJ",
+      "Email": "awd@gmail.com"
+    },
+    {
+      "id": "71ae",
+      "Kelas": "IX",
+      "Jurusan": "DPB",
+      "Email": "awd@gmail.com"
+    },
+    {
+      "id": "c65b",
       "Kelas": "XI",
-      "Jurusan": "DPB",
-      "Email": "abb@gmail.com"
+      "Jurusan": "TKJ",
+      "Email": "awd@gmail.com"
     },
     {
-      "id": "8e1a",
-      "Nama": "dugong",
-      "Kelas": "x",
-      "Jurusan": "DPB",
-      "Email": "abb@gmail.com"
+      "id": "cfe0",
+      "Kelas": "XII",
+      "Jurusan": "TKJ",
+      "Email": "awd@gmail.com"
     },
     {
-      "id": "0f13",
-      "Kelas": "10",
+      "id": "f770",
+      "Kelas": "IIX",
       "Jurusan": "DPB",
+      "Email": "awd@gmail.com"
+    },
+    {
+      "id": "5ec4",
+      "Kelas": "12",
+      "Jurusan": "dpb",
       "Email": "awd@gmail.com"
     }
   ],
   "Kategori": [
     {
-      "Level": "ww",
-      "Keterangan": "aaa",
-      "id": "b47f"
-    },
-    {
-      "id": "704d",
       "Level": "Guru",
-      "Keterangan": "aaa"
+      "id": "49d4"
     },
     {
-      "id": "1a1b",
-      "Level": "Siswa",
-      "Keterangan": "aa"
+      "id": "9aad",
+      "Level": "Siswa"
     },
     {
-      "id": "70aa",
-      "Level": "Siswa",
-      "Keterangan": "aa"
+      "id": "3591",
+      "Level": "Karyawan"
     },
     {
-      "id": "437a",
-      "Level": "Satpam",
-      "Keterangan": "www"
-    },
-    {
-      "id": "95a3",
-      "Level": "Ustadzah"
+      "id": "9d41",
+      "Level": "Ustadz"
     }
   ]
 }

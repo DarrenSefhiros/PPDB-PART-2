@@ -84,10 +84,10 @@ function JenisTagihan() {
               <table className="min-w-full border border-pink-200 rounded-md overflow-hidden">
                 <thead className="bg-purple-200 text-purple-800">
                   <tr>
-                    <th className="px-2 py-2 text-right">No</th>
-                    <th className="px-4 py-2 text-center">Jenis Tagihan</th>
-                    <th className="px-4 py-2 text-center">Keterangan</th>
-                    <th className="px-4 py-2 text-center">Aksi</th>
+                    <th className="px-2 py-2 text-center font-bold">No</th>
+                    <th className="px-4 py-2 text-center font-bold">Jenis Tagihan</th>
+                    <th className="px-4 py-2 text-center font-bold">Keterangan</th>
+                    <th className="px-4 py-2 text-center font-bold">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -99,7 +99,7 @@ function JenisTagihan() {
                       transition={{ delay: index * 0.03 }}
                       className="bg-pink-100 hover:bg-pink-200 transition"
                     >
-                      <td className="border border-pink-200 px-2 py-2 text-right">
+                      <td className="border border-pink-200 px-2 py-2 text-center">
                         {index + 1}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center">

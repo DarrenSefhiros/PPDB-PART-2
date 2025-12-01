@@ -29,7 +29,7 @@ function App() {
       <Route path="/Dashboard" element={<Dashboard />} />
       <Route path="/Register" element={<Register />} />
       <Route path="/Tambahdata" element={<Tambahdata />} />
-      <Route path="/Tambahdata2" element={<TambahData2 />} />
+      <Route path="/TambahDataKategori" element={<TambahData2 />} />
       <Route path="/Tagihan" element={<Tagihan />} />
       <Route path="/Rekaptagihan" element={<Rekaptagihan />} />
       <Route path="/Jenistagihan" element={<Jenistagihan />} />
@@ -37,7 +37,7 @@ function App() {
       <Route path="/MasterData" element={<Masterdata />} />
       <Route path="/Kelas" element={<Kelas />} />
       <Route path="/Tambahjenistagihan" element={<TambahJenisTagihan />} />
-      <Route path="/TambahDataKategori" element={<TambahDataKategori />} />
+      <Route path="/TambahMasterData" element={<TambahDataKategori />} />
       <Route path="/TambahDataKelas" element={<TambahDataKelas />} />
       <Route path="/EditJenisTagihan/:id" element={<EditJenisTagihan />} />
       <Route path="/EditMasterData/:id" element={<EditMasterData />} />

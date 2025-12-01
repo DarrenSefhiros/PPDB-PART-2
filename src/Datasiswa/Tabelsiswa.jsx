@@ -88,7 +88,7 @@ function TabelKategori() {
           <div className="flex justify-between items-center mb-4 gap-2">
             <div className="text-pink-700 font-semibold">Total Status: {data.length}</div>
             <div>
-              <Link to="/TambahData2">
+              <Link to="/TambahDataKategori">
                 <button className="bg-pink-500 hover:bg-pink-600 rounded-md text-white font-bold py-2 px-4 transition hover:scale-[1.06]">
                   + Tambah Status
                 </button>
@@ -105,9 +105,9 @@ function TabelKategori() {
               <table className="min-w-full border border-pink-200 rounded-md overflow-hidden">
                 <thead className="bg-purple-200 text-purple-800">
                   <tr>
-                    <th className="px-2 py-2 text-right">No</th>
-                    <th className="px-4 py-2 text-center">Level</th>
-                    <th className="px-4 py-2 text-center">Aksi</th>
+                    <th className="px-2 py-2 text-center font-bold">No</th>
+                    <th className="px-4 py-2 text-center font-bold">Level</th>
+                    <th className="px-4 py-2 text-center font-bold">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -119,7 +119,7 @@ function TabelKategori() {
                       transition={{ delay: index * 0.03 }}
                       className="bg-pink-100 hover:bg-pink-200 transition"
                     >
-                      <td className="border border-pink-200 px-2 py-2 text-right">{index + 1}</td>
+                      <td className="border border-pink-200 px-2 py-2 text-center">{index + 1}</td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
                         {/* Jika item.Level undefined, tampilkan fallback */}
                         {item.Level || item.Status || "—"}

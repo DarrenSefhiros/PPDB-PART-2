@@ -172,14 +172,14 @@ function Tagihan() {
               <table className="min-w-full border border-pink-200 rounded-md overflow-hidden text-sm">
                 <thead className="bg-purple-200 text-purple-800">
                   <tr className="text-center">
-                    <th className="px-3 py-2 w-10">No</th>
-                    <th className="px-4 py-2 w-40 text-left">Nama</th>
-                    <th className="px-4 py-2 w-52 ">Email</th>
-                    <th className="px-4 py-2 w-36">Jenis</th>
-                    <th className="px-4 py-2 w-32">Tagihan</th>
-                    <th className="px-4 py-2 w-36">Tanggal</th>
-                    <th className="px-4 py-2 w-32">Status</th>
-                    <th className="px-4 py-2 w-48">Aksi</th>
+                    <th className="px-3 py-2 w-10 font-bold">No</th>
+                    <th className="px-4 py-2 w-40 text-left font-bold">Nama</th>
+                    <th className="px-4 py-2 w-52 font-bold">Email</th>
+                    <th className="px-4 py-2 w-36 font-bold">Jenis</th>
+                    <th className="px-4 py-2 w-32 font-bold">Tagihan</th>
+                    <th className="px-4 py-2 w-36 font-bold">Tanggal</th>
+                    <th className="px-4 py-2 w-32 font-bold">Status</th>
+                    <th className="px-4 py-2 w-48 font-bold">Aksi</th>
                   </tr>
                 </thead>
 
@@ -192,7 +192,7 @@ function Tagihan() {
                       transition={{ delay: index * 0.05 }}
                       className="bg-pink-100 hover:bg-pink-200 transition"
                     >
-                      <td className="border border-pink-200 px-2 py-2 text-right">
+                      <td className="border border-pink-200 px-2 py-2 text-center">
                         {index + 1}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-left text-nowrap align-middle">

@@ -15,36 +15,30 @@ function TambahDataKategori() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Ambil kategori
-    const fetchKategori = async () => {
-      try {
-        const res = await axios.get('http://localhost:5000/Kategori');
-        setKategoriList(res.data);
-      } catch (error) {
-        console.error('Gagal fetch data kategori:', error);
-      }
-    };
-
-    // Ambil kelas
-    const fetchKelas = async () => {
-      try {
-        const res = await axios.get('http://localhost:5000/Kelas');
-        setKelasList(res.data);
-      } catch (error) {
-        console.error('Gagal fetch data kelas:', error);
-      }
-    };
-
-    fetchKategori();
-    fetchKelas();
-
-    // Ambil Email user dari localStorage
-    const loginData = JSON.parse(localStorage.getItem('loginData'));
-    if (loginData?.Email) {
-      setFormData((prev) => ({ ...prev, Email: loginData.Email }));
+ useEffect(() => {
+  const fetchKategori = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/Kategori');
+      setKategoriList(res.data);
+    } catch (error) {
+      console.error('Gagal fetch data kategori:', error);
     }
-  }, []);
+  };
+
+
+  const fetchKelas = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/Kelas');
+      setKelasList(res.data);
+    } catch (error) {
+      console.error('Gagal fetch data kelas:', error);
+    }
+  };
+
+  fetchKategori();
+  fetchKelas();
+}, []);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -151,7 +145,7 @@ function TambahDataKategori() {
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-400 to-purple-600">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Tambah Data Kategori
+          Tambah Master Data
         </h2>
         <form onSubmit={handleSubmit}>
           {/* NAMA */}
@@ -171,7 +165,6 @@ function TambahDataKategori() {
             />
           </div>
 
-          {/* EMAIL */}
           <div className="mb-4">
             <label htmlFor="Email" className="block text-gray-700 mb-2">
               Email
@@ -188,7 +181,7 @@ function TambahDataKategori() {
             />
           </div>
 
-          {/* KATEGORI */}
+
           <div className="mb-4">
             <label htmlFor="Kategori" className="block text-gray-700 mb-2">
               Kategori

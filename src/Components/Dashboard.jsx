@@ -9,7 +9,7 @@ import {
   FaTimesCircle,
   FaMoneyBillWave,
   FaChalkboardTeacher,
-  FaUserTie, 
+  FaUserTie,
 } from "react-icons/fa";
 import { PiStudent } from "react-icons/pi";
 
@@ -48,13 +48,14 @@ function Dashboard() {
 
     fetchData();
   }, []);
-    function formatDate(dateString) {
+
+  function formatDate(dateString) {
     if (!dateString) return "";
     const date = new Date(dateString);
     if (isNaN(date)) return dateString;
 
     const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // bulan mulai dari 0
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
 
     return `${day}/${month}/${year}`;
@@ -71,67 +72,6 @@ function Dashboard() {
   const totalSudahLunas = tagihanData.filter((i) => i.Status === "Sudah Lunas").length;
   const totalBelumLunas = tagihanData.filter((i) => i.Status !== "Sudah Lunas").length;
 
-  const handleToggleStatus = async (id) => {
-    const itemToUpdate = tagihanData.find((item) => item.id === id);
-    if (!itemToUpdate) return;
-
-    const newStatus =
-      itemToUpdate.Status?.toLowerCase() === "sudah lunas"
-        ? "Belum Lunas"
-        : "Sudah Lunas";
-
-    const konfirmasi = await Swal.fire({
-      title: "Ubah Status Pembayaran?",
-      text: `Status akan diubah menjadi: ${newStatus}`,
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#28a745",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Ya, ubah",
-      cancelButtonText: "Batal",
-    });
-
-    if (konfirmasi.isConfirmed) {
-      try {
-        await axios.patch(`http://localhost:5000/login/${id}`, {
-          Status: newStatus,
-        });
-
-        setTagihanData((prev) =>
-          prev.map((item) =>
-            item.id === id ? { ...item, Status: newStatus } : item
-          )
-        );
-
-        Swal.fire("Berhasil!", "Status berhasil diubah.", "success");
-      } catch (err) {
-        Swal.fire("Gagal!", "Terjadi kesalahan saat ubah status.", "error");
-      }
-    }
-  };
-
-  const handleDelete = async (id) => {
-    const konfirmasi = await Swal.fire({
-      title: "Serius Kamu?",
-      text: "Data tidak akan bisa dikembalikan jika telah dihapus",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Hapus data",
-    });
-
-    if (konfirmasi.isConfirmed) {
-      try {
-        await axios.delete(`http://localhost:5000/login/${id}`);
-        setTagihanData((prev) => prev.filter((item) => item.id !== id));
-        Swal.fire("Terhapus!", "Data telah dihapus.", "success");
-      } catch (err) {
-        Swal.fire("Error!", "Gagal menghapus data.", "error");
-      }
-    }
-  };
-
   return (
     <div className="flex">
       <Sidnav />
@@ -145,20 +85,20 @@ function Dashboard() {
           <h1 className="text-3xl font-bold text-pink-700">Dashboard</h1>
         </motion.div>
 
- <motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6 }}
-  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mb-6 w-full max-w-6xl"
->
-  <Card title="Total Siswa" value={totalSiswa} icon={<PiStudent />} color="bg-pink-500" />
-  <Card title="Total Guru" value={totalGuru} icon={<FaChalkboardTeacher />} color="bg-pink-500" />
-  <Card title="Total Karyawan" value={totalKaryawan} icon={<FaUserTie />} color="bg-pink-500" />
-  <Card title="Total Tagihan" value={`Rp ${totalTagihan.toLocaleString("id-ID")}`} icon={<FaMoneyBillWave />} color="bg-pink-500" />
-  <Card title="Total Lunas" value={totalSudahLunas} icon={<FaCheckCircle />} color="bg-pink-500" />
-  <Card title="Total Belum Lunas" value={totalBelumLunas} icon={<FaTimesCircle />} color="bg-pink-500" />
-</motion.div>
-
+        {/* === CARD DATA === */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mb-6 w-full max-w-6xl"
+        >
+          <Card title="Total Siswa" value={totalSiswa} icon={<PiStudent />} color="bg-pink-500" />
+          <Card title="Total Guru" value={totalGuru} icon={<FaChalkboardTeacher />} color="bg-pink-500" />
+          <Card title="Total Karyawan" value={totalKaryawan} icon={<FaUserTie />} color="bg-pink-500" />
+          <Card title="Total Tagihan" value={`Rp ${totalTagihan.toLocaleString("id-ID")}`} icon={<FaMoneyBillWave />} color="bg-pink-500" />
+          <Card title="Total Lunas" value={totalSudahLunas} icon={<FaCheckCircle />} color="bg-pink-500" />
+          <Card title="Total Belum Lunas" value={totalBelumLunas} icon={<FaTimesCircle />} color="bg-pink-500" />
+        </motion.div>
 
         {/* === TABEL TAGIHAN === */}
         <div className="w-full max-w-6xl bg-white shadow-md rounded-md p-5 mb-8">
@@ -171,13 +111,13 @@ function Dashboard() {
             <table className="min-w-full border border-pink-200 rounded-md overflow-hidden text-sm">
               <thead className="bg-purple-200 text-purple-800">
                 <tr className="text-center">
-                  <th className="px-3 py-2 w-10">No</th>
-                  <th className="px-4 py-2 w-40 text-left">Nama</th>
-                  <th className="px-4 py-2 w-52">Email</th>
-                  <th className="px-4 py-2 w-36">Jenis</th>
-                  <th className="px-4 py-2 w-32">Tagihan</th>
-                  <th className="px-4 py-2 w-36">Tanggal</th>
-                  <th className="px-4 py-2 w-32">Status</th>
+                  <th className="px-3 py-2 w-10 font-bold">No</th>
+                  <th className="px-4 py-2 w-40 text-left font-bold">Nama</th>
+                  <th className="px-4 py-2 w-52 font-bold">Email</th>
+                  <th className="px-4 py-2 w-36 font-bold">Jenis</th>
+                  <th className="px-4 py-2 w-32 font-bold">Tagihan</th>
+                  <th className="px-4 py-2 w-36 font-bold">Tanggal</th>
+                  <th className="px-4 py-2 w-32 font-bold">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -205,32 +145,45 @@ function Dashboard() {
           )}
         </div>
 
-        {/* === TABEL GURU, SISWA, KARYAWAN === */}
+
         {["Guru", "Siswa", "Karyawan"].map((kategori) => (
           <div key={kategori} className="w-full max-w-6xl bg-white shadow-md rounded-md p-5 mb-6">
             <h2 className="text-xl font-bold text-pink-700 mb-3">Data {kategori}</h2>
+
             <table className="min-w-full border border-pink-200 rounded-md overflow-hidden text-sm">
               <thead className="bg-purple-200 text-purple-800">
                 <tr>
-                  <th className="px-2 py-2 w-12">No</th>
-                  <th className="px-4 py-2 text-center">Nama</th>
-                  <th className="px-4 py-2 text-center">Email</th>
-                  <th className="px-4 py-2 text-center">Jabatan/Kelas</th>
-                  <th className="px-4 py-2 text-center">Kategori</th>
+                  <th className="px-2 py-2 w-12 font-bold">No</th>
+                  <th className="px-4 py-2 text-center font-bold">Nama</th>
+                  <th className="px-4 py-2 text-center font-bold">Email</th>
+                  <th className="px-4 py-2 text-center font-bold">Jabatan/Kelas</th>
+                  <th className="px-4 py-2 text-left font-bold">Kategori</th>
                 </tr>
               </thead>
+
               <tbody>
-                {kesiswaanData
-                  .filter((i) => i.Kategori === kategori)
-                  .map((i, idx) => (
-                    <tr key={i.id} className="bg-pink-100 hover:bg-pink-200 transition">
-                      <td className="border border-pink-200 px-2 py-2 text-center">{idx + 1}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">{i.Nama}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">{i.Email}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">{i.Jabatan}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">{i.Kategori}</td>
-                    </tr>
-                  ))}
+                {kesiswaanData.filter((i) => i.Kategori === kategori).length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="text-center py-4 text-pink-600 font-medium"
+                    >
+                      Belum ada data
+                    </td>
+                  </tr>
+                ) : (
+                  kesiswaanData
+                    .filter((i) => i.Kategori === kategori)
+                    .map((i, idx) => (
+                      <tr key={i.id} className="bg-pink-100 hover:bg-pink-200 transition">
+                        <td className="border border-pink-200 px-2 py-2 text-center">{idx + 1}</td>
+                        <td className="border border-pink-200 px-4 py-2 text-center">{i.Nama}</td>
+                        <td className="border border-pink-200 px-4 py-2 text-center">{i.Email}</td>
+                        <td className="border border-pink-200 px-4 py-2 text-center">{i.Jabatan}</td>
+                        <td className="border border-pink-200 px-4 py-2 text-left">{i.Kategori}</td>
+                      </tr>
+                    ))
+                )}
               </tbody>
             </table>
           </div>

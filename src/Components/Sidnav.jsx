@@ -85,7 +85,7 @@ const Sidnav = () => {
           <li>
             <a
               href="/Tagihan"
-              className="flex items-center gap-3 text-lg hover:bg-pink-700 rounded-md px-3 transition-all duration-200"
+              className="flex items-center gap-3 text-lg hover:bg-pink-800 rounded-md px-3 transition-all duration-200"
             >
               <i className="ri-bill-line text-2xl text-pink-100"></i>
               <span>Tagihan</span>

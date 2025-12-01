@@ -10,7 +10,6 @@ function EditKategoriData() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     Level: "",
-    Keterangan: "",
   });
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +21,6 @@ function EditKategoriData() {
         console.log("Data kategori untuk edit:", res.data);
         setForm({
           Level: res.data.Level || res.data.Status || "",
-          Keterangan: res.data.Keterangan || "",
         });
       } catch (err) {
         console.error("Gagal mengambil data kategori:", err);
@@ -52,15 +50,6 @@ function EditKategoriData() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.Level || !form.Keterangan) {
-      Swal.fire({
-        icon: "warning",
-        title: "Form belum lengkap",
-        text: "Harap isi semua kolom!",
-      });
-      return;
-    }
-
     try {
       await axios.put(`http://localhost:5000/Kategori/${id}`, form);
       Swal.fire({
@@ -70,7 +59,7 @@ function EditKategoriData() {
         timer: 1500,
         showConfirmButton: false,
       });
-      navigate("/KategoriData"); // kembali ke tabel
+      navigate("/KategoriData");
     } catch (err) {
       console.error("Gagal memperbarui kategori:", err);
       Swal.fire({

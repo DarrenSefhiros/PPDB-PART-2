@@ -99,22 +99,8 @@ function Kelas() {
               </select>
             </div>
 
-            <div className="flex flex-col">
-              <label htmlFor="search" className="mb-1 font-semibold text-pink-700">
-                Cari Nama
-              </label>
-              <input
-                type="text"
-                id="search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Masukkan nama..."
-                className="border border-pink-300 rounded-md p-2 w-48 focus:outline-none focus:ring-2 focus:ring-pink-400"
-              />
-            </div>
-
-            <div className="text-pink-700 font-semibold text-lg whitespace-nowrap">
-              Total Data: {filteredData.length} orang
+            <div className="text-pink-700 font-semibold text-lg whitespace-nowrap text-center">
+              Total Kelas: {filteredData.length} 
             </div>
 
             <div>
@@ -136,10 +122,10 @@ function Kelas() {
               <table className="min-w-full border border-pink-200 rounded-md overflow-hidden text-sm">
                 <thead className="bg-purple-200 text-purple-800">
                   <tr className="text-center">
-                    <th className="px-3 py-2 w-10">No</th>
-                    <th className="px-4 py-2 w-52">Kelas</th>
-                    <th className="px-4 py-2 w-32">Jurusan</th>
-                    <th className="px-4 py-2 w-48">Aksi</th>
+                    <th className="px-3 py-2 w-10 font-bold">No</th>
+                    <th className="px-4 py-2 w-52 font-bold">Kelas</th>
+                    <th className="px-4 py-2 w-32 font-bold">Jurusan</th>
+                    <th className="px-4 py-2 w-48 font-bold">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -151,7 +137,7 @@ function Kelas() {
                       transition={{ delay: index * 0.05 }}
                       className="bg-pink-100 hover:bg-pink-200 transition"
                     >
-                      <td className="border border-pink-200 px-2 py-2 text-right">{index + 1}</td>
+                      <td className="border border-pink-200 px-2 py-2 text-center">{index + 1}</td>
                       <td className="border border-pink-200 px-4 py-2 text-center">{item?.Kelas}</td>
                       <td className="border border-pink-200 px-4 py-2 text-center">{item?.Jurusan}</td>
                       <td className="border border-pink-200 px-4 py-2 text-center align-middle">
