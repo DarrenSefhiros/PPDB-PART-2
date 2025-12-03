@@ -12,7 +12,6 @@ function MasterData() {
   const [selectedKategori, setSelectedKategori] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Ambil data utama dan kategori unik
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,7 +37,7 @@ function MasterData() {
     fetchData();
   }, []);
 
-  // Filter data
+
   const filteredData = data.filter((item) => {
     const nama = (item.Nama || "").toLowerCase();
     const matchesKategori =

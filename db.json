@@ -130,39 +130,88 @@
       "Keterangan": "Karyawan sekolah"
     },
     {
-      "id": "3fb8",
-      "Nama": "Darren",
-      "Email": "Duren@gmail.com",
-      "Jabatan": "XII",
-      "Kategori": "Siswa"
+      "lastPresensi": null,
+      "id": "3fb8"
     },
     {
-      "id": "aa83",
-      "Nama": "Sakti",
-      "Email": "Levander@gmail.com",
-      "Jabatan": "XII",
-      "Kategori": "Siswa"
+      "lastPresensi": null,
+      "id": "aa83"
     },
     {
-      "id": "e173",
-      "Nama": "Pak Bondan",
-      "Email": "bla@gmail.com",
-      "Jabatan": "Satpam",
-      "Kategori": "Karyawan"
+      "lastPresensi": {
+        "date": "2025-12-03",
+        "jamMasuk": null,
+        "jamPulang": null
+      },
+      "id": "e173"
     },
     {
-      "Nama": "Pak Boros",
-      "Email": "awd@gmail.com",
-      "Jabatan": "IPA",
-      "Kategori": "Guru",
+      "lastPresensi": {
+        "date": "2025-12-03",
+        "jamMasuk": "08:09:23",
+        "jamPulang": "08:09:26"
+      },
       "id": "0d12"
     },
     {
-      "Nama": "bla",
-      "Email": "awd@gmail.com",
-      "Jabatan": "b indo",
-      "Kategori": "Guru",
+      "lastPresensi": null,
       "id": "ccae"
+    },
+    {
+      "lastPresensi": {
+        "date": "2025-12-03",
+        "jamMasuk": null,
+        "jamPulang": null
+      },
+      "id": "0785"
+    },
+    {
+      "lastPresensi": {
+        "date": "2025-12-03",
+        "jamMasuk": "09:52:08",
+        "jamPulang": null
+      },
+      "id": "0b9f"
+    },
+    {
+      "lastPresensi": {
+        "date": "2025-12-03",
+        "jamMasuk": "10:26:04",
+        "jamPulang": "10:30:18"
+      },
+      "id": "f59c"
+    },
+    {
+      "lastPresensi": {
+        "date": "2025-12-03",
+        "jamMasuk": null,
+        "jamPulang": null
+      },
+      "id": "20cc"
+    },
+    {
+      "id": "8553",
+      "Nama": "aa",
+      "Email": "aaa@gmail.com",
+      "Jabatan": "aaa",
+      "Kategori": "Guru",
+      "lastPresensi": {
+        "date": "2025-12-03",
+        "jamMasuk": "10:32:23",
+        "jamPulang": "10:59:39"
+      }
+    },
+    {
+      "id": "aa9e",
+      "Nama": "rusdi",
+      "Email": "d.sefh007@gmail.com",
+      "Jabatan": "IIX",
+      "Kategori": "Siswa",
+      "lastPresensi": {
+        "date": "2025-12-03",
+        "jamMasuk": "10:59:25",
+        "jamPulang": null
+      }
     }
   ],
   "Tagihan": [

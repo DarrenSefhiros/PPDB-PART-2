@@ -20,6 +20,7 @@ import EditKelas from './Datasiswa/EditKelas'
 import TambahData2 from './Datasiswa/TambahData2'
 import EditMasterData from './Datasiswa/Editmasterdata'
 import EditKategoriData from './Datasiswa/EditKategoriData'
+import Presensi from './Datasiswa/Presensi'
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
       <Route path="/TambahDataKategori" element={<TambahData2 />} />
       <Route path="/Tagihan" element={<Tagihan />} />
       <Route path="/Rekaptagihan" element={<Rekaptagihan />} />
+      <Route path="/Presensi" element={<Presensi />} />
       <Route path="/Jenistagihan" element={<Jenistagihan />} />
       <Route path="/KategoriData" element={<Tabelsiswa />} />
       <Route path="/MasterData" element={<Masterdata />} />
