@@ -17,7 +17,7 @@ function Presensi() {
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedNamaId, setSelectedNamaId] = useState("");
 
-  // Waktu WIB
+  // WIB time
   const nowWIB = () => {
     const d = new Date();
     const time = d.toLocaleTimeString("en-GB", {
@@ -27,7 +27,7 @@ function Presensi() {
       minute: "2-digit",
       second: "2-digit",
     });
-    const date = d.toLocaleDateString("en-CA", { timeZone: "Asia/Jakarta" });
+    const date = d.toLocaleDateString("en-CA", { timeZone: "Asia/Jakarta" }); 
     return { time, date };
   };
 
@@ -36,7 +36,6 @@ function Presensi() {
     const fetchAll = async () => {
       try {
         setLoading(true);
-
         const res = await axios.get("http://localhost:5000/Kesiswaan");
 
         const cleaned = (res.data || [])
@@ -64,20 +63,18 @@ function Presensi() {
     localStorage.setItem("presensiList", JSON.stringify(presensiList));
   }, [presensiList]);
 
-  // Dropdown NAMA (KOSONG jika level = all)
   const namaOptions =
     selectedLevel === "all"
-      ? [] // <<< FIX: KOSONGKAN
+      ? []
       : kesiswaan.filter((k) => k.Kategori === selectedLevel);
 
-  // Merge update aman
   const updateSafe = async (id, dataUpdate) => {
     const old = await axios.get(`http://localhost:5000/Kesiswaan/${id}`);
     const merged = { ...old.data, ...dataUpdate };
     await axios.put(`http://localhost:5000/Kesiswaan/${id}`, merged);
   };
 
-  // Simpan presensi
+  // Simpan presensi (membuat row baru)
   const handleSimpanPresensi = async () => {
     if (!selectedNamaId)
       return Swal.fire("Nama belum dipilih", "Pilih dahulu", "warning");
@@ -91,6 +88,13 @@ function Presensi() {
 
     const { date } = nowWIB();
 
+    const tanggalLengkap = new Date().toLocaleDateString("id-ID", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
     const newPresensi = {
       id: `${selectedNamaId}-${date}-${Date.now()}`,
       kesiswaanId: selectedNamaId,
@@ -98,7 +102,10 @@ function Presensi() {
       level: target.Kategori,
       jamMasuk: null,
       jamPulang: null,
+      status: null,
+      alasanIjin: "",
       date,
+      tanggalLengkap,
     };
 
     try {
@@ -115,10 +122,39 @@ function Presensi() {
     }
   };
 
-  // Jam Masuk
+  // Klik Masuk -> Pilih Masuk atau Ijin
   const handleKlikMasuk = async (entryId) => {
     const entry = presensiList.find((p) => p.id === entryId);
     if (!entry || entry.jamMasuk) return;
+
+    // SweetAlert Pilih Masuk / Ijin
+    const pilihan = await Swal.fire({
+      title: "Pilih Presensi",
+      text: "Kamu mau masuk atau ijin?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Masuk",
+      cancelButtonText: "Ijin",
+    });
+
+    const isMasuk = pilihan.isConfirmed;
+    let alasan = "";
+
+    if (!isMasuk) {
+      const alasanInput = await Swal.fire({
+        title: "Alasan Ijin",
+        input: "text",
+        inputPlaceholder: "Ijin karena apa?",
+        showCancelButton: true,
+        confirmButtonText: "Simpan Ijin",
+      });
+
+      if (!alasanInput.value) {
+        return Swal.fire("Gagal", "Alasan ijin harus diisi!", "warning");
+      }
+
+      alasan = alasanInput.value;
+    }
 
     const { time } = nowWIB();
 
@@ -127,24 +163,39 @@ function Presensi() {
         lastPresensi: {
           date: entry.date,
           jamMasuk: time,
-          jamPulang: entry.jamPulang,
+          jamPulang: isMasuk ? entry.jamPulang : null,
         },
+        status: isMasuk ? "masuk" : "ijin",
+        alasanIjin: alasan,
       });
 
       setPresensiList((prev) =>
-        prev.map((p) => (p.id === entryId ? { ...p, jamMasuk: time } : p))
+        prev.map((p) =>
+          p.id === entryId
+            ? {
+                ...p,
+                jamMasuk: time,
+                status: isMasuk ? "masuk" : "ijin",
+                alasanIjin: alasan,
+              }
+            : p
+        )
       );
 
-      Swal.fire("Berhasil", "Jam Masuk dicatat!", "success");
+      Swal.fire(
+        "Berhasil",
+        isMasuk ? "Jam Masuk dicatat!" : "Ijin dicatat!",
+        "success"
+      );
     } catch {
-      Swal.fire("Error", "Gagal update jam masuk", "error");
+      Swal.fire("Error", "Gagal update presensi", "error");
     }
   };
 
-  // Jam Pulang
+  // Klik Pulang
   const handleKlikPulang = async (entryId) => {
     const entry = presensiList.find((p) => p.id === entryId);
-    if (!entry || entry.jamPulang) return;
+    if (!entry || entry.jamPulang || entry.status === "ijin") return;
 
     const { time } = nowWIB();
 
@@ -158,7 +209,9 @@ function Presensi() {
       });
 
       setPresensiList((prev) =>
-        prev.map((p) => (p.id === entryId ? { ...p, jamPulang: time } : p))
+        prev.map((p) =>
+          p.id === entryId ? { ...p, jamPulang: time } : p
+        )
       );
 
       Swal.fire("Berhasil", "Jam Pulang dicatat!", "success");
@@ -167,7 +220,7 @@ function Presensi() {
     }
   };
 
-  // Hapus presensi
+  // Hapus
   const handleHapus = async (entryId) => {
     const entry = presensiList.find((p) => p.id === entryId);
     if (!entry) return;
@@ -191,6 +244,7 @@ function Presensi() {
     Swal.fire("Berhasil", "Entry presensi dihapus", "success");
   };
 
+  // --- RENDER ---
   return (
     <div className="flex">
       <Sidnav />
@@ -208,7 +262,6 @@ function Presensi() {
 
           {/* FORM */}
           <div className="bg-white p-5 rounded-md shadow-md mb-6 flex flex-wrap items-end gap-4">
-
             {/* Level */}
             <div className="flex flex-col">
               <label className="mb-1 font-semibold text-pink-700">
@@ -239,9 +292,8 @@ function Presensi() {
               <select
                 value={selectedNamaId}
                 onChange={(e) => setSelectedNamaId(e.target.value)}
-                disabled={selectedLevel === "all"} // <<< FIX
-                className="border border-pink-300 rounded-md p-2 w-72
-                  disabled:bg-gray-200 disabled:text-gray-500"
+                disabled={selectedLevel === "all"}
+                className="border border-pink-300 rounded-md p-2 w-72 disabled:bg-gray-200 disabled:text-gray-500"
               >
                 <option value="">
                   {selectedLevel === "all"
@@ -282,8 +334,10 @@ function Presensi() {
                     <th>No</th>
                     <th className="text-left">Nama</th>
                     <th>Level</th>
+                    <th>Status</th>
                     <th>Jam Masuk</th>
                     <th>Jam Pulang</th>
+                    <th>Waktu</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -300,11 +354,25 @@ function Presensi() {
                       <td className="border text-center">{idx + 1}</td>
                       <td className="border px-4 py-2">{p.nama}</td>
                       <td className="border text-center">{p.level}</td>
+
+                      {/* STATUS */}
+                      <td className="border text-center font-semibold">
+                        {p.status === "ijin"
+                          ? `Ijin (${p.alasanIjin})`
+                          : p.status === "masuk"
+                          ? "Masuk"
+                          : "—"}
+                      </td>
+
                       <td className="border text-center">
                         {p.jamMasuk || "—"}
                       </td>
                       <td className="border text-center">
                         {p.jamPulang || "—"}
+                      </td>
+
+                      <td className="border text-center">
+                        {p.tanggalLengkap}
                       </td>
 
                       <td className="border text-center">
@@ -323,9 +391,9 @@ function Presensi() {
 
                           <button
                             onClick={() => handleKlikPulang(p.id)}
-                            disabled={!!p.jamPulang}
+                            disabled={!!p.jamPulang || p.status === "ijin"}
                             className={`py-1 px-3 rounded font-bold ${
-                              p.jamPulang
+                              p.jamPulang || p.status === "ijin"
                                 ? "bg-gray-400 cursor-not-allowed"
                                 : "bg-amber-500 text-white hover:bg-amber-600"
                             }`}

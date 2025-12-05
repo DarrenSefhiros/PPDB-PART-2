@@ -80,7 +80,7 @@ const Sidnav = () => {
               href="/Jenistagihan"
               className="flex items-center text-nowrap gap-3 text-lg hover:bg-pink-700 w-auto rounded-md px-3 transition-all duration-200"
             >
-              <i className="ri-file-list-2-line text-2xl text-pink-100"></i>
+              <i className="ri-file-list-3-line text-2xl text-pink-100"></i>
               <span>Kategori Tagihan</span>
             </a>
           </li>
@@ -118,10 +118,10 @@ const Sidnav = () => {
           </li>
           <li>
             <a
-              href="/Tagihan"
+              href="/Rekappresensi"
               className="flex items-center gap-3 text-lg hover:bg-pink-800 rounded-md px-3 transition-all duration-200"
             >
-              <i className="ri-bill-line text-2xl text-pink-100"></i>
+              <i className="ri-history-line text-2xl text-2xl text-pink-100"></i>
               <span className="text-nowrap">Rekap Presensi</span>
             </a>
           </li>

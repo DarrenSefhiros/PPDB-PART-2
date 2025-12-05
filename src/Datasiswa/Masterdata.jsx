@@ -37,7 +37,6 @@ function MasterData() {
     fetchData();
   }, []);
 
-
   const filteredData = data.filter((item) => {
     const nama = (item.Nama || "").toLowerCase();
     const matchesKategori =
@@ -46,7 +45,6 @@ function MasterData() {
     return matchesKategori && matchesSearch;
   });
 
-  // Hapus data
   const handleDelete = async (id) => {
     if (!id) return;
 
@@ -72,17 +70,13 @@ function MasterData() {
     }
   };
 
-  // Label header untuk kolom Jabatan/Kelas/Mata Pelajaran
   const getJabatanHeader = () => {
     if (selectedKategori === "Siswa") return "Kelas";
     if (selectedKategori === "Guru") return "Mata Pelajaran";
     return "Jabatan";
   };
 
-  // Tampilkan value sesuai kategori
   const getJabatanValue = (item) => {
-    if (item.Kategori === "Siswa") return item.Jabatan || "-";
-    if (item.Kategori === "Guru") return item.Jabatan || "-";
     return item.Jabatan || "-";
   };
 
@@ -146,7 +140,7 @@ function MasterData() {
             </div>
           </div>
 
-          {/* Tabel */}
+          {/* Table */}
           <div className="overflow-x-auto">
             {loading ? (
               <div className="text-center py-4 text-pink-600">Memuat data...</div>
@@ -161,6 +155,10 @@ function MasterData() {
                     <th className="px-4 py-2 w-52 font-bold">Email</th>
                     <th className="px-4 py-2 w-32 font-bold">Kategori</th>
                     <th className="px-4 py-2 w-32 font-bold">{getJabatanHeader()}</th>
+
+                    {/* NEW RFID COLUMN */}
+                    <th className="px-4 py-2 w-32 font-bold">RFID</th>
+
                     <th className="px-4 py-2 w-48 font-bold">Aksi</th>
                   </tr>
                 </thead>
@@ -174,10 +172,16 @@ function MasterData() {
                       className="bg-pink-100 hover:bg-pink-200 transition"
                     >
                       <td className="border border-pink-200 px-2 py-2 text-center">{index + 1}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-left">{item.Nama || "-"}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">{item.Email || "-"}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">{item.Kategori || "-"}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-left">{item.Nama}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-center">{item.Email}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-center">{item.Kategori}</td>
                       <td className="border border-pink-200 px-4 py-2 text-center">{getJabatanValue(item)}</td>
+
+                      {/* RFID VALUE */}
+                      <td className="border border-pink-200 px-4 py-2 text-center">
+                        {item.RFID || "-"}
+                      </td>
+
                       <td className="border border-pink-200 px-4 py-2 text-center">
                         <div className="flex justify-center items-center gap-2">
                           <Link to={`/EditMasterData/${item.id}`}>

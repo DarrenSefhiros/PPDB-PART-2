@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidnav from "./Sidnav";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
   FaCheckCircle,
@@ -32,6 +31,12 @@ function Dashboard() {
   const [kesiswaanData, setKesiswaanData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // === Ambil Presensi dari localStorage ===
+  const [presensiList, setPresensiList] = useState(() => {
+    const saved = localStorage.getItem("presensiList");
+    return saved ? JSON.parse(saved) : [];
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,11 +59,10 @@ function Dashboard() {
     const date = new Date(dateString);
     if (isNaN(date)) return dateString;
 
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-
-    return `${day}/${month}/${year}`;
+    const d = String(date.getDate()).padStart(2, "0");
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const y = date.getFullYear();
+    return `${d}/${m}/${y}`;
   }
 
   const totalSiswa = kesiswaanData.filter((i) => i.Kategori === "Siswa").length;
@@ -111,28 +115,29 @@ function Dashboard() {
             <table className="min-w-full border border-pink-200 rounded-md overflow-hidden text-sm">
               <thead className="bg-purple-200 text-purple-800">
                 <tr className="text-center">
-                  <th className="px-3 py-2 w-10 font-bold">No</th>
-                  <th className="px-4 py-2 w-40 text-left font-bold">Nama</th>
-                  <th className="px-4 py-2 w-52 font-bold">Email</th>
-                  <th className="px-4 py-2 w-36 font-bold">Jenis</th>
-                  <th className="px-4 py-2 w-32 font-bold">Tagihan</th>
-                  <th className="px-4 py-2 w-36 font-bold">Tanggal</th>
-                  <th className="px-4 py-2 w-32 font-bold">Status</th>
+                  <th>No</th>
+                  <th>Nama</th>
+                  <th>Email</th>
+                  <th>Jenis</th>
+                  <th>Tagihan</th>
+                  <th>Tanggal</th>
+                  <th>Status</th>
                 </tr>
               </thead>
+
               <tbody>
                 {tagihanData.map((item, index) => (
                   <tr key={item.id} className="bg-pink-100 hover:bg-pink-200 transition">
-                    <td className="border border-pink-200 px-2 py-2 text-center">{index + 1}</td>
-                    <td className="border border-pink-200 px-4 py-2">{item.Nama}</td>
-                    <td className="border border-pink-200 px-4 py-2">{item.Email}</td>
-                    <td className="border border-pink-200 px-4 py-2">{item.Jenis}</td>
-                    <td className="border border-pink-200 px-4 py-2 text-right">
+                    <td className="border px-2 py-2 text-center">{index + 1}</td>
+                    <td className="border px-4 py-2">{item.Nama}</td>
+                    <td className="border px-4 py-2">{item.Email}</td>
+                    <td className="border px-4 py-2">{item.Jenis}</td>
+                    <td className="border px-4 py-2 text-right">
                       Rp {Number(String(item.Tagihan).replace(/\./g, "") || 0).toLocaleString("id-ID")}
                     </td>
-                    <td className="border border-pink-200 px-4 py-2 text-center">{formatDate(item.Tanggal)}</td>
+                    <td className="border px-4 py-2 text-center">{formatDate(item.Tanggal)}</td>
                     <td
-                      className={`border border-pink-200 px-4 py-2 text-center font-semibold ${
+                      className={`border px-4 py-2 text-center font-semibold ${
                         item.Status === "Sudah Lunas" ? "text-green-600" : "text-yellow-600"
                       }`}
                     >
@@ -145,7 +150,7 @@ function Dashboard() {
           )}
         </div>
 
-
+        {/* === TABEL DATA GURU/SISWA/KARYAWAN === */}
         {["Guru", "Siswa", "Karyawan"].map((kategori) => (
           <div key={kategori} className="w-full max-w-6xl bg-white shadow-md rounded-md p-5 mb-6">
             <h2 className="text-xl font-bold text-pink-700 mb-3">Data {kategori}</h2>
@@ -153,21 +158,18 @@ function Dashboard() {
             <table className="min-w-full border border-pink-200 rounded-md overflow-hidden text-sm">
               <thead className="bg-purple-200 text-purple-800">
                 <tr>
-                  <th className="px-2 py-2 w-12 font-bold">No</th>
-                  <th className="px-4 py-2 text-center font-bold">Nama</th>
-                  <th className="px-4 py-2 text-center font-bold">Email</th>
-                  <th className="px-4 py-2 text-center font-bold">Jabatan/Kelas</th>
-                  <th className="px-4 py-2 text-left font-bold">Kategori</th>
+                  <th>No</th>
+                  <th>Nama</th>
+                  <th>Email</th>
+                  <th>Jabatan/Kelas</th>
+                  <th>Kategori</th>
                 </tr>
               </thead>
 
               <tbody>
                 {kesiswaanData.filter((i) => i.Kategori === kategori).length === 0 ? (
                   <tr>
-                    <td
-                      colSpan="5"
-                      className="text-center py-4 text-pink-600 font-medium"
-                    >
+                    <td colSpan="5" className="text-center py-4 text-pink-600 font-medium">
                       Belum ada data
                     </td>
                   </tr>
@@ -175,12 +177,12 @@ function Dashboard() {
                   kesiswaanData
                     .filter((i) => i.Kategori === kategori)
                     .map((i, idx) => (
-                      <tr key={i.id} className="bg-pink-100 hover:bg-pink-200 transition">
-                        <td className="border border-pink-200 px-2 py-2 text-center">{idx + 1}</td>
-                        <td className="border border-pink-200 px-4 py-2 text-center">{i.Nama}</td>
-                        <td className="border border-pink-200 px-4 py-2 text-center">{i.Email}</td>
-                        <td className="border border-pink-200 px-4 py-2 text-center">{i.Jabatan}</td>
-                        <td className="border border-pink-200 px-4 py-2 text-left">{i.Kategori}</td>
+                      <tr key={i.id} className="bg-pink-100 hover:bg-ppink-200 transition">
+                        <td className="border px-2 py-2 text-center">{idx + 1}</td>
+                        <td className="border px-4 py-2 text-center">{i.Nama}</td>
+                        <td className="border px-4 py-2 text-center">{i.Email}</td>
+                        <td className="border px-4 py-2 text-center">{i.Jabatan}</td>
+                        <td className="border px-4 py-2">{i.Kategori}</td>
                       </tr>
                     ))
                 )}
@@ -188,6 +190,58 @@ function Dashboard() {
             </table>
           </div>
         ))}
+
+        {/* ========================================== */}
+        {/* === TABEL PRESENSI (LENGKAP) — NEW ====== */}
+        {/* ========================================== */}
+        <div className="w-full max-w-6xl bg-white shadow-md rounded-md p-5 mb-10">
+          <h2 className="text-xl font-bold text-pink-700 mb-3">Data Presensi</h2>
+
+          {presensiList.length === 0 ? (
+            <div className="text-center py-6 text-pink-600">Belum ada presensi tersimpan.</div>
+          ) : (
+            <table className="min-w-full border border-pink-200 rounded-md text-sm">
+              <thead className="bg-purple-200 text-purple-800 text-center">
+                <tr>
+                  <th>No</th>
+                  <th>Nama</th>
+                  <th>Level</th>
+                  <th>Status</th>
+                  <th>Alasan</th>
+                  <th>Jam Masuk</th>
+                  <th>Jam Pulang</th>
+                  <th>Tanggal</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {presensiList.map((p, idx) => (
+                  <tr key={p.id} className="bg-pink-100 hover:bg-pink-200 transition">
+                    <td className="border px-2 py-2 text-center">{idx + 1}</td>
+                    <td className="border px-4 py-2">{p.nama}</td>
+                    <td className="border text-center">{p.level}</td>
+
+                    <td className="border text-center font-semibold">
+                      {p.status === "ijin" ? (
+                        <span className="text-red-500">Ijin</span>
+                      ) : (
+                        <span className="text-green-600">Masuk</span>
+                      )}
+                    </td>
+
+                    <td className="border text-center">
+                      {p.status === "ijin" ? p.alasanIjin : "—"}
+                    </td>
+
+                    <td className="border text-center">{p.jamMasuk || "—"}</td>
+                    <td className="border text-center">{p.jamPulang || "—"}</td>
+                    <td className="border text-center">{p.tanggalLengkap}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
     </div>
   );
