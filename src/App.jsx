@@ -22,6 +22,9 @@ import EditMasterData from './Datasiswa/Editmasterdata'
 import EditKategoriData from './Datasiswa/EditKategoriData'
 import Presensi from './Datasiswa/Presensi'
 import RekapPresensi from './Datasiswa/Rekappresensi'
+import Absensi from './Datasiswa/Absensi'
+import PresensiKeluar from './Datasiswa/Absenkeluar'
+import PresensiIjin from './Datasiswa/Absenijin'
 
 
 function App() {
@@ -40,7 +43,10 @@ function App() {
       <Route path="/KategoriData" element={<Tabelsiswa />} />
       <Route path="/MasterData" element={<Masterdata />} />
       <Route path="/Kelas" element={<Kelas />} />
+      <Route path="/ijin" element={<PresensiIjin />} />
+      <Route path="/AbsensiKeluar" element={<PresensiKeluar />} />
       <Route path="/Tambahjenistagihan" element={<TambahJenisTagihan />} />
+      <Route path="/Absensi" element={<Absensi />} />
       <Route path="/TambahMasterData" element={<TambahDataKategori />} />
       <Route path="/TambahDataKelas" element={<TambahDataKelas />} />
       <Route path="/EditJenisTagihan/:id" element={<EditJenisTagihan />} />

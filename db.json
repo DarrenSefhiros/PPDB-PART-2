@@ -186,50 +186,93 @@
       "id": "20cc"
     },
     {
-      "id": "1002",
-      "Nama": "Siezan",
-      "Email": "orgil@gmail.com",
+      "id": "224e",
+      "Nama": "rusdi",
+      "Email": "7.ezacomania.7@gmail.com",
+      "Jabatan": "12",
+      "Kategori": "Siswa",
+      "RFID": "337608",
+      "lastPresensi": null,
+      "status": null,
+      "alasanIjin": null
+    },
+    {
+      "id": "3f9b",
+      "Nama": "paprika",
+      "Email": "d.sefh007@gmail.com",
       "Jabatan": "B Indo",
       "Kategori": "Guru",
-      "RFID": "RFID-460719",
-      "lastPresensi": {
-        "date": "2025-12-05",
-        "jamMasuk": "07:52:19",
-        "jamPulang": null
-      },
-      "status": "ijin",
-      "alasanIjin": "Bolos"
+      "RFID": "711575",
+      "lastPresensi": null,
+      "status": null,
+      "alasanIjin": null
     },
     {
-      "id": "ffa3",
-      "Nama": "aa",
-      "Email": "aaa@gmail.com",
-      "Jabatan": "kurir",
-      "Kategori": "Karyawan",
-      "RFID": "RFID-877799"
-    },
-    {
-      "id": "4ec2",
-      "Nama": "paprika",
-      "Email": "awd@gmail.com",
-      "Jabatan": "IIX",
+      "id": "52c7",
+      "Nama": "Joko",
+      "Email": "kkk@gmail.com",
+      "Jabatan": "IX",
       "Kategori": "Siswa",
-      "RFID": "RFID-375383",
+      "RFID": "999310",
+      "lastPresensi": null,
+      "status": null,
+      "alasanIjin": ""
+    },
+    {
+      "id": "66b6",
+      "Nama": "Pudil",
+      "Email": "Levander@gmail.com",
+      "Jabatan": "Penjual Balon",
+      "Kategori": "Karyawan",
+      "RFID": "731739",
+      "lastPresensi": null,
+      "status": null,
+      "alasanIjin": ""
+    },
+    {
+      "id": "5bcf",
+      "Nama": "awa",
+      "Email": "aaa@gmail.com",
+      "Jabatan": "X",
+      "Kategori": "Siswa",
+      "RFID": "101552",
+      "lastPresensi": null,
+      "status": null,
+      "alasanIjin": ""
+    },
+    {
+      "id": "eb49",
+      "Nama": "awa",
+      "Email": "aaa@gmail.com",
+      "Jabatan": "B Indo",
+      "Kategori": "Guru",
+      "RFID": "0895424260008",
       "lastPresensi": {
-        "date": "2025-12-05",
-        "jamMasuk": "08:28:42",
-        "jamPulang": "08:28:44"
+        "date": "2025-12-08",
+        "jamMasuk": "14:20:18",
+        "jamPulang": null
       },
       "status": "masuk",
       "alasanIjin": ""
     },
     {
-      "id": "92f1",
-      "Nama": "paprika",
-      "Email": "awd@gmail.com",
-      "Jabatan": "IIX",
+      "id": "5acd",
+      "Nama": "willie salim",
+      "Email": "joko@gmail.com",
+      "Jabatan": "X",
       "Kategori": "Siswa",
-      "RFID": "RFID-146110"
+      "RFID": "133186037781",
+      "lastPresensi": {
+        "date": "2025-12-08",
+        "jamMasuk": null,
+        "jamPulang": null,
+        "ijin": {
+          "alasan": "Sakit",
+          "keterangan": ""
+        }
+      },
+      "status": "ijin",
+      "alasanIjin": "Sakit"
     }
   ],
   "Tagihan": [

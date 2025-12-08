@@ -3,10 +3,11 @@ import axios from "axios";
 import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 function Presensi() {
   const [kesiswaan, setKesiswaan] = useState([]);
-  const [kategoriList, setKategoriList] = useState([]);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   const [presensiList, setPresensiList] = useState(() => {
@@ -14,10 +15,6 @@ function Presensi() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [selectedLevel, setSelectedLevel] = useState("all");
-  const [selectedNamaId, setSelectedNamaId] = useState("");
-
-  // WIB time
   const nowWIB = () => {
     const d = new Date();
     const time = d.toLocaleTimeString("en-GB", {
@@ -27,200 +24,80 @@ function Presensi() {
       minute: "2-digit",
       second: "2-digit",
     });
-    const date = d.toLocaleDateString("en-CA", { timeZone: "Asia/Jakarta" }); 
+    const date = d.toLocaleDateString("en-CA", { timeZone: "Asia/Jakarta" });
     return { time, date };
   };
 
-  // Fetch data master
-  useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        setLoading(true);
-        const res = await axios.get("http://localhost:5000/Kesiswaan");
-
-        const cleaned = (res.data || [])
-          .filter(Boolean)
-          .filter((d) => d.Nama && d.Nama.trim() !== "");
-
-        setKesiswaan(cleaned);
-
-        const uniqueKategori = [
-          ...new Set(cleaned.map((d) => d.Kategori).filter(Boolean)),
-        ];
-        setKategoriList(uniqueKategori);
-      } catch (err) {
-        Swal.fire("Error", "Gagal memuat master data", "error");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAll();
-  }, []);
-
-  // Simpan ke localStorage
+  // Simpan otomatis ke localStorage
   useEffect(() => {
     localStorage.setItem("presensiList", JSON.stringify(presensiList));
   }, [presensiList]);
 
-  const namaOptions =
-    selectedLevel === "all"
-      ? []
-      : kesiswaan.filter((k) => k.Kategori === selectedLevel);
+  // Ambil data Kesiswaan
+  const loadKesiswaan = async () => {
+    const res = await axios.get("http://localhost:5000/Kesiswaan");
 
-  const updateSafe = async (id, dataUpdate) => {
-    const old = await axios.get(`http://localhost:5000/Kesiswaan/${id}`);
-    const merged = { ...old.data, ...dataUpdate };
-    await axios.put(`http://localhost:5000/Kesiswaan/${id}`, merged);
+    const cleaned = (res.data || [])
+      .filter(Boolean)
+      .filter((d) => d.Nama && d.Nama.trim() !== "");
+
+    setKesiswaan(cleaned);
   };
 
-  // Simpan presensi (membuat row baru)
-  const handleSimpanPresensi = async () => {
-    if (!selectedNamaId)
-      return Swal.fire("Nama belum dipilih", "Pilih dahulu", "warning");
+  useEffect(() => {
+    loadKesiswaan();
+    setLoading(false);
+  }, []);
 
-    const target = kesiswaan.find(
-      (k) => String(k.id) === String(selectedNamaId)
-    );
+  // ===============================
+  // SYNC otomatis dari lastPresensi
+  // ===============================
+  useEffect(() => {
+    if (!kesiswaan.length) return;
 
-    if (!target)
-      return Swal.fire("Error", "Data tidak ditemukan", "error");
+    const newEntries = [];
 
-    const { date } = nowWIB();
+    kesiswaan.forEach((s) => {
+      if (!s.lastPresensi) return;
 
-    const tanggalLengkap = new Date().toLocaleDateString("id-ID", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+      const tanggalLengkap = new Date().toLocaleDateString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+      const uniqueId = `${s.id}-${s.lastPresensi.date}`;
+
+      const sudahAda = presensiList.some((p) => p.id.startsWith(uniqueId));
+      if (sudahAda) return;
+
+      // TENTUKAN STATUS
+      let status = "—";
+      if (s.lastPresensi.ijin) status = "ijin";
+      else if (s.lastPresensi.jamMasuk) status = "masuk";
+      else if (s.lastPresensi.jamPulang) status = "keluar";
+
+      newEntries.push({
+        id: `${uniqueId}-${Date.now()}`,
+        kesiswaanId: s.id,
+        nama: s.Nama,
+        level: s.Kategori,
+        jamMasuk: s.lastPresensi.jamMasuk || null,
+        jamPulang: s.lastPresensi.jamPulang || null,
+        alasanIjin: s.lastPresensi.ijin?.alasan || "",
+        date: s.lastPresensi.date,
+        tanggalLengkap,
+        status,
+      });
     });
 
-    const newPresensi = {
-      id: `${selectedNamaId}-${date}-${Date.now()}`,
-      kesiswaanId: selectedNamaId,
-      nama: target.Nama,
-      level: target.Kategori,
-      jamMasuk: null,
-      jamPulang: null,
-      status: null,
-      alasanIjin: "",
-      date,
-      tanggalLengkap,
-    };
-
-    try {
-      await updateSafe(selectedNamaId, {
-        lastPresensi: { date, jamMasuk: null, jamPulang: null },
-      });
-
-      setPresensiList((p) => [newPresensi, ...p]);
-      setSelectedNamaId("");
-
-      Swal.fire("Berhasil", "Presensi dibuat", "success");
-    } catch {
-      Swal.fire("Error", "Gagal menyimpan presensi", "error");
+    if (newEntries.length > 0) {
+      setPresensiList((prev) => [...newEntries, ...prev]);
     }
-  };
+  }, [kesiswaan]);
 
-  // Klik Masuk -> Pilih Masuk atau Ijin
-  const handleKlikMasuk = async (entryId) => {
-    const entry = presensiList.find((p) => p.id === entryId);
-    if (!entry || entry.jamMasuk) return;
-
-    // SweetAlert Pilih Masuk / Ijin
-    const pilihan = await Swal.fire({
-      title: "Pilih Presensi",
-      text: "Kamu mau masuk atau ijin?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Masuk",
-      cancelButtonText: "Ijin",
-    });
-
-    const isMasuk = pilihan.isConfirmed;
-    let alasan = "";
-
-    if (!isMasuk) {
-      const alasanInput = await Swal.fire({
-        title: "Alasan Ijin",
-        input: "text",
-        inputPlaceholder: "Ijin karena apa?",
-        showCancelButton: true,
-        confirmButtonText: "Simpan Ijin",
-      });
-
-      if (!alasanInput.value) {
-        return Swal.fire("Gagal", "Alasan ijin harus diisi!", "warning");
-      }
-
-      alasan = alasanInput.value;
-    }
-
-    const { time } = nowWIB();
-
-    try {
-      await updateSafe(entry.kesiswaanId, {
-        lastPresensi: {
-          date: entry.date,
-          jamMasuk: time,
-          jamPulang: isMasuk ? entry.jamPulang : null,
-        },
-        status: isMasuk ? "masuk" : "ijin",
-        alasanIjin: alasan,
-      });
-
-      setPresensiList((prev) =>
-        prev.map((p) =>
-          p.id === entryId
-            ? {
-                ...p,
-                jamMasuk: time,
-                status: isMasuk ? "masuk" : "ijin",
-                alasanIjin: alasan,
-              }
-            : p
-        )
-      );
-
-      Swal.fire(
-        "Berhasil",
-        isMasuk ? "Jam Masuk dicatat!" : "Ijin dicatat!",
-        "success"
-      );
-    } catch {
-      Swal.fire("Error", "Gagal update presensi", "error");
-    }
-  };
-
-  // Klik Pulang
-  const handleKlikPulang = async (entryId) => {
-    const entry = presensiList.find((p) => p.id === entryId);
-    if (!entry || entry.jamPulang || entry.status === "ijin") return;
-
-    const { time } = nowWIB();
-
-    try {
-      await updateSafe(entry.kesiswaanId, {
-        lastPresensi: {
-          date: entry.date,
-          jamMasuk: entry.jamMasuk,
-          jamPulang: time,
-        },
-      });
-
-      setPresensiList((prev) =>
-        prev.map((p) =>
-          p.id === entryId ? { ...p, jamPulang: time } : p
-        )
-      );
-
-      Swal.fire("Berhasil", "Jam Pulang dicatat!", "success");
-    } catch {
-      Swal.fire("Error", "Gagal update jam pulang", "error");
-    }
-  };
-
-  // Hapus
+  // Hapus row presensi
   const handleHapus = async (entryId) => {
     const entry = presensiList.find((p) => p.id === entryId);
     if (!entry) return;
@@ -235,16 +112,17 @@ function Presensi() {
 
     if (!confirm.isConfirmed) return;
 
-    try {
-      await updateSafe(entry.kesiswaanId, { lastPresensi: null });
-    } catch {}
+    await axios.put(`http://localhost:5000/Kesiswaan/${entry.kesiswaanId}`, {
+      ...kesiswaan.find((k) => k.id === entry.kesiswaanId),
+      lastPresensi: null,
+    });
 
     setPresensiList((prev) => prev.filter((p) => p.id !== entryId));
+    Swal.fire("Berhasil", "Entry dihapus", "success");
 
-    Swal.fire("Berhasil", "Entry presensi dihapus", "success");
+    loadKesiswaan();
   };
 
-  // --- RENDER ---
   return (
     <div className="flex">
       <Sidnav />
@@ -260,68 +138,33 @@ function Presensi() {
             Presensi Harian
           </h2>
 
-          {/* FORM */}
-          <div className="bg-white p-5 rounded-md shadow-md mb-6 flex flex-wrap items-end gap-4">
-            {/* Level */}
-            <div className="flex flex-col">
-              <label className="mb-1 font-semibold text-pink-700">
-                Pilih Level
-              </label>
-              <select
-                value={selectedLevel}
-                onChange={(e) => {
-                  setSelectedLevel(e.target.value);
-                  setSelectedNamaId("");
-                }}
-                className="border border-pink-300 rounded-md p-2 w-56"
-              >
-                <option value="all">— Semua Level —</option>
-                {kategoriList.map((kat) => (
-                  <option key={kat} value={kat}>
-                    {kat}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {/* 3 Tombol */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
 
-            {/* Nama */}
-            <div className="flex flex-col">
-              <label className="mb-1 font-semibold text-pink-700">
-                Pilih Nama
-              </label>
-              <select
-                value={selectedNamaId}
-                onChange={(e) => setSelectedNamaId(e.target.value)}
-                disabled={selectedLevel === "all"}
-                className="border border-pink-300 rounded-md p-2 w-72 disabled:bg-gray-200 disabled:text-gray-500"
-              >
-                <option value="">
-                  {selectedLevel === "all"
-                    ? "Pilih level dulu"
-                    : "— Pilih Nama —"}
-                </option>
-
-                {namaOptions.map((n) => (
-                  <option key={n.id} value={n.id}>
-                    {n.Nama}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <button
-              onClick={handleSimpanPresensi}
-              className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-md"
+            <div
+              onClick={() => navigate("/Ijin")}
+              className="cursor-pointer bg-purple-300 hover:bg-purple-400 text-purple-900 font-semibold py-4 rounded-xl text-center shadow-md transition"
             >
-              Simpan Presensi
-            </button>
-
-            <div className="ml-auto text-pink-700 font-semibold">
-              Total Entry: {presensiList.length}
+              Presensi Ijin
             </div>
+
+            <div
+              onClick={() => navigate("/Absensi")}
+              className="cursor-pointer bg-green-300 hover:bg-green-400 text-green-900 font-semibold py-4 rounded-xl text-center shadow-md transition"
+            >
+              Presensi Masuk
+            </div>
+
+            <div
+              onClick={() => navigate("/AbsensiKeluar")}
+              className="cursor-pointer bg-blue-300 hover:bg-blue-400 text-blue-900 font-semibold py-4 rounded-xl text-center shadow-md transition"
+            >
+              Presensi Keluar
+            </div>
+
           </div>
 
-          {/* TABEL */}
+          {/* TABLE */}
           <div className="overflow-x-auto bg-white p-4 rounded-md shadow-md">
             {presensiList.length === 0 ? (
               <div className="text-center py-8 text-pink-600">
@@ -355,18 +198,20 @@ function Presensi() {
                       <td className="border px-4 py-2">{p.nama}</td>
                       <td className="border text-center">{p.level}</td>
 
-                      {/* STATUS */}
                       <td className="border text-center font-semibold">
                         {p.status === "ijin"
                           ? `Ijin (${p.alasanIjin})`
                           : p.status === "masuk"
                           ? "Masuk"
+                          : p.status === "keluar"
+                          ? "Pulang"
                           : "—"}
                       </td>
 
                       <td className="border text-center">
                         {p.jamMasuk || "—"}
                       </td>
+
                       <td className="border text-center">
                         {p.jamPulang || "—"}
                       </td>
@@ -376,38 +221,12 @@ function Presensi() {
                       </td>
 
                       <td className="border text-center">
-                        <div className="flex justify-center gap-2">
-                          <button
-                            onClick={() => handleKlikMasuk(p.id)}
-                            disabled={!!p.jamMasuk}
-                            className={`py-1 px-3 rounded font-bold ${
-                              p.jamMasuk
-                                ? "bg-gray-400 cursor-not-allowed"
-                                : "bg-green-500 text-white hover:bg-green-600"
-                            }`}
-                          >
-                            Masuk
-                          </button>
-
-                          <button
-                            onClick={() => handleKlikPulang(p.id)}
-                            disabled={!!p.jamPulang || p.status === "ijin"}
-                            className={`py-1 px-3 rounded font-bold ${
-                              p.jamPulang || p.status === "ijin"
-                                ? "bg-gray-400 cursor-not-allowed"
-                                : "bg-amber-500 text-white hover:bg-amber-600"
-                            }`}
-                          >
-                            Pulang
-                          </button>
-
-                          <button
-                            onClick={() => handleHapus(p.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded"
-                          >
-                            🗑
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => handleHapus(p.id)}
+                          className="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded"
+                        >
+                          🗑
+                        </button>
                       </td>
                     </motion.tr>
                   ))}

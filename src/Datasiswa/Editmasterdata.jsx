@@ -4,36 +4,40 @@ import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 
 function EditMasterData() {
-  const { id } = useParams(); // Ambil ID dari route
+  const { id } = useParams();
   const [kategoriList, setKategoriList] = useState([]);
+
   const [formData, setFormData] = useState({
     Nama: '',
     Email: '',
     Jabatan: '',
     Kategori: '',
+    RFID: '', // ← TAMBAH RFID DI STATE
   });
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Ambil data kategori dan data awal form
   useEffect(() => {
     const fetchKategori = async () => {
       try {
         const res = await axios.get('http://localhost:5000/Kategori');
         setKategoriList(res.data);
       } catch (error) {
-        console.error('Gagal fetch data kategori:', error);
+        console.error('Gagal fetch kategori:', error);
       }
     };
 
     const fetchDataById = async () => {
       try {
         const res = await axios.get(`http://localhost:5000/Kesiswaan/${id}`);
+
         setFormData({
           Nama: res.data.Nama || '',
           Email: res.data.Email || '',
           Jabatan: res.data.Jabatan || '',
           Kategori: res.data.Kategori || '',
+          RFID: res.data.RFID || '', // ← RFID DITAMPILKAN
         });
       } catch (error) {
         console.error('Gagal fetch data:', error);
@@ -48,10 +52,7 @@ function EditMasterData() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const isValidGmail = (email) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
@@ -60,14 +61,14 @@ function EditMasterData() {
     e.preventDefault();
     setLoading(true);
 
-    if (!formData.Nama || !formData.Email || !formData.Kategori || !formData.Jabatan) {
-      Swal.fire('Error', 'Semua field wajib diisi!', 'error');
+    if (!formData.Nama || !formData.Email || !formData.Kategori || !formData.Jabatan || !formData.RFID) {
+      Swal.fire('Error', 'Semua field wajib diisi termasuk RFID!', 'error');
       setLoading(false);
       return;
     }
 
     if (!isValidGmail(formData.Email)) {
-      Swal.fire('Error', 'Email harus menggunakan Gmail yang valid!', 'error');
+      Swal.fire('Error', 'Email harus Gmail valid!', 'error');
       setLoading(false);
       return;
     }
@@ -78,7 +79,7 @@ function EditMasterData() {
       await Swal.fire({
         icon: 'success',
         title: 'Berhasil!',
-        text: 'Data anda telah diperbarui.',
+        text: 'Data berhasil diperbarui.',
         timer: 1500,
         showConfirmButton: false,
       });
@@ -92,9 +93,9 @@ function EditMasterData() {
     }
   };
 
-  // Label dan placeholder dinamis sesuai kategori
+  // Label dinamis
   let jabatanLabel = 'Jabatan';
-  let jabatanPlaceholder = 'Masukkan Jabatan anda';
+  let jabatanPlaceholder = 'Masukkan Jabatan';
   if (formData.Kategori === 'Siswa') {
     jabatanLabel = 'Kelas';
     jabatanPlaceholder = 'Masukkan Kelas';
@@ -106,49 +107,57 @@ function EditMasterData() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-400 to-purple-600">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Edit Master Data
-        </h2>
+        <h2 className="text-2xl font-bold text-center mb-6">Edit Master Data</h2>
+
         <form onSubmit={handleSubmit}>
           {/* Nama */}
           <div className="mb-4">
-            <label htmlFor="Nama" className="block text-gray-700 mb-2">Nama</label>
+            <label className="block mb-1">Nama</label>
             <input
-              id="Nama"
               name="Nama"
               type="text"
-              placeholder="Masukkan Nama"
               value={formData.Nama}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="w-full px-4 py-2 border rounded-md"
               required
             />
           </div>
 
           {/* Email */}
           <div className="mb-4">
-            <label htmlFor="Email" className="block text-gray-700 mb-2">Email</label>
+            <label className="block mb-1">Email</label>
             <input
-              id="Email"
               name="Email"
               type="email"
-              placeholder="Masukkan Email"
               value={formData.Email}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="w-full px-4 py-2 border rounded-md"
+              required
+            />
+          </div>
+
+          {/* RFID */}
+          <div className="mb-4">
+            <label className="block mb-1">RFID</label>
+            <input
+              name="RFID"
+              type="text"
+              placeholder="Masukkan RFID"
+              value={formData.RFID}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-md"
               required
             />
           </div>
 
           {/* Kategori */}
           <div className="mb-4">
-            <label htmlFor="Kategori" className="block text-gray-700 mb-2">Kategori</label>
+            <label className="block mb-1">Kategori</label>
             <select
-              id="Kategori"
               name="Kategori"
               value={formData.Kategori}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="w-full px-4 py-2 border rounded-md bg-white"
               required
             >
               <option value="">Pilih Kategori</option>
@@ -158,17 +167,16 @@ function EditMasterData() {
             </select>
           </div>
 
-          {/* Jabatan/Kelas/Mapel */}
+          {/* Jabatan / Kelas / Mapel */}
           <div className="mb-4">
-            <label htmlFor="Jabatan" className="block text-gray-700 mb-2">{jabatanLabel}</label>
+            <label className="block mb-1">{jabatanLabel}</label>
             <input
-              id="Jabatan"
               name="Jabatan"
               type="text"
               placeholder={jabatanPlaceholder}
               value={formData.Jabatan}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className="w-full px-4 py-2 border rounded-md"
               required
             />
           </div>
@@ -178,9 +186,7 @@ function EditMasterData() {
             <button
               type="submit"
               disabled={loading}
-              className={`bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded ${
-                loading ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              className="bg-pink-600 text-white px-6 py-2 rounded-md font-bold"
             >
               {loading ? 'Memproses...' : 'Update'}
             </button>
@@ -188,7 +194,7 @@ function EditMasterData() {
             <button
               type="button"
               onClick={() => navigate('/MasterData')}
-              className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded"
+              className="bg-gray-500 text-white px-6 py-2 rounded-md font-bold"
             >
               Kembali
             </button>

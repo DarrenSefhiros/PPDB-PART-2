@@ -11,7 +11,9 @@ function TambahDataKategori() {
     Email: '',
     Jabatan: '',
     Kategori: '',
+    RFID: '', // <<< DITAMBAHKAN
   });
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -45,17 +47,11 @@ function TambahDataKategori() {
 
   const isValidGmail = (email) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
 
-  // GENERATE RFID
-  const generateRFID = () => {
-    const randomNum = Math.floor(100000 + Math.random() * 900000);
-    return `RFID-${randomNum}`;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    if (!formData.Nama || !formData.Email || !formData.Kategori || !formData.Jabatan) {
+    if (!formData.Nama || !formData.Email || !formData.Kategori || !formData.Jabatan || !formData.RFID) {
       Swal.fire('Error', 'Semua field wajib diisi!', 'error');
       setLoading(false);
       return;
@@ -68,12 +64,7 @@ function TambahDataKategori() {
     }
 
     try {
-      const newData = {
-        ...formData,
-        RFID: generateRFID(), // RFID otomatis
-      };
-
-      await axios.post('http://localhost:5000/Kesiswaan', newData);
+      await axios.post('http://localhost:5000/Kesiswaan', formData);
 
       Swal.fire({
         icon: 'success',
@@ -180,6 +171,20 @@ function TambahDataKategori() {
           <div className="mb-4">
             <label className="block mb-1">{jabatanLabel}</label>
             {jabatanInput}
+          </div>
+
+          {/* INPUT RFID MANUAL */}
+          <div className="mb-4">
+            <label className="block mb-1">RFID</label>
+            <input
+              name="RFID"
+              type="text"
+              placeholder="Masukkan RFID"
+              value={formData.RFID}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-md"
+              required
+            />
           </div>
 
           <div className="flex justify-between mt-6">

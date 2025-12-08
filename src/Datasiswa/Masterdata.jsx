@@ -156,7 +156,6 @@ function MasterData() {
                     <th className="px-4 py-2 w-32 font-bold">Kategori</th>
                     <th className="px-4 py-2 w-32 font-bold">{getJabatanHeader()}</th>
 
-                    {/* NEW RFID COLUMN */}
                     <th className="px-4 py-2 w-32 font-bold">RFID</th>
 
                     <th className="px-4 py-2 w-48 font-bold">Aksi</th>
