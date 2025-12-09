@@ -96,7 +96,7 @@ function PresensiKeluar() {
 
   return (
     <div className="flex">
-      <div className="p-10 w-full min-h-screen flex items-center justify-center bg-blue-50">
+      <div className="p-10 w-full min-h-screen flex items-center justify-center bg-pink-50">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}

@@ -9,7 +9,8 @@ function PresensiIjin() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const [alasan, setAlasan] = useState("Sakit");
+  const [kategoriIjinList, setKategoriIjinList] = useState([]);  // ✅ added
+  const [alasan, setAlasan] = useState("");
   const [keterangan, setKeterangan] = useState("");
 
   const rfidRef = useRef(null);
@@ -30,10 +31,27 @@ function PresensiIjin() {
     setTimeout(() => rfidRef.current?.focus(), 300);
   }, []);
 
-  // CEK RFID
+  useEffect(() => {
+    const loadKategoriIjin = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/KategoriIjin");
+        setKategoriIjinList(res.data || []);
+        if (res.data && res.data.length > 0) {
+          setAlasan(res.data[0].KategoriIjin);
+        } else {
+          setAlasan("");
+        }
+      } catch (err) {
+        console.error("Gagal mengambil kategori ijin:", err);
+        setKategoriIjinList([]);
+        setAlasan("");
+      }
+    };
+    loadKategoriIjin();
+  }, []);
+
   const handleCheckRFID = async () => {
     setLoading(true);
-
     try {
       const res = await axios.get("http://localhost:5000/Kesiswaan");
       const user = res.data.find((u) => String(u.RFID) === String(rfidInput));
@@ -45,20 +63,29 @@ function PresensiIjin() {
         setUserData(user);
       }
     } catch (err) {
+      console.error("Error fetch Kesiswaan:", err);
       Swal.fire("Error", "Gagal mengambil data!", "error");
+      setUserData(null);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
-  // SUBMIT IJIN
   const handleIjin = async () => {
     if (!userData) return;
 
-    const { date } = nowWIB();
+    const { date, time } = nowWIB();
+    const hour = parseInt(time.split(":")[0]);
     const last = userData.lastPresensi;
 
-    // CEGAH IJIN BERULANG DI HARI YANG SAMA
+    if (hour < 6) {
+      return Swal.fire(
+        "Belum waktunya",
+        "Presensi ijin dimulai jam 06:00",
+        "warning"
+      );
+    }
+
     if (last && last.date === date && last.ijin) {
       return Swal.fire(
         "Sudah Ijin",
@@ -82,24 +109,25 @@ function PresensiIjin() {
       },
     };
 
-    await axios.put(`http://localhost:5000/Kesiswaan/${userData.id}`, updateData);
-
-    Swal.fire("Berhasil!", "Presensi ijin berhasil disimpan.", "success");
-
-    setUserData(null);
-    setRfidInput("");
-    setKeterangan("");
+    try {
+      await axios.put(`http://localhost:5000/Kesiswaan/${userData.id}`, updateData);
+      Swal.fire("Berhasil!", "Presensi ijin berhasil disimpan.", "success");
+      setUserData(null);
+      setRfidInput("");
+      setKeterangan("");
+    } catch (err) {
+      console.error("Error updating ijin:", err);
+      Swal.fire("Error", "Gagal menyimpan presensi ijin!", "error");
+    }
   };
 
   return (
     <div className="flex w-full min-h-screen items-center justify-center bg-pink-100">
-
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-lg text-center border border-pink-300"
       >
-        {/* BACK BUTTON */}
         <Link
           to="/Presensi"
           className="inline-block mb-5 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg shadow"
@@ -107,29 +135,21 @@ function PresensiIjin() {
           ⬅ Kembali
         </Link>
 
-        {/* JUDUL */}
-        <h2 className="text-2xl font-bold text-pink-700 mb-6">
-          Presensi Ijin
-        </h2>
+        <h2 className="text-2xl font-bold text-pink-700 mb-6">Presensi Ijin</h2>
 
-        {/* FOTO PROFIL */}
         <img
-          src={
-            userData?.foto ||
-            "https://www.dpzone.in/wp-content/uploads/2/Guest-PFP-13.jpg"
-          }
+          src={userData?.foto || "https://www.dpzone.in/wp-content/uploads/2/Guest-PFP-13.jpg"}
           alt="Guest"
           className="w-32 h-32 rounded-full mx-auto mb-5 border-4 border-pink-300 shadow-md"
         />
 
-        {/* INPUT RFID */}
         <input
           ref={rfidRef}
           type="text"
           placeholder="Scan / Masukkan RFID..."
           value={rfidInput}
           onChange={(e) => setRfidInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleCheckRFID()}
+          onKeyDown={(e) => { if (e.key === "Enter") handleCheckRFID(); }}
           className="w-full px-4 py-3 rounded-md border border-pink-400 text-center text-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
 
@@ -141,7 +161,6 @@ function PresensiIjin() {
           {loading ? "Mencari..." : "Cek RFID"}
         </button>
 
-        {/* DATA USER */}
         {userData && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -155,21 +174,19 @@ function PresensiIjin() {
           </motion.div>
         )}
 
-        {/* FORM IJIN */}
         {userData && (
           <div className="mt-5 text-left">
-            <label className="block font-semibold text-pink-700">
-              Alasan Ijin
-            </label>
+            <label className="block font-semibold text-pink-700">Alasan Ijin</label>
             <select
               value={alasan}
               onChange={(e) => setAlasan(e.target.value)}
               className="w-full p-3 border border-pink-400 rounded-md mt-1"
             >
-              <option>Sakit</option>
-              <option>Izin Pribadi</option>
-              <option>Kebutuhan Mendesak</option>
-              <option>Lainnya</option>
+              {kategoriIjinList.map((item) => (
+                <option key={item.id} value={item.KategoriIjin}>
+                  {item.KategoriIjin}
+                </option>
+              ))}
             </select>
 
             <label className="block mt-3 font-semibold text-pink-700">
@@ -180,11 +197,10 @@ function PresensiIjin() {
               onChange={(e) => setKeterangan(e.target.value)}
               className="w-full p-3 border border-pink-400 rounded-md mt-1"
               placeholder="Isi keterangan tambahan (optional)"
-            ></textarea>
+            />
           </div>
         )}
 
-        {/* SUBMIT IJIN */}
         {userData && (
           <button
             onClick={handleIjin}

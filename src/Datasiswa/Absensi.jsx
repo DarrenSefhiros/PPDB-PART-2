@@ -53,6 +53,15 @@ function Absensi() {
     const hour = parseInt(time.split(":")[0]);
     const last = userData.lastPresensi;
 
+    // ❌ Belum jam 6 pagi → TIDAK BOLEH PRESENSI
+    if (hour < 6) {
+      return Swal.fire(
+        "Belum waktunya",
+        "Presensi dimulai jam 06:00",
+        "warning"
+      );
+    }
+
     // ❌ Jika hari ini sudah IJIN → TIDAK BOLEH ABSEN MASUK (kecuali >= 15)
     if (userData.status === "ijin" && hour < 15) {
       return Swal.fire(

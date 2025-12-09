@@ -225,8 +225,12 @@
       "Jabatan": "Penjual Balon",
       "Kategori": "Karyawan",
       "RFID": "731739",
-      "lastPresensi": null,
-      "status": null,
+      "lastPresensi": {
+        "date": "2025-12-09",
+        "jamMasuk": "07:44:27",
+        "jamPulang": null
+      },
+      "status": "masuk",
       "alasanIjin": ""
     },
     {
@@ -236,8 +240,12 @@
       "Jabatan": "X",
       "Kategori": "Siswa",
       "RFID": "101552",
-      "lastPresensi": null,
-      "status": null,
+      "lastPresensi": {
+        "date": "2025-12-09",
+        "jamMasuk": "07:23:02",
+        "jamPulang": null
+      },
+      "status": "masuk",
       "alasanIjin": ""
     },
     {
@@ -248,12 +256,16 @@
       "Kategori": "Guru",
       "RFID": "0895424260008",
       "lastPresensi": {
-        "date": "2025-12-08",
-        "jamMasuk": "14:20:18",
-        "jamPulang": null
+        "date": "2025-12-09",
+        "jamMasuk": null,
+        "jamPulang": null,
+        "ijin": {
+          "alasan": "tidur",
+          "keterangan": ""
+        }
       },
-      "status": "masuk",
-      "alasanIjin": ""
+      "status": "ijin",
+      "alasanIjin": "tidur"
     },
     {
       "id": "5acd",
@@ -262,17 +274,28 @@
       "Jabatan": "X",
       "Kategori": "Siswa",
       "RFID": "133186037781",
+      "lastPresensi": null,
+      "status": "ijin",
+      "alasanIjin": "Sakit"
+    },
+    {
+      "id": "c444",
+      "Nama": "mi bombo",
+      "Email": "rafa@gmail.com",
+      "Jabatan": "raja iblis",
+      "Kategori": "Karyawan",
+      "RFID": "088923",
+      "status": "ijin",
+      "alasanIjin": "acara keluarga",
       "lastPresensi": {
-        "date": "2025-12-08",
+        "date": "2025-12-09",
         "jamMasuk": null,
         "jamPulang": null,
         "ijin": {
-          "alasan": "Sakit",
-          "keterangan": ""
+          "alasan": "acara keluarga",
+          "keterangan": "saya sedang ada acara keluarga"
         }
-      },
-      "status": "ijin",
-      "alasanIjin": "Sakit"
+      }
     }
   ],
   "Tagihan": [
@@ -393,6 +416,28 @@
     {
       "id": "9d41",
       "Level": "Ustadz"
+    }
+  ],
+  "KategoriIjin": [
+    {
+      "KategoriIjin": "joko",
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "KategoriIjin": "Izin Pribadi"
+    },
+    {
+      "id": "3",
+      "KategoriIjin": "Kebutuhan Mendesak"
+    },
+    {
+      "id": "5513",
+      "KategoriIjin": "tidur"
+    },
+    {
+      "id": "d846",
+      "KategoriIjin": "acara keluarga"
     }
   ]
 }

@@ -182,7 +182,7 @@ function Dashboard() {
                         <td className="border px-4 py-2 text-center">{i.Nama}</td>
                         <td className="border px-4 py-2 text-center">{i.Email}</td>
                         <td className="border px-4 py-2 text-center">{i.Jabatan}</td>
-                        <td className="border px-4 py-2">{i.Kategori}</td>
+                        <td className="border px-4 py-2 text-center">{i.Kategori}</td>
                       </tr>
                     ))
                 )}
@@ -200,7 +200,7 @@ function Dashboard() {
           {presensiList.length === 0 ? (
             <div className="text-center py-6 text-pink-600">Belum ada presensi tersimpan.</div>
           ) : (
-            <table className="min-w-full border border-pink-200 rounded-md text-sm">
+            <table className="min-w-full border border-pink-200 rounded-m     d text-sm">
               <thead className="bg-purple-200 text-purple-800 text-center">
                 <tr>
                   <th>No</th>
@@ -224,6 +224,8 @@ function Dashboard() {
                     <td className="border text-center font-semibold">
                       {p.status === "ijin" ? (
                         <span className="text-red-500">Ijin</span>
+                      ) : p.status === "keluar" ? (
+                        <span className="text-blue-600">Pulang</span>
                       ) : (
                         <span className="text-green-600">Masuk</span>
                       )}

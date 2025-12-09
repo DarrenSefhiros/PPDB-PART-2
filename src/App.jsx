@@ -11,7 +11,9 @@ import TambahJenisTagihan from './Components/Tambahjenistagihan'
 import EditJenisTagihan from './Components/Editjenistagihan'
 import Rekaptagihan from './Components/Rekaptagihan'
 import Tabelsiswa from './Datasiswa/Tabelsiswa'
+import TabelKategoriIjin from './Datasiswa/TabelKategoriIjin'
 import TambahDataKategori from './Datasiswa/Tambahdatakategori'
+import TambahKategoriIjin from './Datasiswa/TambahKategoriIjin'
 import Editkategori from './Datasiswa/Editkategori'
 import Masterdata from './Datasiswa/Masterdata'
 import Kelas from './Datasiswa/kelas'
@@ -20,6 +22,7 @@ import EditKelas from './Datasiswa/EditKelas'
 import TambahData2 from './Datasiswa/TambahData2'
 import EditMasterData from './Datasiswa/Editmasterdata'
 import EditKategoriData from './Datasiswa/EditKategoriData'
+import EditKategoriIjin from './Datasiswa/EditKategoriIjin'
 import Presensi from './Datasiswa/Presensi'
 import RekapPresensi from './Datasiswa/Rekappresensi'
 import Absensi from './Datasiswa/Absensi'
@@ -43,6 +46,9 @@ function App() {
       <Route path="/KategoriData" element={<Tabelsiswa />} />
       <Route path="/MasterData" element={<Masterdata />} />
       <Route path="/Kelas" element={<Kelas />} />
+      <Route path="/KategoriIjin" element={<TabelKategoriIjin />} />
+      <Route path="/TambahKategoriIjin" element={<TambahKategoriIjin />} />
+      <Route path="/EditKategoriIjin/:id" element={<EditKategoriIjin />} />
       <Route path="/ijin" element={<PresensiIjin />} />
       <Route path="/AbsensiKeluar" element={<PresensiKeluar />} />
       <Route path="/Tambahjenistagihan" element={<TambahJenisTagihan />} />

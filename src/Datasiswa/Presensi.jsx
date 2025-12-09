@@ -75,8 +75,8 @@ function Presensi() {
       // TENTUKAN STATUS
       let status = "—";
       if (s.lastPresensi.ijin) status = "ijin";
-      else if (s.lastPresensi.jamMasuk) status = "masuk";
       else if (s.lastPresensi.jamPulang) status = "keluar";
+      else if (s.lastPresensi.jamMasuk) status = "masuk";
 
       newEntries.push({
         id: `${uniqueId}-${Date.now()}`,
@@ -143,21 +143,21 @@ function Presensi() {
 
             <div
               onClick={() => navigate("/Ijin")}
-              className="cursor-pointer bg-purple-300 hover:bg-purple-400 text-purple-900 font-semibold py-4 rounded-xl text-center shadow-md transition"
+              className="cursor-pointer bg-pink-300 hover:bg-pink-400 text-pink-900 font-semibold py-4 rounded-xl text-center shadow-md transition"
             >
               Presensi Ijin
             </div>
 
             <div
               onClick={() => navigate("/Absensi")}
-              className="cursor-pointer bg-green-300 hover:bg-green-400 text-green-900 font-semibold py-4 rounded-xl text-center shadow-md transition"
+              className="cursor-pointer bg-pink-300 hover:bg-pink-400 text-pink-900 font-semibold py-4 rounded-xl text-center shadow-md transition"
             >
               Presensi Masuk
             </div>
 
             <div
               onClick={() => navigate("/AbsensiKeluar")}
-              className="cursor-pointer bg-blue-300 hover:bg-blue-400 text-blue-900 font-semibold py-4 rounded-xl text-center shadow-md transition"
+              className="cursor-pointer bg-pink-300 hover:bg-pink-400 text-pink-900 font-semibold py-4 rounded-xl text-center shadow-md transition"
             >
               Presensi Keluar
             </div>
