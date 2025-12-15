@@ -74,9 +74,10 @@ function Presensi() {
 
       // TENTUKAN STATUS
       let status = "—";
-      if (s.lastPresensi.ijin) status = "ijin";
-      else if (s.lastPresensi.jamPulang) status = "keluar";
-      else if (s.lastPresensi.jamMasuk) status = "masuk";
+if (s.status === "ijin") status = "ijin";
+else if (s.lastPresensi?.jamPulang) status = "keluar";
+else if (s.lastPresensi?.jamMasuk) status = "masuk";
+
 
       newEntries.push({
         id: `${uniqueId}-${Date.now()}`,
@@ -134,8 +135,8 @@ function Presensi() {
           transition={{ duration: 0.5 }}
           className="p-8 w-full max-w-6xl mx-auto"
         >
-          <h2 className="text-2xl font-bold text-pink-700 mb-6">
-            Presensi Harian
+          <h2 className="text-4xl font-bold text-pink-700 mb-6">
+            Presensi
           </h2>
 
           {/* 3 Tombol */}
