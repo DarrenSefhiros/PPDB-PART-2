@@ -28,6 +28,7 @@ import RekapPresensi from './Datasiswa/Rekappresensi'
 import Absensi from './Datasiswa/Absensi'
 import PresensiKeluar from './Datasiswa/Absenkeluar'
 import PresensiIjin from './Datasiswa/Absenijin'
+import EditRekapPresensi from './Datasiswa/EditRekapPresensi'
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
       <Route path="/Tagihan" element={<Tagihan />} />
       <Route path="/Rekaptagihan" element={<Rekaptagihan />} />
       <Route path="/Rekappresensi" element={<RekapPresensi />} />
+      <Route path="/EditRekapPresensi/:id" element={<EditRekapPresensi />} />
       <Route path="/Presensi" element={<Presensi />} />
       <Route path="/Jenistagihan" element={<Jenistagihan />} />
       <Route path="/KategoriData" element={<Tabelsiswa />} />

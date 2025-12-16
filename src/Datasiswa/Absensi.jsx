@@ -11,6 +11,9 @@ function Absensi() {
   const rfidRef = useRef(null);
   const navigate = useNavigate();
 
+  // ===============================
+  // WAKTU WIB
+  // ===============================
   const nowWIB = () => {
     const d = new Date();
     return {
@@ -29,14 +32,16 @@ function Absensi() {
   }, []);
 
   // ===============================
-  // CEK RFID + RESET HARIAN
+  // AUTO FETCH USER DARI RFID
   // ===============================
-  const handleCheckRFID = async () => {
+  const fetchUserByRFID = async (rfid) => {
+    if (!rfid) return;
+
     setLoading(true);
     try {
       const res = await axios.get("http://localhost:5000/Kesiswaan");
       let user = res.data.find(
-        (u) => String(u.RFID) === String(rfidInput)
+        (u) => String(u.RFID) === String(rfid)
       );
 
       if (!user) {
@@ -71,6 +76,15 @@ function Absensi() {
   };
 
   // ===============================
+  // TRIGGER OTOMATIS SAAT ENTER
+  // ===============================
+  const handleRFIDKey = (e) => {
+    if (e.key === "Enter") {
+      fetchUserByRFID(rfidInput);
+    }
+  };
+
+  // ===============================
   // ABSEN MASUK / PULANG
   // ===============================
   const handleAbsen = async () => {
@@ -87,7 +101,7 @@ function Absensi() {
       );
     }
 
-    // ❌ SUDAH IJIN HARI INI
+    // ❌ SUDAH IJIN
     if (
       userData.status === "ijin" &&
       userData.lastPresensi?.date === date &&
@@ -100,7 +114,7 @@ function Absensi() {
       );
     }
 
-    // ❌ SUDAH MASUK HARI INI
+    // ❌ SUDAH MASUK
     if (
       userData.status === "masuk" &&
       userData.lastPresensi?.date === date &&
@@ -129,7 +143,6 @@ function Absensi() {
       });
 
       Swal.fire("Berhasil", "Absen masuk berhasil", "success");
-      return;
     }
 
     // ===============================
@@ -154,6 +167,11 @@ function Absensi() {
 
       Swal.fire("Berhasil", "Absen pulang berhasil", "success");
     }
+
+    // 🔄 RESET SIAP USER BERIKUTNYA
+    setRfidInput("");
+    setUserData(null);
+    rfidRef.current?.focus();
   };
 
   return (
@@ -186,18 +204,16 @@ function Absensi() {
           ref={rfidRef}
           value={rfidInput}
           onChange={(e) => setRfidInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleCheckRFID()}
-          placeholder="Masukkan RFID..."
+          onKeyDown={handleRFIDKey}
+          placeholder="Scan / Masukkan RFID..."
           className="w-full px-4 py-3 rounded-md border text-center text-lg"
         />
 
-        <button
-          onClick={handleCheckRFID}
-          disabled={loading}
-          className="mt-3 bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md"
-        >
-          {loading ? "Mencari..." : "Cek RFID"}
-        </button>
+        {loading && (
+          <p className="mt-3 text-purple-600 font-semibold">
+            Mencari data...
+          </p>
+        )}
 
         {/* INFO USER */}
         {userData && (
@@ -210,7 +226,10 @@ function Absensi() {
             <p><b>Email:</b> {userData.Email}</p>
             <p><b>Kategori:</b> {userData.Kategori}</p>
             <p><b>Jabatan/Kelas:</b> {userData.Jabatan}</p>
-            <p><b>Status Hari Ini:</b> {userData.status || "Belum presensi"}</p>
+            <p>
+              <b>Status Hari Ini:</b>{" "}
+              {userData.status || "Belum presensi"}
+            </p>
           </motion.div>
         )}
 

@@ -3,6 +3,7 @@ import axios from "axios";
 import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 function RekapPresensi() {
   const [kesiswaan, setKesiswaan] = useState([]);
@@ -128,6 +129,27 @@ function RekapPresensi() {
     return true;
   });
 
+  // Handle delete presensi
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: 'Data presensi ini akan dihapus permanen!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Ya, Hapus!',
+      cancelButtonText: 'Batal'
+    });
+
+    if (result.isConfirmed) {
+      const updatedList = presensiList.filter((p) => p.id !== id);
+      setPresensiList(updatedList);
+      localStorage.setItem("presensiList", JSON.stringify(updatedList));
+      Swal.fire('Terhapus!', 'Data presensi telah dihapus.', 'success');
+    }
+  };
+
   return (
     <div className="flex">
       <Sidnav />
@@ -250,6 +272,7 @@ function RekapPresensi() {
                     <th>Alasan Ijin</th>
                     <th>Masuk</th>
                     <th>Pulang</th>
+                    <th>Aksi</th>
                   </tr>
                 </thead>
 
@@ -285,6 +308,21 @@ function RekapPresensi() {
                         <td className="border text-center">{alasan}</td>
                         <td className="border text-center">{p.jamMasuk || "—"}</td>
                         <td className="border text-center">{p.jamPulang || "—"}</td>
+                        <td className="border text-center">
+                          <div className="flex justify-center items-center gap-2">
+                            <Link to={`/EditRekapPresensi/${p.id}`}>
+                              <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105">
+                                ✏️
+                              </button>
+                            </Link>
+                            <button
+                              onClick={() => handleDelete(p.id)}
+                              className="bg-red-500 hover:bg-red-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105"
+                            >
+                              🗑️
+                            </button>
+                          </div>
+                        </td>
                       </motion.tr>
                     );
                   })}

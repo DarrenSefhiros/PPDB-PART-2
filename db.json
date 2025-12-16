@@ -204,8 +204,8 @@
       "Kategori": "Guru",
       "RFID": "711575",
       "lastPresensi": {
-        "date": "2025-12-15",
-        "jamMasuk": "13:59:33",
+        "date": "2025-12-16",
+        "jamMasuk": "09:50:50",
         "jamPulang": null
       },
       "status": "masuk",
@@ -233,9 +233,13 @@
       "Jabatan": "B Indo",
       "Kategori": "Guru",
       "RFID": "0895424260008",
-      "lastPresensi": null,
-      "status": "ijin",
-      "alasanIjin": "tidur"
+      "lastPresensi": {
+        "date": "2025-12-16",
+        "jamMasuk": "09:52:45",
+        "jamPulang": null
+      },
+      "status": "masuk",
+      "alasanIjin": ""
     },
     {
       "id": "5acd",

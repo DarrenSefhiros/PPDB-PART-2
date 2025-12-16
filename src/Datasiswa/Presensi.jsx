@@ -126,16 +126,14 @@ else if (s.lastPresensi?.jamMasuk) status = "masuk";
 
   return (
     <div className="flex">
-      <Sidnav />
-
-      <div className="ml-60 min-h-screen bg-pink-50 p-5 w-full">
+      <div className="ml- min-h-screen bg-pink-50 p-5 w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="p-8 w-full max-w-6xl mx-auto"
         >
-          <h2 className="text-4xl font-bold text-pink-700 mb-6">
+          <h2 className="text-5xl font-bold text-pink-700 mb-6 text-center">
             Presensi
           </h2>
 

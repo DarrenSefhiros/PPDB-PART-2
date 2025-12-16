@@ -10,88 +10,114 @@ function PresensiKeluar() {
   const [loading, setLoading] = useState(false);
   const rfidRef = useRef(null);
 
+  // ===============================
+  // WAKTU WIB
+  // ===============================
   const nowWIB = () => {
     const d = new Date();
-    const time = d.toLocaleTimeString("en-GB", {
-      timeZone: "Asia/Jakarta",
-      hour12: false,
-    });
-    const date = d.toLocaleDateString("en-CA", {
-      timeZone: "Asia/Jakarta",
-    });
-    return { time, date };
+    return {
+      time: d.toLocaleTimeString("en-GB", {
+        timeZone: "Asia/Jakarta",
+        hour12: false,
+      }),
+      date: d.toLocaleDateString("en-CA", {
+        timeZone: "Asia/Jakarta",
+      }),
+    };
   };
 
   useEffect(() => {
     setTimeout(() => rfidRef.current?.focus(), 300);
   }, []);
 
-  // CEK RFID
-  const handleCheckRFID = async () => {
+  // ===============================
+  // AUTO FETCH USER RFID
+  // ===============================
+  const fetchUserByRFID = async (rfid) => {
+    if (!rfid) return;
+
     setLoading(true);
     try {
       const res = await axios.get("http://localhost:5000/Kesiswaan");
-      const user = res.data.find((u) => String(u.RFID) === String(rfidInput));
+      const user = res.data.find(
+        (u) => String(u.RFID) === String(rfid)
+      );
 
       if (!user) {
-        setUserData(null);
         Swal.fire("RFID tidak ditemukan", "Kode RFID tidak terdaftar!", "error");
-      } else {
-        setUserData(user);
+        setUserData(null);
+        return;
       }
-    } catch (err) {
+
+      setUserData(user);
+    } catch {
       Swal.fire("Error", "Gagal mengakses database!", "error");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  // PROSES ABSEN PULANG
+  // ===============================
+  // TRIGGER SAAT ENTER (RFID READER)
+  // ===============================
+  const handleRFIDKey = (e) => {
+    if (e.key === "Enter") {
+      fetchUserByRFID(rfidInput);
+    }
+  };
+
+  // ===============================
+  // ABSEN PULANG
+  // ===============================
   const handleAbsenPulang = async () => {
     if (!userData) return;
 
     const { time, date } = nowWIB();
     const hour = parseInt(time.split(":")[0]);
+    const last = userData.lastPresensi;
 
-    // BELUM JAM 3 → Tidak bisa
+    // BELUM JAM 15
     if (hour < 15) {
       return Swal.fire(
         "Belum waktunya pulang",
-        "Silahkan presensi pulang di jam 15:00 ke atas",
+        "Presensi pulang dibuka jam 15:00",
         "warning"
       );
     }
 
-    const last = userData.lastPresensi;
-
-    // BELUM PRESENSI MASUK → Tidak boleh
+    // BELUM MASUK
     if (!last || last.date !== date || !last.jamMasuk) {
       return Swal.fire(
-        "Tidak bisa absen pulang",
-        "Anda belum melakukan presensi masuk hari ini!",
+        "Ditolak",
+        "Anda belum presensi masuk hari ini",
         "error"
       );
     }
 
-    // SUDAH ABSEN PULANG → Tidak boleh
+    // SUDAH PULANG
     if (last.jamPulang) {
       return Swal.fire(
-        "Sudah absen pulang",
-        "Anda telah melakukan presensi pulang sebelumnya",
+        "Sudah presensi pulang",
+        "Anda sudah melakukan presensi pulang",
         "warning"
       );
     }
 
-    // UPDATE DATABASE
+    // UPDATE DB
     await axios.put(`http://localhost:5000/Kesiswaan/${userData.id}`, {
       ...userData,
       lastPresensi: {
-        date,
-        jamMasuk: last.jamMasuk,
+        ...last,
         jamPulang: time,
       },
     });
 
-    Swal.fire("Berhasil!", "Presensi pulang berhasil disimpan", "success");
+    Swal.fire("Berhasil", "Presensi pulang berhasil", "success");
+
+    // 🔄 RESET SIAP SCAN BERIKUTNYA
+    setRfidInput("");
+    setUserData(null);
+    rfidRef.current?.focus();
   };
 
   return (
@@ -102,7 +128,7 @@ function PresensiKeluar() {
           animate={{ opacity: 1, scale: 1 }}
           className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-lg text-center"
         >
-          {/* TOMBOL BACK */}
+          {/* BACK */}
           <Link to="/presensi">
             <button className="mb-5 bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-lg">
               ← Back
@@ -123,20 +149,18 @@ function PresensiKeluar() {
           <input
             ref={rfidRef}
             type="text"
-            placeholder="Scan atau masukkan RFID..."
+            placeholder="Scan / Masukkan RFID..."
             value={rfidInput}
             onChange={(e) => setRfidInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleCheckRFID()}
+            onKeyDown={handleRFIDKey}
             className="w-full px-4 py-3 rounded-md border border-gray-400 text-center text-lg"
           />
 
-          <button
-            onClick={handleCheckRFID}
-            disabled={loading}
-            className="mt-3 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md"
-          >
-            {loading ? "Mencari..." : "Cek RFID"}
-          </button>
+          {loading && (
+            <p className="mt-3 text-blue-600 font-semibold">
+              Mencari data...
+            </p>
+          )}
 
           {/* DATA USER */}
           {userData && (
@@ -152,7 +176,7 @@ function PresensiKeluar() {
             </motion.div>
           )}
 
-          {/* TOMBOL ABSEN PULANG */}
+          {/* TOMBOL PULANG */}
           {userData && (
             <button
               onClick={handleAbsenPulang}

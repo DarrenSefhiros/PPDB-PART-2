@@ -109,15 +109,6 @@ const Sidnav = () => {
           </li>
           <li>
             <a
-              href="/Presensi"
-              className="flex items-center text-nowrap gap-3 text-lg hover:bg-pink-800 w-auto rounded-md px-3 transition-all duration-200"
-            >
-              <i className="ri-file-list-2-line text-2xl text-pink-100"></i>
-              <span>Presensi</span>
-            </a>
-          </li>
-          <li>
-            <a
               href="/KategoriIjin"
               className="flex items-center gap-3 text-lg hover:bg-pink-800 rounded-md px-3 transition-all duration-200"
             >
