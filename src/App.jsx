@@ -43,18 +43,18 @@ function App() {
       <Route path="/Rekaptagihan" element={<Rekaptagihan />} />
       <Route path="/Rekappresensi" element={<RekapPresensi />} />
       <Route path="/EditRekapPresensi/:id" element={<EditRekapPresensi />} />
-      <Route path="/Presensi" element={<Presensi />} />
+      <Route path="/abc" element={<Presensi />} />
       <Route path="/Jenistagihan" element={<Jenistagihan />} />
       <Route path="/KategoriData" element={<Tabelsiswa />} />
       <Route path="/MasterData" element={<Masterdata />} />
       <Route path="/Kelas" element={<Kelas />} />
       <Route path="/KategoriIjin" element={<TabelKategoriIjin />} />
       <Route path="/TambahKategoriIjin" element={<TambahKategoriIjin />} />
-      <Route path="/EditKategoriIjin/:id" element={<EditKategoriIjin />} />
+      <Route path="/EditKategoriIjin/: id" element={<EditKategoriIjin />} />
       <Route path="/ijin" element={<PresensiIjin />} />
       <Route path="/AbsensiKeluar" element={<PresensiKeluar />} />
       <Route path="/Tambahjenistagihan" element={<TambahJenisTagihan />} />
-      <Route path="/Absensi" element={<Absensi />} />
+      <Route path="/Presensi" element={<Absensi />} />
       <Route path="/TambahMasterData" element={<TambahDataKategori />} />
       <Route path="/TambahDataKelas" element={<TambahDataKelas />} />
       <Route path="/EditJenisTagihan/:id" element={<EditJenisTagihan />} />

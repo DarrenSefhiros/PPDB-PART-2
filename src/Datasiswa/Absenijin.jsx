@@ -2,19 +2,18 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function PresensiIjin() {
+function Absensi() {
   const [rfidInput, setRfidInput] = useState("");
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const [kategoriIjinList, setKategoriIjinList] = useState([]);
-  const [alasan, setAlasan] = useState("");
-  const [keterangan, setKeterangan] = useState("");
-
   const rfidRef = useRef(null);
+  const navigate = useNavigate();
 
+  // ===============================
+  // WAKTU WIB
+  // ===============================
   const nowWIB = () => {
     const d = new Date();
     return {
@@ -33,30 +32,16 @@ function PresensiIjin() {
   }, []);
 
   // ===============================
-  // LOAD KATEGORI IJIN
+  // AUTO FETCH USER DARI RFID
   // ===============================
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/KategoriIjin")
-      .then((res) => {
-        setKategoriIjinList(res.data || []);
-        setAlasan(res.data?.[0]?.KategoriIjin || "");
-      })
-      .catch(() => {
-        setKategoriIjinList([]);
-        setAlasan("");
-      });
-  }, []);
+  const fetchUserByRFID = async (rfid) => {
+    if (!rfid) return;
 
-  // ===============================
-  // CEK RFID + RESET HARIAN
-  // ===============================
-  const handleCheckRFID = async () => {
     setLoading(true);
     try {
       const res = await axios.get("http://localhost:5000/Kesiswaan");
       let user = res.data.find(
-        (u) => String(u.RFID) === String(rfidInput)
+        (u) => String(u.RFID) === String(rfid)
       );
 
       if (!user) {
@@ -85,33 +70,47 @@ function PresensiIjin() {
       setUserData(user);
     } catch {
       Swal.fire("Error", "Gagal mengambil data!", "error");
-      setUserData(null);
     } finally {
       setLoading(false);
     }
   };
 
   // ===============================
-  // SIMPAN IJIN
+  // TRIGGER OTOMATIS SAAT ENTER
   // ===============================
-  const handleIjin = async () => {
+useEffect(() => {
+  if (rfidInput.length >= 9) { 
+    const timer = setTimeout(() => {
+      fetchUserByRFID(rfidInput);
+    }, 300); // debounce biar ga kepanggil berkali-kali
+
+    return () => clearTimeout(timer);
+  }
+}, [rfidInput]);
+
+
+  // ===============================
+  // ABSEN MASUK / PULANG
+  // ===============================
+  const handleAbsen = async () => {
     if (!userData) return;
 
-    const { date, time } = nowWIB();
+    const { time, date } = nowWIB();
     const hour = parseInt(time.split(":")[0]);
 
     if (hour < 6) {
       return Swal.fire(
         "Belum waktunya",
-        "Presensi ijin dimulai jam 06:00",
+        "Presensi dimulai jam 06:00",
         "warning"
       );
     }
 
-    // ❌ SUDAH IJIN HARI INI
+    // ❌ SUDAH IJIN
     if (
       userData.status === "ijin" &&
-      userData.lastPresensi?.date === date
+      userData.lastPresensi?.date === date &&
+      hour < 15
     ) {
       return Swal.fire(
         "Ditolak",
@@ -120,56 +119,80 @@ function PresensiIjin() {
       );
     }
 
-    // ❌ SUDAH MASUK HARI INI
+    // ❌ SUDAH MASUK
     if (
       userData.status === "masuk" &&
-      userData.lastPresensi?.date === date
+      userData.lastPresensi?.date === date &&
+      hour < 15
     ) {
       return Swal.fire(
         "Ditolak",
-        "Anda sudah absen masuk hari ini, tidak bisa ijin",
+        "Anda sudah absen masuk hari ini",
         "warning"
       );
     }
 
-    await axios.put(`http://localhost:5000/Kesiswaan/${userData.id}`, {
-      ...userData,
-      status: "ijin",
-      alasanIjin: alasan,
-      lastPresensi: {
-        date,
-        jamMasuk: null,
-        jamPulang: null,
-        ijin: {
-          alasan,
-          keterangan,
+    // ===============================
+    // ABSEN MASUK
+    // ===============================
+    if (hour < 15) {
+      await axios.put(`http://localhost:5000/Kesiswaan/${userData.id}`, {
+        ...userData,
+        status: "masuk",
+        alasanIjin: "",
+        lastPresensi: {
+          date,
+          jamMasuk: time,
+          jamPulang: null,
         },
-      },
-    });
+      });
 
-    Swal.fire("Berhasil", "Presensi ijin disimpan", "success");
-    setUserData(null);
+      Swal.fire("Berhasil", "Absen masuk berhasil", "success");
+    }
+
+    // ===============================
+    // ABSEN PULANG
+    // ===============================
+    if (hour >= 15) {
+      if (!userData.lastPresensi?.jamMasuk) {
+        return Swal.fire(
+          "Ditolak",
+          "Anda belum absen masuk",
+          "warning"
+        );
+      }
+
+      await axios.put(`http://localhost:5000/Kesiswaan/${userData.id}`, {
+        ...userData,
+        lastPresensi: {
+          ...userData.lastPresensi,
+          jamPulang: time,
+        },
+      });
+
+      Swal.fire("Berhasil", "Absen pulang berhasil", "success");
+    }
+
+    // 🔄 RESET SIAP USER BERIKUTNYA
     setRfidInput("");
-    setKeterangan("");
+    setUserData(null);
+    rfidRef.current?.focus();
   };
 
   return (
-    <div className="flex w-full min-h-screen items-center justify-center bg-pink-100">
+    <div className="min-h-screen flex items-center justify-center bg-pink-50">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-lg text-center"
+        className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-lg text-center relative"
       >
-        <Link
-          to="/Presensi"
-          className="inline-block mb-5 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg"
+        {/* BACK */}
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute left-5 top-5 bg-pink-300 hover:bg-pink-400 text-white px-4 py-2 rounded-lg"
         >
-          ⬅ Kembali
-        </Link>
-
-        <h2 className="text-2xl font-bold text-pink-700 mb-6">
-          Presensi Ijin
-        </h2>
+          ← Back
+        </button>
 
         {/* FOTO PROFIL */}
         <img
@@ -177,77 +200,56 @@ function PresensiIjin() {
             userData?.foto ||
             "https://www.dpzone.in/wp-content/uploads/2/Guest-PFP-13.jpg"
           }
-          alt="Profil"
+          alt="Foto Profil"
           className="w-32 h-32 rounded-full mx-auto mb-5 border-4 border-gray-300 shadow-md"
         />
 
-        {/* RFID */}
-        <input
-          ref={rfidRef}
-          value={rfidInput}
-          onChange={(e) => setRfidInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleCheckRFID()}
-          placeholder="Scan / Masukkan RFID..."
-          className="w-full px-4 py-3 rounded-md border text-center text-lg"
-        />
+        {/* INPUT RFID */}
+<input
+  ref={rfidRef}
+  value={rfidInput}
+  onChange={(e) => setRfidInput(e.target.value)}
+  placeholder="Scan RFID..."
+  className="w-full px-4 py-3 rounded-md border text-center text-lg"
+/>
 
-        <button
-          onClick={handleCheckRFID}
-          disabled={loading}
-          className="mt-3 bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md"
-        >
-          {loading ? "Mencari..." : "Cek RFID"}
-        </button>
+
+        {loading && (
+          <p className="mt-3 text-purple-600 font-semibold">
+            Mencari data...
+          </p>
+        )}
 
         {/* INFO USER */}
         {userData && (
-          <div className="mt-6 text-left bg-pink-100 p-4 rounded-lg">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-6 text-left bg-pink-100 p-4 rounded-lg"
+          >
             <p><b>Nama:</b> {userData.Nama}</p>
             <p><b>Email:</b> {userData.Email}</p>
             <p><b>Kategori:</b> {userData.Kategori}</p>
-            <p><b>Kelas/Jabatan:</b> {userData.Jabatan}</p>
-            <p><b>Status Hari Ini:</b> {userData.status || "Belum presensi"}</p>
-          </div>
+            <p><b>Jabatan/Kelas:</b> {userData.Jabatan}</p>
+            <p>
+              <b>Status Hari Ini:</b>{" "}
+              {userData.status || "Belum presensi"}
+            </p>
+          </motion.div>
         )}
 
-        {/* FORM IJIN */}
+        {/* TOMBOL ABSEN */}
         {userData && (
-          <>
-            <div className="mt-5 text-left">
-              <label className="font-semibold">Alasan Ijin</label>
-              <select
-                value={alasan}
-                onChange={(e) => setAlasan(e.target.value)}
-                className="w-full p-3 border rounded-md mt-1"
-              >
-                {kategoriIjinList.map((i) => (
-                  <option key={i.id} value={i.KategoriIjin}>
-                    {i.KategoriIjin}
-                  </option>
-                ))}
-              </select>
-
-              <label className="block mt-3 font-semibold">
-                Keterangan Tambahan
-              </label>
-              <textarea
-                value={keterangan}
-                onChange={(e) => setKeterangan(e.target.value)}
-                className="w-full p-3 border rounded-md mt-1"
-              />
-            </div>
-
-            <button
-              onClick={handleIjin}
-              className="mt-6 w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-lg"
-            >
-              SIMPAN IJIN
-            </button>
-          </>
+          <button
+            onClick={handleAbsen}
+            className="mt-6 w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-lg"
+          >
+            ABSEN
+          </button>
         )}
       </motion.div>
     </div>
   );
 }
 
-export default PresensiIjin;
+export default Absensi;

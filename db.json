@@ -197,112 +197,72 @@
       "alasanIjin": ""
     },
     {
-      "id": "3f9b",
-      "Nama": "paprika",
-      "Email": "d.sefh007@gmail.com",
-      "Jabatan": "B Indo",
-      "Kategori": "Guru",
-      "RFID": "711575",
-      "lastPresensi": {
-        "date": "2025-12-16",
-        "jamMasuk": "09:50:50",
-        "jamPulang": null
-      },
-      "status": "masuk",
-      "alasanIjin": ""
-    },
-    {
-      "id": "66b6",
-      "Nama": "Pudil",
-      "Email": "Levander@gmail.com",
-      "Jabatan": "Penjual Balon",
-      "Kategori": "Karyawan",
-      "RFID": "731739",
-      "lastPresensi": {
-        "date": "2025-12-09",
-        "jamMasuk": "07:44:27",
-        "jamPulang": null
-      },
-      "status": "masuk",
-      "alasanIjin": ""
-    },
-    {
-      "id": "eb49",
-      "Nama": "awa",
-      "Email": "aaa@gmail.com",
-      "Jabatan": "B Indo",
-      "Kategori": "Guru",
-      "RFID": "0895424260008",
-      "lastPresensi": {
-        "date": "2025-12-16",
-        "jamMasuk": "09:52:45",
-        "jamPulang": null
-      },
-      "status": "masuk",
-      "alasanIjin": ""
-    },
-    {
-      "id": "5acd",
-      "Nama": "willie salim",
-      "Email": "joko@gmail.com",
-      "Jabatan": "X",
-      "Kategori": "Siswa",
-      "RFID": "133186037781",
       "lastPresensi": null,
-      "status": "ijin",
-      "alasanIjin": "Kebutuhan Mendesak"
+      "status": "",
+      "alasanIjin": "",
+      "id": "3f9b"
     },
     {
-      "id": "c444",
+      "lastPresensi": null,
+      "status": "",
+      "alasanIjin": "",
+      "id": "66b6"
+    },
+    {
+      "lastPresensi": null,
+      "status": "",
+      "alasanIjin": "",
+      "id": "c444"
+    },
+    {
+      "lastPresensi": null,
+      "status": "",
+      "alasanIjin": "",
+      "id": "95db"
+    },
+    {
+      "lastPresensi": null,
+      "status": "",
+      "alasanIjin": "",
+      "id": "bb5b"
+    },
+    {
+      "id": "62ac",
+      "Nama": "willie salim",
+      "Email": "wwww@gmail.com",
+      "Jabatan": "IX",
+      "Kategori": "Siswa",
+      "RFID": "133186037781"
+    },
+    {
+      "id": "c926",
       "Nama": "mi bombo",
       "Email": "rafa@gmail.com",
       "Jabatan": "raja iblis",
       "Kategori": "Karyawan",
-      "RFID": "088923",
+      "RFID": "088923"
+    },
+    {
+      "id": "e9f7",
+      "Nama": "awa",
+      "Email": "kkk@gmail.com",
+      "Jabatan": "awd",
+      "Kategori": "Guru",
+      "RFID": "0895424260008"
+    },
+    {
+      "id": "f5cb",
+      "Nama": "zen",
+      "Email": "Levander@gmail.com",
+      "Jabatan": "b jawa",
+      "Kategori": "Guru",
+      "RFID": "123456789",
       "status": "masuk",
       "alasanIjin": "",
       "lastPresensi": {
-        "date": "2025-12-15",
-        "jamMasuk": "09:33:43",
+        "date": "2025-12-20",
+        "jamMasuk": "08:39:57",
         "jamPulang": null
-      }
-    },
-    {
-      "id": "70ef",
-      "Nama": "Bima Sakti",
-      "Email": "wdd@gmail.com",
-      "Jabatan": "IX",
-      "Kategori": "Siswa",
-      "RFID": "08976161623",
-      "status": "ijin",
-      "alasanIjin": "Sakit",
-      "lastPresensi": {
-        "date": "2025-12-15",
-        "jamMasuk": null,
-        "jamPulang": null,
-        "ijin": {
-          "alasan": "Sakit",
-          "keterangan": ""
-        }
-      }
-    },
-    {
-      "Nama": "kla",
-      "Email": "kla@gmail.com",
-      "Jabatan": "IIX",
-      "Kategori": "Siswa",
-      "RFID": "0897543356",
-      "id": "3967",
-      "status": "ijin",
-      "alasanIjin": "Kebutuhan Mendesak",
-      "lastPresensi": {
-        "date": "2025-12-15",
-        "jamMasuk": null,
-        "jamPulang": null,
-        "ijin": {
-          "alasan": "Kebutuhan Mendesak",
-          "keterangan": ""
-        }
       }
     }
   ],

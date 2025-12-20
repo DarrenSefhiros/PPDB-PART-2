@@ -1,55 +1,77 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
-import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
 
 function RekapPresensi() {
   const [kesiswaan, setKesiswaan] = useState([]);
+  const [presensiList, setPresensiList] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [presensiList, setPresensiList] = useState(() => {
-    const saved = localStorage.getItem("presensiList");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // Filter mode
+  // ===============================
+  // FILTER STATE
+  // ===============================
   const [filterMode, setFilterMode] = useState("harian");
-
-  // Sub filters
-  const [selectedDate, setSelectedDate] = useState(() => {
-    const now = new Date();
-    return now.toISOString().split("T")[0];
-  });
-
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
 
-  // Format tanggal Indonesia
-  const formatTanggalIndo = (d) => {
-    const date = new Date(d);
-    return date.toLocaleDateString("id-ID", {
+  // ===============================
+  // FORMAT TANGGAL
+  // ===============================
+  const formatTanggalIndo = (d) =>
+    new Date(d).toLocaleDateString("id-ID", {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
       timeZone: "Asia/Jakarta",
     });
-  };
 
-  // Fetch kesiswaan
+  // ===============================
+  // FETCH DATA KESISWAAN + PRESENSI
+  // ===============================
   useEffect(() => {
     const fetchAll = async () => {
       try {
         setLoading(true);
         const res = await axios.get("http://localhost:5000/Kesiswaan");
+
         const cleaned = (res.data || [])
           .filter(Boolean)
           .filter((d) => d.Nama && d.Nama.trim() !== "");
+
         setKesiswaan(cleaned);
-      } catch {
-        Swal.fire("Error", "Gagal memuat data kesiswaan", "error");
+
+        // 🔥 Bentuk data presensi dari lastPresensi
+        const presensi = cleaned
+          .filter((u) => u.lastPresensi?.date)
+          .map((u) => {
+            let status = "—";
+            if (u.lastPresensi.ijin) status = "ijin";
+            else if (u.lastPresensi.jamPulang) status = "keluar";
+            else if (u.lastPresensi.jamMasuk) status = "masuk";
+
+            return {
+              id: u.id,
+              nama: u.Nama,
+              rfid: u.RFID,
+              level: u.Kategori,
+              date: u.lastPresensi.date,
+              status,
+              alasanIjin: u.lastPresensi.ijin?.alasan || "-",
+              jamMasuk: u.lastPresensi.jamMasuk || null,
+              jamPulang: u.lastPresensi.jamPulang || null,
+            };
+          });
+
+        setPresensiList(presensi);
+      } catch (err) {
+        Swal.fire("Error", "Gagal memuat data presensi", "error");
       } finally {
         setLoading(false);
       }
@@ -58,7 +80,9 @@ function RekapPresensi() {
     fetchAll();
   }, []);
 
-  // Generate tahun + bulan otomatis dari presensi
+  // ===============================
+  // LIST BULAN & TAHUN OTOMATIS
+  // ===============================
   const tahunList = Array.from(
     new Set(presensiList.map((p) => new Date(p.date).getFullYear()))
   ).sort((a, b) => b - a);
@@ -70,39 +94,27 @@ function RekapPresensi() {
         return `${d.getMonth() + 1}-${d.getFullYear()}`;
       })
     )
-  ).sort((a, b) => {
-    const [m1, y1] = a.split("-").map(Number);
-    const [m2, y2] = b.split("-").map(Number);
-    return y2 - y1 || m2 - m1;
-  });
+  );
 
   const namaBulan = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember",
   ];
 
-  // Default bulan & tahun otomatis
   useEffect(() => {
-    if (bulanList.length > 0 && filterMode === "bulanan") {
+    if (filterMode === "bulanan" && bulanList.length > 0) {
       const [m, y] = bulanList[0].split("-");
       setSelectedMonth(m);
       setSelectedYear(y);
-    } else if (tahunList.length > 0 && filterMode === "tahunan") {
+    }
+    if (filterMode === "tahunan" && tahunList.length > 0) {
       setSelectedYear(tahunList[0]);
     }
-  }, [presensiList, filterMode]);
+  }, [filterMode, presensiList]);
 
-  // Filtering presensi
+  // ===============================
+  // FILTER DATA
+  // ===============================
   const presensiFiltered = presensiList.filter((p) => {
     const d = new Date(p.date);
     const day = d.getDate();
@@ -129,27 +141,43 @@ function RekapPresensi() {
     return true;
   });
 
-  // Handle delete presensi
+  // ===============================
+  // HAPUS PRESENSI
+  // ===============================
   const handleDelete = async (id) => {
-    const result = await Swal.fire({
-      title: 'Apakah Anda yakin?',
-      text: 'Data presensi ini akan dihapus permanen!',
-      icon: 'warning',
+    const konfirmasi = await Swal.fire({
+      title: "Serius Kamu?",
+      text: "Data tidak akan bisa dikembalikan jika telah dihapus",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Ya, Hapus!',
-      cancelButtonText: 'Batal'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Hapus data",
+      cancelButtonText: "Batal",
     });
 
-    if (result.isConfirmed) {
-      const updatedList = presensiList.filter((p) => p.id !== id);
-      setPresensiList(updatedList);
-      localStorage.setItem("presensiList", JSON.stringify(updatedList));
-      Swal.fire('Terhapus!', 'Data presensi telah dihapus.', 'success');
+    if (!konfirmasi.isConfirmed) return;
+
+    try {
+      // Hapus lastPresensi di backend
+      const siswa = kesiswaan.find((k) => k.id === id);
+      if (siswa) {
+        await axios.put(`http://localhost:5000/Kesiswaan/${id}`, {
+          ...siswa,
+          lastPresensi: null,
+        });
+      }
+
+      setPresensiList((prev) => prev.filter((p) => p.id !== id));
+      Swal.fire("Terhapus!", "Data presensi telah dihapus", "success");
+    } catch (err) {
+      Swal.fire("Error", "Gagal menghapus presensi", "error");
     }
   };
 
+  // ===============================
+  // RENDER
+  // ===============================
   return (
     <div className="flex">
       <Sidnav />
@@ -157,175 +185,150 @@ function RekapPresensi() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="p-8 w-full max-w-6xl mx-auto"
+          className="p-8 max-w-6xl mx-auto"
         >
           <h2 className="text-2xl font-bold text-pink-700 mb-6">
             Rekap Presensi
           </h2>
 
-          {/* FILTER PANEL */}
-          <div className="bg-white p-5 rounded-md shadow-md mb-6 flex gap-6 items-end flex-wrap">
+          {/* FILTER */}
+          <div className="bg-white p-5 rounded-md shadow mb-6 flex gap-6 flex-wrap">
+            <select
+              value={filterMode}
+              onChange={(e) => setFilterMode(e.target.value)}
+              className="border p-2 rounded-md"
+            >
+              <option value="harian">Harian</option>
+              <option value="bulanan">Bulanan</option>
+              <option value="tahunan">Tahunan</option>
+            </select>
 
-            {/* Filter */}
-            <div className="flex flex-col">
-              <label className="mb-1 font-semibold text-pink-700">Filter</label>
-              <select
-                value={filterMode}
-                onChange={(e) => setFilterMode(e.target.value)}
-                className="border border-pink-300 rounded-md p-2 w-56"
-              >
-                <option value="harian">Harian</option>
-                <option value="bulanan">Bulanan</option>
-                <option value="tahunan">Tahunan</option>
-              </select>
-            </div>
-
-            {/* Harian */}
             {filterMode === "harian" && (
-              <div className="flex flex-col">
-                <label className="mb-1 font-semibold text-pink-700">
-                  Pilih Tanggal
-                </label>
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="border border-pink-300 rounded-md p-2"
-                />
-              </div>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="border p-2 rounded-md"
+              />
             )}
 
-            {/* Bulanan */}
-            {filterMode === "bulanan" && bulanList.length > 0 && (
+            {filterMode === "bulanan" && (
               <>
-                <div className="flex flex-col">
-                  <label className="mb-1 font-semibold text-pink-700">Bulan</label>
-                  <select
-                    value={selectedMonth}
-                    onChange={(e) => setSelectedMonth(e.target.value)}
-                    className="border border-pink-300 rounded-md p-2"
-                  >
-                    {bulanList.map((b) => {
-                      const [m] = b.split("-");
-                      return (
-                        <option key={b} value={m}>
-                          {namaBulan[m - 1]}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="mb-1 font-semibold text-pink-700">Tahun</label>
-                  <select
-                    value={selectedYear}
-                    onChange={(e) => setSelectedYear(e.target.value)}
-                    className="border border-pink-300 rounded-md p-2"
-                  >
-                    {tahunList.map((y) => (
-                      <option key={y} value={y}>
-                        {y}
+                <select
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  className="border p-2 rounded-md"
+                >
+                  {bulanList.map((b) => {
+                    const [m] = b.split("-");
+                    return (
+                      <option key={b} value={m}>
+                        {namaBulan[m - 1]}
                       </option>
-                    ))}
-                  </select>
-                </div>
-              </>
-            )}
+                    );
+                  })}
+                </select>
 
-            {/* Tahunan */}
-            {filterMode === "tahunan" && tahunList.length > 0 && (
-              <div className="flex flex-col">
-                <label className="mb-1 font-semibold text-pink-700">Tahun</label>
                 <select
                   value={selectedYear}
                   onChange={(e) => setSelectedYear(e.target.value)}
-                  className="border border-pink-300 rounded-md p-2"
+                  className="border p-2 rounded-md"
                 >
                   {tahunList.map((y) => (
-                    <option key={y} value={y}>
-                      {y}
-                    </option>
+                    <option key={y}>{y}</option>
                   ))}
                 </select>
-              </div>
+              </>
+            )}
+
+            {filterMode === "tahunan" && (
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+                className="border p-2 rounded-md"
+              >
+                {tahunList.map((y) => (
+                  <option key={y}>{y}</option>
+                ))}
+              </select>
             )}
           </div>
 
-          {/* TABEL */}
-          <div className="overflow-x-auto bg-white p-4 rounded-md shadow-md">
-            {presensiFiltered.length === 0 ? (
-              <div className="text-center py-8 text-pink-600">
-                Tidak ada data presensi.
-              </div>
+          <div>
+            {loading ? (
+              <div className="text-center py-4 text-pink-600">Memuat data...</div>
+            ) : presensiFiltered.length === 0 ? (
+              <div className="text-center py-4 text-pink-600">Tidak ada data presensi</div>
             ) : (
-              <table className="min-w-full border border-pink-200 rounded-md text-sm">
+              <table className="min-w-full border border-pink-200 rounded-md overflow-hidden text-sm">
                 <thead className="bg-purple-200 text-purple-800">
                   <tr className="text-center">
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>RFID</th> {/* BARU */}
-                    <th>Level</th>
-                    <th>Tanggal</th>
-                    <th>Status</th>
-                    <th>Alasan Ijin</th>
-                    <th>Masuk</th>
-                    <th>Pulang</th>
-                    <th>Aksi</th>
+                    <th className="px-3  w-10 font-bold">No</th>
+                    <th className="px-4  w-40 text-left font-bold">Nama</th>
+                    <th className="px-4  w-52 font-bold">RFID</th>
+                    <th className="px-4  w-36 font-bold">Level</th>
+                    <th className="px-4  w-36 font-bold">Tanggal</th>
+                    <th className="px-4  w-32 font-bold">Status</th>
+                    <th className="px-4  w-40 font-bold">Alasan Ijin</th>
+                    <th className="px-4  w-32 font-bold">Masuk</th>
+                    <th className="px-4  w-32 font-bold">Pulang</th>
+                    <th className="px-4  w-48 font-bold">Aksi</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {presensiFiltered.map((p, idx) => {
-                    const status = p.status || "-";
-                    const alasan = p.alasanIjin || "-";
-
-                    // 🔥 Ambil RFID dari master data berdasarkan nama
-                    const findRFID = kesiswaan.find((k) => k.Nama === p.nama);
-                    const rfid = findRFID ? findRFID.RFID : "-";
-
-                    return (
-                      <motion.tr
-                        key={p.id}
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.03 }}
-                        className="bg-pink-100 hover:bg-pink-200"
-                      >
-                        <td className="border text-center">{idx + 1}</td>
-                        <td className="border px-4 py-2">{p.nama}</td>
-                        <td className="border text-center">{rfid}</td> {/* BARU */}
-                        <td className="border text-center">{p.level}</td>
-                        <td className="border text-center">
-                          {formatTanggalIndo(p.date)}
-                        </td>
-
-                        <td className="border text-center font-bold">
-                          {status}
-                        </td>
-
-                        <td className="border text-center">{alasan}</td>
-                        <td className="border text-center">{p.jamMasuk || "—"}</td>
-                        <td className="border text-center">{p.jamPulang || "—"}</td>
-                        <td className="border text-center">
-                          <div className="flex justify-center items-center gap-2">
-                            <Link to={`/EditRekapPresensi/${p.id}`}>
-                              <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105">
-                                ✏️
-                              </button>
-                            </Link>
-                            <button
-                              onClick={() => handleDelete(p.id)}
-                              className="bg-red-500 hover:bg-red-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105"
-                            >
-                              🗑️
+                  {presensiFiltered.map((p, i) => (
+                    <motion.tr
+                      key={p.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                      className="bg-pink-100 hover:bg-pink-200 transition"
+                    >
+                      <td className="border border-pink-200 px-2 py-2 text-center">
+                        {i + 1}
+                      </td>
+                      <td className="border border-pink-200 px-4 py-2 text-left text-nowrap align-middle">
+                        {p.nama}
+                      </td>
+                      <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
+                        {p.rfid || "—"}
+                      </td>
+                      <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
+                        {p.level}
+                      </td>
+                      <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
+                        {formatTanggalIndo(p.date)}
+                      </td>
+                      <td className="border border-pink-200 px-4 py-2 text-center font-semibold text-nowrap align-middle">
+                        {p.status}
+                      </td>
+                      <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
+                        {p.alasanIjin}
+                      </td>
+                      <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
+                        {p.jamMasuk || "—"}
+                      </td>
+                      <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
+                        {p.jamPulang || "—"}
+                      </td>
+                      <td className="border border-pink-200 px-4 py-2 text-center align-middle">
+                        <div className="flex justify-center items-center gap-2">
+                          <Link to={`/EditRekapPresensi/${p.id}`}>
+                            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105">
+                              ✏️
                             </button>
-                          </div>
-                        </td>
-                      </motion.tr>
-                    );
-                  })}
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(p.id)}
+                            className="bg-red-500 hover:bg-red-600 text-white font-bold w-12 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105"
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
                 </tbody>
               </table>
             )}
