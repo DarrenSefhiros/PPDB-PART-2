@@ -112,14 +112,14 @@ function JenisTagihan() {
                         <div className="flex justify-center space-x-2">
                           <Link to={`/EditJenisTagihan/${item.id}`}>
                             <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded transition hover:scale-[1.09]">
-                              ✍ Edit
+                              ✍
                             </button>
                           </Link>
                           <button
                             className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded transition hover:scale-[1.09]"
                             onClick={() => handleDelete(item.id)}
                           >
-                            🗑 Hapus
+                            🗑
                           </button>
                         </div>
                       </td>

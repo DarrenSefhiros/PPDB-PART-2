@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import "remixicon/fonts/remixicon.css";
 import Swal from "sweetalert2";
 
@@ -30,13 +31,13 @@ const Sidnav = () => {
 
         <ul className="space-y-5">
           <li>
-            <a
-              href="/Dashboard"
+            <NavLink
+              to="/Dashboard"
               className="flex items-center gap-3 text-lg hover:bg-pink-700 rounded-md py-2 px-3 transition-all duration-200"
             >
               <i className="ri-dashboard-line text-2xl text-pink-100"></i>
               <span className="font-medium">Dashboard</span>
-            </a>
+            </NavLink>
           </li>
 
           {/* DATABASE */}
@@ -44,31 +45,31 @@ const Sidnav = () => {
             Database
           </li>
           <li>
-            <a
-              href="/KategoriData"
+            <NavLink
+              to="/KategoriData"
               className="flex items-center gap-3 text-lg hover:bg-pink-700 rounded-md px-3 transition-all duration-200"
             >
               <i className="ri-database-2-line text-2xl text-pink-100"></i>
               <span>Kategori Data</span>
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a
-              href="/Kelas"
+            <NavLink
+              to="/Kelas"
               className="flex items-center gap-3 text-lg hover:bg-pink-700 rounded-md px-3 transition-all duration-200"
             >
               <i className="ri-team-line text-2xl text-pink-100"></i>
               <span>Kelas</span>
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a
-              href="/MasterData"
+            <NavLink
+              to="/MasterData"
               className="flex items-center gap-3 text-lg hover:bg-pink-700 rounded-md px-3 transition-all duration-200"
             >
               <i className="ri-folder-user-line text-2xl text-pink-100"></i>
               <span>Master Data</span>
-            </a>
+            </NavLink>
           </li>
 
           {/* KEUANGAN */}
@@ -76,31 +77,31 @@ const Sidnav = () => {
             Keuangan
           </li>
           <li>
-            <a
-              href="/Jenistagihan"
+            <NavLink
+              to="/Jenistagihan"
               className="flex items-center text-nowrap gap-3 text-lg hover:bg-pink-700 w-auto rounded-md px-3 transition-all duration-200"
             >
               <i className="ri-file-list-3-line text-2xl text-pink-100"></i>
               <span>Kategori Tagihan</span>
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a
-              href="/Tagihan"
+            <NavLink
+              to="/Tagihan"
               className="flex items-center gap-3 text-lg hover:bg-pink-800 rounded-md px-3 transition-all duration-200"
             >
               <i className="ri-bill-line text-2xl text-pink-100"></i>
               <span>Tagihan</span>
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a
-              href="/Rekaptagihan"
+            <NavLink
+              to="/Rekaptagihan"
               className="flex items-center gap-3 text-lg hover:bg-pink-800 rounded-md px-3 transition-all duration-200"
             >
               <i className="ri-history-line text-2xl text-pink-100"></i>
               <span>Rekap Tagihan</span>
-            </a>
+            </NavLink>
           </li>
 
           {/* KEUANGAN DUPLIKAT */}
@@ -108,22 +109,22 @@ const Sidnav = () => {
             Presensi
           </li>
           <li>
-            <a
-              href="/KategoriIjin"
+            <NavLink
+              to="/KategoriIjin"
               className="flex items-center gap-3 text-lg hover:bg-pink-800 rounded-md px-3 transition-all duration-200"
             >
               <i className="ri-file-list-3-line text-2xl text-pink-100"></i>
               <span>Kategori Ijin</span>
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a
-              href="/Rekappresensi"
+            <NavLink
+              to="/Rekappresensi"
               className="flex items-center gap-3 text-lg hover:bg-pink-800 rounded-md px-3 transition-all duration-200"
             >
               <i className="ri-history-line text-2xl text-2xl text-pink-100"></i>
               <span className="text-nowrap">Rekap Presensi</span>
-            </a>
+            </NavLink>
           </li>
         </ul>
       </div>

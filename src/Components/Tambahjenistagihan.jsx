@@ -71,6 +71,9 @@ function TambahJenisTagihan() {
                 required
                 className="w-full border border-gray-300 px-4 py-2 rounded-md focus:ring-pink-400 focus:outline-none"
               />
+              {formData.Tagihan && !isNaN(formData.Tagihan) && (
+                <p className="text-sm text-gray-600 mt-1">Rp.{parseInt(formData.Tagihan).toLocaleString()}</p>
+              )}
             </div>
             <div>
               <label className="block text-gray-700 mb-1">Keterangan</label>

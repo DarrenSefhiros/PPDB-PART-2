@@ -184,11 +184,14 @@ function TambahData() {
               id="Tagihan"
               name="Tagihan"
               type="text"
-              placeholder="Total tagihan"
+              placeholder="Masukkan jenis tagihan"
               value={formData.Tagihan}
               readOnly
               className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
             />
+            {formData.Tagihan && !isNaN(formData.Tagihan) && (
+              <p className="text-sm text-gray-600 mt-1">Rp.{parseInt(formData.Tagihan).toLocaleString()}</p>
+            )}
           </div>
 
           {/* TANGGAL TAGIHAN */}

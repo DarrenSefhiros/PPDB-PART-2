@@ -86,17 +86,7 @@ function Absensi() {
     }
   };
 
-  // ===============================
-  // AUTO FETCH SAAT RFID MASUK
-  // ===============================
-  useEffect(() => {
-    if (rfidInput.length >= 3) {
-      const timer = setTimeout(() => {
-        fetchUserByRFID(rfidInput);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [rfidInput]);
+
 
   const sudahPulangHariIni = (user) => {
   const today = nowWIB().date;
@@ -140,6 +130,8 @@ if (sudahPulangHariIni(userData)) {
       return Swal.fire("Ditolak", "Anda sudah ijin hari ini", "warning");
     }
 
+
+
   // ================== ABSEN MASUK ==================
 if (!userData.lastPresensi?.jamMasuk) {
 
@@ -179,10 +171,10 @@ if (!userData.lastPresensi?.jamMasuk) {
 Pulang
 if (userData.lastPresensi?.jamMasuk && !userData.lastPresensi?.jamPulang) {
 
-  if (hour < 9.10) {
+  if (hour < 10) {
     return Swal.fire(
       "Belum waktunya pulang",
-      "Absen pulang hanya bisa setelah jam 9:00",
+      "Absen pulang hanya bisa setelah jam 10:00",
       "warning"
     );
   }
@@ -235,6 +227,8 @@ if (userData.lastPresensi?.jamMasuk && !userData.lastPresensi?.jamPulang) {
     if (userData.status === "ijin" && userData.lastPresensi?.date === date) {
       return Swal.fire("Ditolak", "Anda sudah ijin hari ini", "warning");
     }
+
+
 
     const { value: form } = await Swal.fire({
       title: "Ijin Karena Apa?",
@@ -329,6 +323,11 @@ if (userData.lastPresensi?.jamMasuk && !userData.lastPresensi?.jamPulang) {
           ref={rfidRef}
           value={rfidInput}
           onChange={(e) => setRfidInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              fetchUserByRFID(rfidInput);
+            }
+          }}
           placeholder="Scan RFID..."
           className="w-full mt-6 px-4 py-3 rounded-md border text-center text-lg"
         />

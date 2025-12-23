@@ -111,6 +111,13 @@
       "Tagihan": "1.500.000",
       "JatuhTempo": "",
       "Keterangan": "biaya untuk piknik"
+    },
+    {
+      "id": "94fd",
+      "JenisTagihan": "Study Tour",
+      "Tagihan": "1500000",
+      "JatuhTempo": "",
+      "Keterangan": "Outing Class ke Bali"
     }
   ],
   "Kesiswaan": [
@@ -258,12 +265,7 @@
       "RFID": "0895424260008",
       "status": "pulang",
       "alasanIjin": "",
-      "lastPresensi": {
-        "date": "2025-12-23",
-        "jamMasuk": "08:30:36",
-        "jamPulang": "08:30:43",
-        "terlambat": true
-      }
+      "lastPresensi": null
     },
     {
       "lastPresensi": {
@@ -286,16 +288,13 @@
       "Jabatan": "b jawa",
       "Kategori": "Guru",
       "RFID": "123456789",
-      "status": "ijin",
-      "alasanIjin": "Sakit",
+      "status": "masuk",
+      "alasanIjin": "",
       "lastPresensi": {
         "date": "2025-12-23",
-        "jamMasuk": null,
+        "jamMasuk": "11:36:18",
         "jamPulang": null,
-        "ijin": {
-          "alasan": "Sakit",
-          "keterangan": ""
-        }
+        "terlambat": true
       }
     },
     {
@@ -307,6 +306,17 @@
       "RFID": "0911122334",
       "status": "ijin",
       "alasanIjin": "Sakit",
+      "lastPresensi": null
+    },
+    {
+      "id": "eaf0",
+      "Nama": "wowik",
+      "Email": "wiwok@gmail.com",
+      "Jabatan": "Penjual Jajan",
+      "Kategori": "Karyawan",
+      "RFID": "089443421",
+      "status": "ijin",
+      "alasanIjin": "Sakit",
       "lastPresensi": {
         "date": "2025-12-23",
         "jamMasuk": null,
@@ -318,20 +328,34 @@
       }
     },
     {
-      "id": "eaf0",
-      "Nama": "wowik",
-      "Email": "wiwok@gmail.com",
-      "Jabatan": "Penjual Jajan",
-      "Kategori": "Karyawan",
-      "RFID": "089443421"
-    },
-    {
       "id": "58ff",
       "Nama": "vira",
       "Email": "pit322@gmail.com",
       "Jabatan": "Penjual mainan",
       "Kategori": "Karyawan",
-      "RFID": "911283294"
+      "RFID": "911283294",
+      "status": "ijin",
+      "alasanIjin": "Sakit",
+      "lastPresensi": null
+    },
+    {
+      "id": "c3dc",
+      "Nama": "Roihan",
+      "Email": "roihan@gmail.com",
+      "Jabatan": "XII",
+      "Kategori": "Siswa",
+      "RFID": "2589287447",
+      "status": "ijin",
+      "alasanIjin": "Sakit",
+      "lastPresensi": {
+        "date": "2025-12-23",
+        "jamMasuk": null,
+        "jamPulang": null,
+        "ijin": {
+          "alasan": "Sakit",
+          "keterangan": ""
+        }
+      }
     }
   ],
   "Tagihan": [
@@ -346,14 +370,6 @@
     }
   ],
   "login": [
-    {
-      "id": "7ee2",
-      "Nama": "Darren",
-      "Jenis": "Uang Gedung",
-      "Tagihan": "20.000.000",
-      "Tanggal": "2025-11-19",
-      "Email": "Duren@gmail.com"
-    },
     {
       "id": "1e56",
       "Nama": "Sakti",
@@ -380,15 +396,6 @@
       "Status": "Sudah Lunas"
     },
     {
-      "id": "93f7",
-      "Nama": "Darren",
-      "Jenis": "Uang Kemah",
-      "Tagihan": "30.000",
-      "Tanggal": "2025-11-27",
-      "Email": "Duren@gmail.com",
-      "Status": "Belum Lunas"
-    },
-    {
       "id": "d74c",
       "Nama": "Sakti",
       "Jenis": "Biaya Piknik",
@@ -396,6 +403,23 @@
       "Tanggal": "2025-12-26",
       "Email": "Levander@gmail.com",
       "Status": "Sudah Lunas"
+    },
+    {
+      "id": "7bb0",
+      "Nama": "willie salim",
+      "Jenis": "Uang Gedung",
+      "Tagihan": "20.000.000",
+      "Tanggal": "2025-12-12",
+      "Email": "wwww@gmail.com"
+    },
+    {
+      "id": "62f8",
+      "Nama": "Roihan",
+      "Jenis": "Study Tour",
+      "Tagihan": "1500000",
+      "Tanggal": "2025-12-30",
+      "Email": "roihan@gmail.com",
+      "Status": "Belum Lunas"
     }
   ],
   "Kelas": [
@@ -431,9 +455,15 @@
     },
     {
       "id": "5ec4",
-      "Kelas": "12",
-      "Jurusan": "dpb",
+      "Kelas": "XII",
+      "Jurusan": "DPB",
       "Email": "awd@gmail.com"
+    },
+    {
+      "id": "f726",
+      "Kelas": "XII",
+      "Jurusan": "TKJ A",
+      "Email": "abb@gmail.com"
     }
   ],
   "Kategori": [

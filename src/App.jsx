@@ -50,7 +50,7 @@ function App() {
       <Route path="/Kelas" element={<Kelas />} />
       <Route path="/KategoriIjin" element={<TabelKategoriIjin />} />
       <Route path="/TambahKategoriIjin" element={<TambahKategoriIjin />} />
-      <Route path="/EditKategoriIjin/: id" element={<EditKategoriIjin />} />
+      <Route path="/EditKategoriIjin/:id" element={<EditKategoriIjin />} />
       <Route path="/ijin" element={<PresensiIjin />} />
       <Route path="/AbsensiKeluar" element={<PresensiKeluar />} />
       <Route path="/Tambahjenistagihan" element={<TambahJenisTagihan />} />

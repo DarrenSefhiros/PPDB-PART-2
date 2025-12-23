@@ -59,7 +59,6 @@ function RekapPresensi() {
             return {
               id: u.id,
               nama: u.Nama,
-              rfid: u.RFID,
               level: u.Kategori,
               date: u.lastPresensi.date,
               status,
@@ -113,33 +112,35 @@ function RekapPresensi() {
   }, [filterMode, presensiList]);
 
   // ===============================
-  // FILTER DATA
-  // ===============================
-  const presensiFiltered = presensiList.filter((p) => {
-    const d = new Date(p.date);
-    const day = d.getDate();
-    const month = d.getMonth() + 1;
-    const year = d.getFullYear();
+// FILTER DATA
+// ===============================
+  const presensiFiltered = presensiList
+    .filter((p) => {
+      const d = new Date(p.date);
+      const day = d.getDate();
+      const month = d.getMonth() + 1;
+      const year = d.getFullYear();
 
-    if (filterMode === "harian") {
-      const s = new Date(selectedDate);
-      return (
-        day === s.getDate() &&
-        month === s.getMonth() + 1 &&
-        year === s.getFullYear()
-      );
-    }
+      if (filterMode === "harian") {
+        const s = new Date(selectedDate);
+        return (
+          day === s.getDate() &&
+          month === s.getMonth() + 1 &&
+          year === s.getFullYear()
+        );
+      }
 
-    if (filterMode === "bulanan") {
-      return month === Number(selectedMonth) && year === Number(selectedYear);
-    }
+      if (filterMode === "bulanan") {
+        return month === Number(selectedMonth) && year === Number(selectedYear);
+      }
 
-    if (filterMode === "tahunan") {
-      return year === Number(selectedYear);
-    }
+      if (filterMode === "tahunan") {
+        return year === Number(selectedYear);
+      }
 
-    return true;
-  });
+      return true;
+    })
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   // ===============================
   // HAPUS PRESENSI
@@ -164,6 +165,8 @@ function RekapPresensi() {
       if (siswa) {
         await axios.put(`http://localhost:5000/Kesiswaan/${id}`, {
           ...siswa,
+          status: "",
+          alasanIjin: "",
           lastPresensi: null,
         });
       }
@@ -264,8 +267,7 @@ function RekapPresensi() {
                 <thead className="bg-purple-200 text-purple-800">
                   <tr className="text-center">
                     <th className="px-3  w-10 font-bold">No</th>
-                    <th className="px-4  w-40 text-left font-bold">Nama</th>
-                    <th className="px-4  w-52 font-bold">RFID</th>
+                    <th className="px-4  w-40 text-center font-bold">Nama</th>
                     <th className="px-4  w-36 font-bold">Level</th>
                     <th className="px-4  w-36 font-bold">Tanggal</th>
                     <th className="px-4  w-32 font-bold">Status</th>
@@ -290,9 +292,6 @@ function RekapPresensi() {
                       </td>
                       <td className="border border-pink-200 px-2 py-2 text-left text-nowrap align-middle">
                         {p.nama}
-                      </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
-                        {p.rfid || "—"}
                       </td>
                       <td className="border border-pink-200 py-2 text-center text-nowrap align-middle">
                         {p.level}

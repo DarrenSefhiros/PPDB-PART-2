@@ -11,6 +11,7 @@ function MasterData() {
   const [loading, setLoading] = useState(true);
   const [selectedKategori, setSelectedKategori] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [rfidVisible, setRfidVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -156,7 +157,16 @@ function MasterData() {
                     <th className="px-4 py-2 w-32 font-bold">Kategori</th>
                     <th className="px-4 py-2 w-32 font-bold">{getJabatanHeader()}</th>
 
-                    <th className="px-4 py-2 w-32 font-bold">RFID</th>
+                    <th className="px-4 py-2 w-32 font-bold">
+                      RFID
+                      <button
+                        onClick={() => setRfidVisible(!rfidVisible)}
+                        className="ml-2 text-purple-800 hover:text-purple-600"
+                        title={rfidVisible ? "Sembunyikan RFID" : "Tampilkan RFID"}
+                      >
+                        {rfidVisible ? "👁️" : "🙈"}
+                      </button>
+                    </th>
 
                     <th className="px-4 py-2 w-48 font-bold">Aksi</th>
                   </tr>
@@ -178,7 +188,7 @@ function MasterData() {
 
                       {/* RFID VALUE */}
                       <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.RFID || "-"}
+                        {rfidVisible ? (item.RFID || "-") : "****"}
                       </td>
 
                       <td className="border border-pink-200 px-4 py-2 text-center">

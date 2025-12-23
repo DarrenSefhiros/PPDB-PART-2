@@ -282,7 +282,7 @@ function Dashboard() {
                     .map((i, idx) => (
                       <tr key={i.id} className="bg-pink-100 hover:bg-ppink-200 transition">
                         <td className="border px-2 py-2 text-center">{idx + 1}</td>
-                        <td className="border px-4 py-2 text-center">{i.Nama}</td>
+                        <td className="border px-4 py-2 text-left">{i.Nama}</td>
                         <td className="border px-4 py-2 text-center">{i.Email}</td>
                         <td className="border px-4 py-2 text-center">{i.Jabatan}</td>
                         <td className="border px-4 py-2 text-center">{i.Kategori}</td>
