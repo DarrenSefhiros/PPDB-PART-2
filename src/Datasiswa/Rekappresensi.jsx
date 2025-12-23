@@ -53,7 +53,7 @@ function RekapPresensi() {
           .map((u) => {
             let status = "—";
             if (u.lastPresensi.ijin) status = "ijin";
-            else if (u.lastPresensi.jamPulang) status = "keluar";
+            else if (u.lastPresensi.jamPulang) status = "pulang";
             else if (u.lastPresensi.jamMasuk) status = "masuk";
 
             return {
@@ -181,7 +181,7 @@ function RekapPresensi() {
   return (
     <div className="flex">
       <Sidnav />
-      <div className="ml-60 min-h-screen bg-pink-50 p-5 w-full">
+      <div className="ml-60 min-h-screen bg-pink-50 p-5 w-full overflow-x-hidden">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -192,7 +192,7 @@ function RekapPresensi() {
           </h2>
 
           {/* FILTER */}
-          <div className="bg-white p-5 rounded-md shadow mb-6 flex gap-6 flex-wrap">
+          <div className="bg-white p-5 w-auto rounded-md shadow mb-6 flex gap-6 flex-wrap">
             <select
               value={filterMode}
               onChange={(e) => setFilterMode(e.target.value)}
@@ -288,13 +288,13 @@ function RekapPresensi() {
                       <td className="border border-pink-200 px-2 py-2 text-center">
                         {i + 1}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2 text-left text-nowrap align-middle">
+                      <td className="border border-pink-200 px-2 py-2 text-left text-nowrap align-middle">
                         {p.nama}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
                         {p.rfid || "—"}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
+                      <td className="border border-pink-200 py-2 text-center text-nowrap align-middle">
                         {p.level}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
@@ -312,16 +312,16 @@ function RekapPresensi() {
                       <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
                         {p.jamPulang || "—"}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center align-middle">
+                      <td className="border border-pink-200 px-2 py-2 text-center align-middle">
                         <div className="flex justify-center items-center gap-2">
                           <Link to={`/EditRekapPresensi/${p.id}`}>
-                            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold w-10 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105">
+                            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold w-8 h-7 flex items-center justify-center rounded-md transition-transform hover:scale-105">
                               ✏️
                             </button>
                           </Link>
                           <button
                             onClick={() => handleDelete(p.id)}
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold w-12 h-8 flex items-center justify-center rounded-md transition-transform hover:scale-105"
+                            className="bg-red-500 hover:bg-red-600 text-white font-bold w-8 h-7 flex items-center justify-center rounded-md transition-transform hover:scale-105"
                           >
                             🗑️
                           </button>

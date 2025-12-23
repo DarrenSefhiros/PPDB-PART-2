@@ -11,7 +11,7 @@ function PresensiKeluar() {
   const rfidRef = useRef(null);
 
   // ===============================
-  // WAKTU WIB
+  //  WIB
   // ===============================
   const nowWIB = () => {
     const d = new Date();
@@ -77,10 +77,10 @@ function PresensiKeluar() {
     const last = userData.lastPresensi;
 
     // BELUM JAM 15
-    if (hour < 15) {
+    if (hour < 10) {
       return Swal.fire(
         "Belum waktunya pulang",
-        "Presensi pulang dibuka jam 15:00",
+        "Presensi pulang dibuka jam 10:00",
         "warning"
       );
     }

@@ -75,7 +75,7 @@ function Presensi() {
       // TENTUKAN STATUS
       let status = "—";
 if (s.status === "ijin") status = "ijin";
-else if (s.lastPresensi?.jamPulang) status = "keluar";
+else if (s.lastPresensi?.jamPulang) status = "pulang";
 else if (s.lastPresensi?.jamMasuk) status = "masuk";
 
 

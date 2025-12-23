@@ -186,15 +186,15 @@
       "id": "20cc"
     },
     {
-      "id": "224e",
       "Nama": "rusdi",
       "Email": "7.ezacomania.7@gmail.com",
       "Jabatan": "12",
       "Kategori": "Siswa",
-      "RFID": "337608",
-      "lastPresensi": null,
+      "RFID": "3376081212",
+      "id": "224e",
       "status": "masuk",
-      "alasanIjin": ""
+      "alasanIjin": "",
+      "lastPresensi": null
     },
     {
       "lastPresensi": null,
@@ -232,7 +232,14 @@
       "Email": "wwww@gmail.com",
       "Jabatan": "IX",
       "Kategori": "Siswa",
-      "RFID": "133186037781"
+      "RFID": "133186037781",
+      "status": "masuk",
+      "alasanIjin": "",
+      "lastPresensi": {
+        "date": "2025-12-22",
+        "jamMasuk": "06:55:16",
+        "jamPulang": "09:36:19"
+      }
     },
     {
       "id": "c926",
@@ -248,22 +255,83 @@
       "Email": "kkk@gmail.com",
       "Jabatan": "awd",
       "Kategori": "Guru",
-      "RFID": "0895424260008"
+      "RFID": "0895424260008",
+      "status": "pulang",
+      "alasanIjin": "",
+      "lastPresensi": {
+        "date": "2025-12-23",
+        "jamMasuk": "08:30:36",
+        "jamPulang": "08:30:43",
+        "terlambat": true
+      }
     },
     {
-      "id": "f5cb",
+      "lastPresensi": {
+        "jamMasuk": "07:57:46",
+        "jamPulang": "01:11"
+      },
+      "id": "f5cb"
+    },
+    {
+      "lastPresensi": {
+        "jamMasuk": "08:00:05",
+        "jamPulang": "11:11"
+      },
+      "id": "a5ed"
+    },
+    {
+      "id": "4c3d",
       "Nama": "zen",
       "Email": "Levander@gmail.com",
       "Jabatan": "b jawa",
       "Kategori": "Guru",
       "RFID": "123456789",
-      "status": "masuk",
-      "alasanIjin": "",
+      "status": "ijin",
+      "alasanIjin": "Sakit",
       "lastPresensi": {
-        "date": "2025-12-20",
-        "jamMasuk": "08:39:57",
-        "jamPulang": null
+        "date": "2025-12-23",
+        "jamMasuk": null,
+        "jamPulang": null,
+        "ijin": {
+          "alasan": "Sakit",
+          "keterangan": ""
+        }
       }
+    },
+    {
+      "id": "55bf",
+      "Nama": "ikan",
+      "Email": "duyung@gmail.com",
+      "Jabatan": "X",
+      "Kategori": "Siswa",
+      "RFID": "0911122334",
+      "status": "ijin",
+      "alasanIjin": "Sakit",
+      "lastPresensi": {
+        "date": "2025-12-23",
+        "jamMasuk": null,
+        "jamPulang": null,
+        "ijin": {
+          "alasan": "Sakit",
+          "keterangan": ""
+        }
+      }
+    },
+    {
+      "id": "eaf0",
+      "Nama": "wowik",
+      "Email": "wiwok@gmail.com",
+      "Jabatan": "Penjual Jajan",
+      "Kategori": "Karyawan",
+      "RFID": "089443421"
+    },
+    {
+      "id": "58ff",
+      "Nama": "vira",
+      "Email": "pit322@gmail.com",
+      "Jabatan": "Penjual mainan",
+      "Kategori": "Karyawan",
+      "RFID": "911283294"
     }
   ],
   "Tagihan": [
@@ -402,6 +470,10 @@
     {
       "id": "d846",
       "KategoriIjin": "acara keluarga"
+    },
+    {
+      "id": "a1fb",
+      "KategoriIjin": "Pulang Kampung"
     }
   ]
 }

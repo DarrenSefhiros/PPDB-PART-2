@@ -14,7 +14,7 @@ function Absensi() {
   const navigate = useNavigate();
 
   // ===============================
-  // WAKTU WIB
+  // WIB
   // ===============================
   const nowWIB = () => {
     const d = new Date();
@@ -44,7 +44,7 @@ function Absensi() {
   }, []);
 
   // ===============================
-  // AUTO FETCH USER DARI RFID
+  // FETCH USER BY RFID
   // ===============================
   const fetchUserByRFID = async (rfid) => {
     if (!rfid) return;
@@ -58,7 +58,6 @@ function Absensi() {
 
       if (!user) {
         Swal.fire("Tidak ditemukan", "RFID tidak terdaftar!", "error");
-        setUserData(null);
         return;
       }
 
@@ -88,10 +87,10 @@ function Absensi() {
   };
 
   // ===============================
-  // AUTO TRIGGER SAAT RFID MASUK
+  // AUTO FETCH SAAT RFID MASUK
   // ===============================
   useEffect(() => {
-    if (rfidInput.length >= 9) {
+    if (rfidInput.length >= 3) {
       const timer = setTimeout(() => {
         fetchUserByRFID(rfidInput);
       }, 300);
@@ -99,10 +98,28 @@ function Absensi() {
     }
   }, [rfidInput]);
 
+  const sudahPulangHariIni = (user) => {
+  const today = nowWIB().date;
+  return (
+    user?.lastPresensi?.date === today &&
+    user?.lastPresensi?.jamPulang
+  );
+};
+
+
   // ===============================
   // ABSEN MASUK / PULANG
   // ===============================
   const handleAbsen = async () => {
+    // ❌ SUDAH PULANG → TIDAK BISA ABSEN APAPUN
+if (sudahPulangHariIni(userData)) {
+  return Swal.fire(
+    "Ditolak",
+    "Anda sudah absen pulang hari ini",
+    "warning"
+  );
+}
+
     if (!userData) return;
 
     const { time, date } = nowWIB();
@@ -118,70 +135,84 @@ function Absensi() {
 
     if (
       userData.status === "ijin" &&
-      userData.lastPresensi?.date === date &&
-      hour < 15
+      userData.lastPresensi?.date === date
     ) {
-      return Swal.fire(
-        "Ditolak",
-        "Anda sudah ijin hari ini",
-        "warning"
-      );
+      return Swal.fire("Ditolak", "Anda sudah ijin hari ini", "warning");
     }
 
-    if (
-      userData.status === "masuk" &&
-      userData.lastPresensi?.date === date &&
-      hour < 15
-    ) {
-      return Swal.fire(
-        "Ditolak",
-        "Anda sudah absen masuk hari ini",
-        "warning"
-      );
-    }
+  // ================== ABSEN MASUK ==================
+if (!userData.lastPresensi?.jamMasuk) {
 
-    // ABSEN MASUK
-    if (hour < 15) {
-      await axios.put(`http://localhost:5000/Kesiswaan/${userData.id}`, {
-        ...userData,
-        status: "masuk",
-        alasanIjin: "",
-        lastPresensi: {
-          date,
-          jamMasuk: time,
-          jamPulang: null,
-        },
-      });
+  // ⏰ CEK TERLAMBAT
+  if (hour >= 7) {
+    await Swal.fire(
+      "Terlambat",
+      "Anda tercatat masuk dalam kondisi TERLAMBAT",
+      "warning"
+    );
+  }
 
-      Swal.fire("Berhasil", "Absen masuk berhasil", "success");
-    }
+  const updatedUser = {
+    ...userData,
+    status: "masuk",
+    alasanIjin: "",
+    lastPresensi: {
+      date,
+      jamMasuk: time,
+      jamPulang: null,
+      terlambat: hour >= 7, // 🔥 OPTIONAL: simpan status telat
+    },
+  };
 
-    // ABSEN PULANG
-    if (hour >= 15) {
-      if (!userData.lastPresensi?.jamMasuk) {
-        return Swal.fire(
-          "Ditolak",
-          "Anda belum absen masuk",
-          "warning"
-        );
-      }
+  await axios.put(
+    `http://localhost:5000/Kesiswaan/${userData.id}`,
+    updatedUser
+  );
 
-      await axios.put(`http://localhost:5000/Kesiswaan/${userData.id}`, {
-        ...userData,
-        lastPresensi: {
-          ...userData.lastPresensi,
-          jamPulang: time,
-        },
-      });
+  setUserData(updatedUser);
+  Swal.fire("Berhasil", "Absen masuk berhasil", "success");
+  resetForm();
+  return;
+}
 
-      Swal.fire("Berhasil", "Absen pulang berhasil", "success");
-    }
 
-    resetForm();
+Pulang
+if (userData.lastPresensi?.jamMasuk && !userData.lastPresensi?.jamPulang) {
+
+  if (hour < 9.10) {
+    return Swal.fire(
+      "Belum waktunya pulang",
+      "Absen pulang hanya bisa setelah jam 9:00",
+      "warning"
+    );
+  }
+
+  const updatedUser = {
+    ...userData,
+    status: "pulang",
+    lastPresensi: {
+      ...userData.lastPresensi,
+      jamPulang: time,
+    },
+  };
+
+  await axios.put(
+    `http://localhost:5000/Kesiswaan/${userData.id}`,
+    updatedUser
+  );
+
+  setUserData(updatedUser);
+  Swal.fire("Berhasil", "Absen pulang berhasil", "success");
+  resetForm();
+  return;
+}
+
+
+    Swal.fire("Info", "Anda sudah absen hari ini", "info");
   };
 
   // ===============================
-  // IJIN (SWEETALERT)
+  // IJIN
   // ===============================
   const handleIjin = async () => {
     if (!userData) return;
@@ -197,15 +228,12 @@ function Absensi() {
       );
     }
 
-    if (
-      userData.status === "ijin" &&
-      userData.lastPresensi?.date === date
-    ) {
-      return Swal.fire(
-        "Ditolak",
-        "Anda sudah ijin hari ini",
-        "warning"
-      );
+    if (userData.status === "pulang") {
+      return Swal.fire("Ditolak", "Anda sudah absen pulang hari ini", "warning");
+    }
+
+    if (userData.status === "ijin" && userData.lastPresensi?.date === date) {
+      return Swal.fire("Ditolak", "Anda sudah ijin hari ini", "warning");
     }
 
     const { value: form } = await Swal.fire({
@@ -231,7 +259,7 @@ function Absensi() {
 
     if (!form) return;
 
-    await axios.put(`http://localhost:5000/Kesiswaan/${userData.id}`, {
+    const updatedUser = {
       ...userData,
       status: "ijin",
       alasanIjin: form.alasan,
@@ -244,15 +272,23 @@ function Absensi() {
           keterangan: form.keterangan,
         },
       },
-    });
+    };
 
+    await axios.put(
+      `http://localhost:5000/Kesiswaan/${userData.id}`,
+      updatedUser
+    );
+
+    setUserData(updatedUser);
     Swal.fire("Berhasil", "Presensi ijin disimpan", "success");
     resetForm();
   };
 
+  // ===============================
+  // RESET (CUMA RFID)
+  // ===============================
   const resetForm = () => {
     setRfidInput("");
-    setUserData(null);
     rfidRef.current?.focus();
   };
 
@@ -279,12 +315,22 @@ function Absensi() {
           className="w-32 h-32 rounded-full mx-auto mb-5 border-4 border-gray-300 shadow-md"
         />
 
+        {userData && (
+          <div className="mt-6 text-left bg-pink-100 p-4 rounded-lg">
+            <p><b>Nama:</b> {userData.Nama}</p>
+            <p><b>Email:</b> {userData.Email}</p>
+            <p><b>Kategori:</b> {userData.Kategori}</p>
+            <p><b>Jabatan/Kelas:</b> {userData.Jabatan}</p>
+            <p><b>Status Hari Ini:</b> {userData.status || "Belum presensi"}</p>
+          </div>
+        )}
+
         <input
           ref={rfidRef}
           value={rfidInput}
           onChange={(e) => setRfidInput(e.target.value)}
           placeholder="Scan RFID..."
-          className="w-full px-4 py-3 rounded-md border text-center text-lg"
+          className="w-full mt-6 px-4 py-3 rounded-md border text-center text-lg"
         />
 
         {loading && (
@@ -294,31 +340,21 @@ function Absensi() {
         )}
 
         {userData && (
-          <>
-            <div className="mt-6 text-left bg-pink-100 p-4 rounded-lg">
-              <p><b>Nama:</b> {userData.Nama}</p>
-              <p><b>Email:</b> {userData.Email}</p>
-              <p><b>Kategori:</b> {userData.Kategori}</p>
-              <p><b>Jabatan/Kelas:</b> {userData.Jabatan}</p>
-              <p><b>Status Hari Ini:</b> {userData.status || "Belum presensi"}</p>
-            </div>
+          <div className="mt-6 flex gap-4">
+            <button
+              onClick={handleAbsen}
+              className="w-1/2 bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-lg"
+            >
+              ABSEN
+            </button>
 
-            <div className="mt-6 flex gap-4">
-              <button
-                onClick={handleAbsen}
-                className="w-1/2 bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-lg"
-              >
-                ABSEN
-              </button>
-
-              <button
-                onClick={handleIjin}
-                className="w-1/2 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-lg"
-              >
-                IJIN
-              </button>
-            </div>
-          </>
+            <button
+              onClick={handleIjin}
+              className="w-1/2 bg-purple-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-lg"
+            >
+              IJIN
+            </button>
+          </div>
         )}
       </motion.div>
     </div>

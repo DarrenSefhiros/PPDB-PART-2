@@ -8,6 +8,8 @@ function EditRekapPresensi() {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState(null);
+
   const [formData, setFormData] = useState({
     status: "",
     jamMasuk: "",
@@ -20,7 +22,9 @@ function EditRekapPresensi() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/Kesiswaan/${id}`);
+        const res = await axios.get(
+          `http://localhost:5000/Kesiswaan/${id}`
+        );
         const user = res.data;
 
         if (!user || !user.lastPresensi) {
@@ -29,10 +33,16 @@ function EditRekapPresensi() {
           return;
         }
 
+        setUserData(user);
+
+        let status = "masuk";
+        if (user.lastPresensi.ijin) status = "ijin";
+        else if (user.lastPresensi.jamPulang) status = "keluar";
+
         setFormData({
-          status: user.lastPresensi?.ijin ? "ijin" : user.status,
-          jamMasuk: user.lastPresensi?.jamMasuk || "",
-          jamPulang: user.lastPresensi?.jamPulang || "",
+          status,
+          jamMasuk: user.lastPresensi.jamMasuk || "",
+          jamPulang: user.lastPresensi.jamPulang || "",
         });
       } catch (err) {
         Swal.fire("Error", "Gagal memuat data presensi", "error");
@@ -55,15 +65,17 @@ function EditRekapPresensi() {
   };
 
   // ===============================
-  // UPDATE JAM PRESENSI
+  // UPDATE PRESENSI (AMAN)
   // ===============================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!userData) return;
+
     if (formData.status === "ijin") {
       Swal.fire(
         "Tidak Diizinkan",
-        "Presensi ijin tidak memiliki jam masuk dan jam pulang",
+        "Presensi ijin tidak memiliki jam masuk & pulang",
         "warning"
       );
       return;
@@ -72,7 +84,9 @@ function EditRekapPresensi() {
     setLoading(true);
     try {
       await axios.put(`http://localhost:5000/Kesiswaan/${id}`, {
+        ...userData, // 🔥 PENTING
         lastPresensi: {
+          ...userData.lastPresensi, // 🔥 MERGE DATA LAMA
           jamMasuk: formData.jamMasuk || null,
           jamPulang: formData.jamPulang || null,
         },
@@ -104,7 +118,6 @@ function EditRekapPresensi() {
           Edit Jam Presensi
         </h2>
 
-        {/* STATUS INFO */}
         <p className="text-center mb-6 font-semibold">
           Status Presensi :
           <span
@@ -119,41 +132,34 @@ function EditRekapPresensi() {
         </p>
 
         <form onSubmit={handleSubmit}>
-          {/* JAM MASUK */}
           <div className="mb-4">
-            <label className="block mb-1 font-semibold">Jam Masuk</label>
+            <label className="block mb-1 font-semibold">
+              Jam Masuk
+            </label>
             <input
               type="time"
               name="jamMasuk"
               value={formData.jamMasuk}
               onChange={handleChange}
               disabled={formData.status === "ijin"}
-              className={`w-full px-4 py-2 border rounded-md ${
-                formData.status === "ijin"
-                  ? "bg-gray-200 cursor-not-allowed"
-                  : ""
-              }`}
+              className="w-full px-4 py-2 border rounded-md"
             />
           </div>
 
-          {/* JAM PULANG */}
           <div className="mb-6">
-            <label className="block mb-1 font-semibold">Jam Pulang</label>
+            <label className="block mb-1 font-semibold">
+              Jam Pulang
+            </label>
             <input
               type="time"
               name="jamPulang"
               value={formData.jamPulang}
               onChange={handleChange}
               disabled={formData.status === "ijin"}
-              className={`w-full px-4 py-2 border rounded-md ${
-                formData.status === "ijin"
-                  ? "bg-gray-200 cursor-not-allowed"
-                  : ""
-              }`}
+              className="w-full px-4 py-2 border rounded-md"
             />
           </div>
 
-          {/* BUTTON */}
           <div className="flex justify-between">
             <button
               type="submit"
