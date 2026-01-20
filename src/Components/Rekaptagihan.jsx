@@ -4,6 +4,7 @@
   import Swal from "sweetalert2";
   import Sidnav from "./Sidnav";
   import { motion } from "framer-motion";
+  import { BASE_URL } from "../config/api";
 
  function Rekaptagihan() {
   const [data, setData] = useState([]);
@@ -27,7 +28,7 @@
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/login");
+        const res = await axios.get(`${BASE_URL}/Keuangan`);
         setData(res.data.reverse());
 
         const jenisRes = await axios.get("http://localhost:5000/jenistagihan");
@@ -55,7 +56,7 @@
 
     if (konfirmasi.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/login/${id}`);
+        await axios.delete(`${BASE_URL}/Keuangan/${id}`);
         setData((prev) => prev.filter((item) => item.id !== id));
         Swal.fire("Terhapus!", "Data anda telah dihapus", "success");
       } catch (err) {

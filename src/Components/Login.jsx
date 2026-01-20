@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from 'sweetalert2';
+import { BASE_URL } from '../config/api';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:5000/users?Email=${formData.Email}&Password=${formData.Password}`);
+      const res = await axios.get(`${BASE_URL}users?Email=${formData.Email}&Password=${formData.Password}`);
       if (res.data.length > 0) {
         Swal.fire({
           position: "center",

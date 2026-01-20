@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from "../config/api";
 
 function TambahData() {
   const [jenisTagihanList, setJenisTagihanList] = useState([]);
@@ -21,7 +22,7 @@ function TambahData() {
     // Ambil data Jenis Tagihan
     const fetchJenisTagihan = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/jenistagihan');
+        const res = await axios.get(`${BASE_URL}/JenisTagihan`);
         setJenisTagihanList(res.data);
       } catch (error) {
         console.error('Gagal fetch jenis tagihan:', error);
@@ -31,7 +32,7 @@ function TambahData() {
     // Ambil Master Data (misal: Siswa/Guru)
     const fetchMasterData = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/Kesiswaan'); // endpoint master data
+        const res = await axios.get(`${BASE_URL}/Kesiswaan`); // endpoint master data
         setMasterDataList(res.data);
       } catch (error) {
         console.error('Gagal fetch master data:', error);
@@ -76,7 +77,7 @@ function TambahData() {
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:5000/login', formData);
+      await axios.post(`${BASE_URL}/Keuangan`, formData);
 
       await Swal.fire({
         icon: 'success',

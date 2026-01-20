@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Swal from 'sweetalert2';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { BASE_URL } from '../config/api';
 
 function Register() {
-  const [formData, setFormData] = useState({
-    Email: '',
-    Password: '',
-    Konfirmasi: '',
-  });
+const [formData, setFormData] = useState({
+  email: "",
+  username: "",
+  password: "",
+});
+
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // 🔹 State baru
@@ -23,19 +25,16 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 🔹 Validasi password & konfirmasi
-    if (formData.Password !== formData.Konfirmasi) {
-      Swal.fire({
-        icon: "error",
-        title: "Password tidak cocok",
-        text: "Silakan periksa kembali password dan konfirmasinya.",
-      });
-      return;
-    }
 
     setLoading(true);
     try {
-      await axios.post(`http://localhost:5000/users`, formData);
+await axios.post(`${BASE_URL}/register`, {
+  email: formData.Email,
+  username: formData.Username,
+  password: formData.Password
+});
+
+
       Swal.fire({
         position: "center",
         icon: "success",
@@ -48,8 +47,8 @@ function Register() {
 
       setFormData({
         Email: "",
+        Username: "",
         Password: "",
-        Konfirmasi: "",
       });
 
       navigate("/");
@@ -81,6 +80,19 @@ function Register() {
               type="email"
               placeholder="Masukan Email anda"
               value={formData.Email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="Username" className="block text-gray-700 mb-2 font-bold">Username</label>
+            <input
+              id="Username"
+              name="Username"
+              type="Username"
+              placeholder="Masukan Username anda"
+              value={formData.Username}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required

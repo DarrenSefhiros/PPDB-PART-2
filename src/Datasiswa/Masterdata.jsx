@@ -163,7 +163,7 @@ function MasterData() {
                         onClick={() => setRfidVisible(!rfidVisible)}
                         className="ml-2 text-purple-800 hover:text-purple-600"
                         title={rfidVisible ? "Sembunyikan RFID" : "Tampilkan RFID"}
-                      >
+                      >Ke
                         {rfidVisible ? "👁️" : "🙈"}
                       </button>
                     </th>

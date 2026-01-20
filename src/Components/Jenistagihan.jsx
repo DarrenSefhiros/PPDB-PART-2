@@ -4,6 +4,7 @@ import Sidnav from "./Sidnav";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { BASE_URL } from "../config/api";
 
 function JenisTagihan() {
   const [data, setData] = useState([]);
@@ -13,7 +14,7 @@ function JenisTagihan() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/jenistagihan");
+        const res = await axios.get(`${BASE_URL}/JenisTagihan`);
         setData(res.data);
       } catch (err) {
         console.error("Gagal mengambil data:", err);
@@ -40,7 +41,7 @@ function JenisTagihan() {
 
     if (konfirmasi.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/jenistagihan/${id}`);
+        await axios.delete(`${BASE_URL}/JenisTagihan${id}`);
         setData((prev) => prev.filter((item) => item.id !== id));
         Swal.fire("Terhapus!", "Data anda telah dihapus", "success");
       } catch (err) {

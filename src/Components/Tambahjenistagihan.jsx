@@ -25,7 +25,7 @@ function TambahJenisTagihan() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/jenistagihan", formData);
+      await axios.post(``, formData);
 
       await Swal.fire({
         icon: "success",

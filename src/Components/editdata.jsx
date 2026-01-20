@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { BASE_URL } from "../config/api";
 
 function EditData() {
   const { id } = useParams();
@@ -22,11 +23,11 @@ function EditData() {
     const fetchData = async () => {
       try {
         // Ambil data tagihan yang mau diedit
-        const res = await axios.get(`http://localhost:5000/login/${id}`);
+        const res = await axios.get(`${BASE_URL}/Keuangan${id}`);
         setFormData(res.data);
 
         // Ambil semua jenis tagihan
-        const jenisRes = await axios.get("http://localhost:5000/jenistagihan");
+        const jenisRes = await axios.get(`${BASE_URL}/JenisTagihan`);
         setJenisTagihanList(jenisRes.data);
       } catch (err) {
         console.error("Gagal mengambil data:", err);

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
+import { BASE_URL } from "../config/api";
 
 function EditJenisTagihan() {
   const { id } = useParams();
@@ -19,7 +20,7 @@ function EditJenisTagihan() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/jenistagihan/${id}`);
+        const res = await axios.get(`${BASE_URL}/JenisTagihan${id}`);
         setFormData({
           JenisTagihan: res.data.JenisTagihan,
           Keterangan: res.data.Keterangan,
@@ -50,7 +51,7 @@ function EditJenisTagihan() {
 
     try {
       // Update Jenis Tagihan
-      await axios.put(`http://localhost:5000/jenistagihan/${id}`, formData);
+      await axios.put(`${BASE_URL}/JenisTagihan/${id}`, formData);
 
       // Update semua siswa yang memakai jenis tagihan ini
       const siswaRes = await axios.get(
