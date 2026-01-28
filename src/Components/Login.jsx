@@ -1,57 +1,45 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from "axios";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Swal from 'sweetalert2';
-import { BASE_URL } from '../config/api';
+import Swal from "sweetalert2";
+import api from "../config/api";
 
 function Login() {
   const [formData, setFormData] = useState({
-    Email: '',
-    Password: '',
+    email: "",
+    password: "",
   });
 
-     const [show, setShow] = useState(false);
-  
-       const [showPassword, setShowPassword] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const res = await axios.get(`${BASE_URL}users?Email=${formData.Email}&Password=${formData.Password}`);
-      if (res.data.length > 0) {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Login berhasil",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        localStorage.setItem("loginData", JSON.stringify(res.data[0]));
 
-        setFormData({ Email: "", Password: "" });
-        navigate("/Dashboard");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Login gagal",
-          text: "Email atau password salah"
-        });
-      }
+    try {
+      const res = await api.post("/login", formData);
+
+      Swal.fire({
+        icon: "success",
+        title: "Login berhasil",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      localStorage.setItem("loginData", JSON.stringify(res.data));
+      navigate("/Dashboard");
     } catch (error) {
       Swal.fire({
         icon: "error",
-        title: "Error",
-        text: error.message
+        title: "Login gagal",
+        text: "Email atau password salah",
       });
     } finally {
       setLoading(false);
@@ -61,54 +49,55 @@ function Login() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-400 to-purple-600">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Login
+        </h2>
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="Email" className="block text-gray-700 mb-2 font-bold">Email</label>
+            <label className="block text-gray-700 mb-2 font-bold">
+              Email
+            </label>
             <input
-              id="Email"
-              name="Email"
+              name="email"
               type="email"
-              placeholder="Masukan Email anda"
-              value={formData.Email}
+              value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+              placeholder="Masukkan email"
+              className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-pink-400"
               required
             />
           </div>
- <div className="mb-4 relative">
-  <label htmlFor="Password" className="block text-gray-700 mb-2 font-bold">Password</label>
-  <input
-    id="Password"
-    name="Password"
-    type={showPassword ? "text" : "password"}
-    placeholder="Masukan Password anda"
-    value={formData.Password}
-    onChange={handleChange}
-    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400 pr-10" // ⬅️ padding kanan biar icon gak nabrak
-    required
-  />
-  <span
-    onClick={() => setShowPassword(!showPassword)}
-    className="absolute right-3 top-[45px] text-gray-600 cursor-pointer"
-  >
-    {showPassword ? <FaEye /> : <FaEyeSlash />}
-  </span>
-</div>
+
+          <div className="mb-4 relative">
+            <label className="block text-gray-700 mb-2 font-bold">
+              Password
+            </label>
+            <input
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Masukkan password"
+              className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-pink-400 pr-10"
+              required
+            />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-[45px] cursor-pointer text-gray-600"
+            >
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </span>
+          </div>
+
           <button
             type="submit"
-            className="w-full font-bold bg-pink-500 text-white py-2 rounded-md hover:bg-pink-600 transition duration-200"
             disabled={loading}
+            className="w-full bg-pink-500 text-white py-2 rounded-md font-bold hover:bg-pink-600"
           >
-            {loading ? 'Loading...' : 'Login'}
+            {loading ? "Loading..." : "Login"}
           </button>
         </form>
-        <div className="text-center mt-8">
-          <span>
-            Belum punya akun?
-          </span>
-          <a href="/Register" className="text-blue-400 underline"> Daftar dulu</a>
-        </div>
       </div>
     </div>
   );

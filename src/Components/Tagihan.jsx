@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Swal from "sweetalert2";
 import Sidnav from "./Sidnav";
 import { motion } from "framer-motion";
-import { BASE_URL } from "../config/api";
+import api from "../config/api";
 
 function Tagihan() {
   const [data, setData] = useState([]);
-  const [jenisTagihan, setJenisTagihan] = useState([]); // ✅ daftar jenis dari backend
+  const [jenisTagihan, setJenisTagihan] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedJenis, setSelectedJenis] = useState("all");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/Keuangan`);
+        const res = await api.get(`/keuangan`);
         setData(res.data.reverse());
 
-        const jenisRes = await axios.get("http://localhost:5000/jenistagihan");
+        const jenisRes = await api.get(`/jenistagihan`);
         setJenisTagihan(jenisRes.data);
       } catch (err) {
         console.error("Gagal mengambil data:", err);
@@ -35,7 +34,7 @@ function Tagihan() {
     if (!itemToUpdate) return;
 
     const newStatus =
-      itemToUpdate.Status?.toLowerCase() === "sudah lunas"
+      itemToUpdate.status?.toLowerCase() === "sudah lunas"
         ? "Belum Lunas"
         : "Sudah Lunas";
 
@@ -52,13 +51,11 @@ function Tagihan() {
 
     if (konfirmasi.isConfirmed) {
       try {
-        await axios.patch(`http://localhost:5000/login/${id}`, {
-          Status: newStatus,
-        });
+        await api.patch(`/keuangan/${id}`, { status: newStatus });
 
         setData((prev) =>
           prev.map((item) =>
-            item.id === id ? { ...item, Status: newStatus } : item
+            item.id === id ? { ...item, status: newStatus } : item
           )
         );
 
@@ -86,7 +83,7 @@ function Tagihan() {
 
     if (konfirmasi.isConfirmed) {
       try {
-        await axios.delete(`${BASE_URL}/Keuangan/${id}`);
+        await api.delete(`/keuangan/${id}`);
         setData((prev) => prev.filter((item) => item.id !== id));
         Swal.fire("Terhapus!", "Data anda telah dihapus", "success");
       } catch (err) {
@@ -95,26 +92,26 @@ function Tagihan() {
     }
   };
 
-  // Fungsi untuk format tanggal ke dd/mm/yyyy
+  // Format tanggal ke dd/MM/yyyy
   function formatDate(dateString) {
     if (!dateString) return "";
     const date = new Date(dateString);
     if (isNaN(date)) return dateString;
 
     const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // bulan mulai dari 0
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
 
     return `${day}/${month}/${year}`;
   }
 
-  // Filter berdasarkan jenis tagihan yang dipilih
+  // Filter data berdasarkan jenis
   const filteredData =
     selectedJenis === "all"
       ? data
       : data.filter(
           (item) =>
-            item.Jenis?.trim().toLowerCase() === selectedJenis.toLowerCase()
+            item.jenis?.trim().toLowerCase() === selectedJenis.toLowerCase()
         );
 
   return (
@@ -144,8 +141,8 @@ function Tagihan() {
               >
                 <option value="all">Semua Data</option>
                 {jenisTagihan.map((jenis) => (
-                  <option key={jenis.id} value={jenis.JenisTagihan}>
-                    {jenis.JenisTagihan}
+                  <option key={jenis.id} value={jenis.jenisTagihan}>
+                    {jenis.jenisTagihan}
                   </option>
                 ))}
               </select>
@@ -196,32 +193,29 @@ function Tagihan() {
                       <td className="border border-pink-200 px-2 py-2 text-center">
                         {index + 1}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2 text-left text-nowrap align-middle">
-                        {item.Nama}
+                      <td className="border border-pink-200 px-4 py-2 text-left align-middle">
+                        {item.nama}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
-                        {item.Email}
+                      <td className="border border-pink-200 px-4 py-2 text-center align-middle">
+                        {item.email}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
-                        {item.Jenis}
+                      <td className="border border-pink-200 px-4 py-2 text-center align-middle">
+                        {item.jenis}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2 text-right text-nowrap align-middle">
-                        Rp{" "}
-                        {Number(String(item.Tagihan).replace(/\./g, "") || 0).toLocaleString(
-                          "id-ID"
-                        )}
+                      <td className="border border-pink-200 px-4 py-2 text-right align-middle">
+                        Rp {Number(item.tagihan || 0).toLocaleString("id-ID")}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2 text-center text-nowrap align-middle">
-                        {formatDate(item.Tanggal)}
+                      <td className="border border-pink-200 px-4 py-2 text-center align-middle">
+                        {formatDate(item.tanggal)}
                       </td>
                       <td
-                        className={`border border-pink-200 px-4 py-2 text-center font-semibold text-nowrap align-middle ${
-                          item.Status === "Sudah Lunas"
+                        className={`border border-pink-200 px-4 py-2 text-center font-semibold align-middle ${
+                          item.status === "Sudah Lunas"
                             ? "text-green-600"
                             : "text-yellow-600"
                         }`}
                       >
-                        {item.Status || "Belum Lunas"}
+                        {item.status || "Belum Lunas"}
                       </td>
 
                       <td className="border border-pink-200 px-4 py-2 text-center align-middle">

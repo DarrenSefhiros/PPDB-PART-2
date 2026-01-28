@@ -1,82 +1,40 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import Sidnav from "../Components/Sidnav";
+import api from "../config/api";
 
 function TambahData2() {
   const [formData, setFormData] = useState({
-    Level: "",
+    level: "",
   });
-
-  const [kategoriOptions, setKategoriOptions] = useState([]);
-  const [kelasOptions, setKelasOptions] = useState([]);
 
   const navigate = useNavigate();
 
-  // Ambil daftar kategori
-  useEffect(() => {
-    const fetchKategori = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/Kategori");
-        setKategoriOptions(res.data || []);
-      } catch (err) {
-        console.error("Gagal ambil kategori:", err);
-      }
-    };
-
-    fetchKategori();
-  }, []);
-
-  // Ambil daftar kelas
-  useEffect(() => {
-    const fetchKelas = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/Kelas");
-        setKelasOptions(res.data || []);
-      } catch (err) {
-        console.error("Gagal ambil kelas:", err);
-      }
-    };
-
-    fetchKelas();
-  }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Jika ganti kategori, reset jabatan
-    if (name === "Kategori") {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-        Jabatan: "", // reset jabatan/kelas saat kategori berubah
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/Kategori", formData);
+      await api.post("/Kategori", formData);
 
-      await Swal.fire({
+      Swal.fire({
         icon: "success",
         title: "Berhasil!",
-        text: "Data berhasil ditambahkan.",
+        text: "Kategori berhasil ditambahkan",
         timer: 1500,
         showConfirmButton: false,
       });
 
       navigate("/KategoriData");
     } catch (error) {
-      console.error("Gagal tambah data:", error);
-      Swal.fire("Error", "Gagal menambahkan data!", "error");
+      console.error(error);
+      Swal.fire("Error", "Gagal menambahkan data", "error");
     }
   };
 
@@ -85,22 +43,24 @@ function TambahData2() {
       <div className="ml-30 p-6 w-full min-h-screen bg-gradient-to-br from-pink-400 to-purple-600">
         <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 my-14">
           <h2 className="text-2xl font-bold text-center text-pink-700 mb-6">
-            Tambah Data
+            Tambah Kategori
           </h2>
+
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Status */}
             <div>
-              <label className="block text-gray-700 mb-1">Level</label>
+              <label className="block text-gray-700 mb-1">
+                Level
+              </label>
               <input
                 type="text"
-                name="Level"
-                value={formData.Level}
+                name="level"
+                value={formData.level}
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-300 px-4 py-2 rounded-md focus:ring-pink-400 focus:outline-none"
               />
             </div>
-            {/* Tombol */}
+
             <div className="flex justify-between">
               <button
                 type="submit"

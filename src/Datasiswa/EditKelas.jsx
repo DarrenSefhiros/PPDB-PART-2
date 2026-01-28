@@ -2,21 +2,22 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import api from "../config/api";
 
 function EditKelas() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    Kelas: "",
-    Jurusan: "",
+    kelas: "",
+    jurusan: "",
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Ambil data kategori yang mau diedit
-        const res = await axios.get(`http://localhost:5000/Kelas/${id}`);
+        const res = await api.get(`/Kelas/${id}`);
         setFormData(res.data);
       } catch (err) {
         console.error("Gagal mengambil data:", err);
@@ -37,7 +38,7 @@ function EditKelas() {
     e.preventDefault();
     try {
       // Update data kategori
-      await axios.put(`http://localhost:5000/Kelas/${id}`, formData);
+      await api.put(`/Kelas/${id}`, formData);
 
       await Swal.fire({
         position: "center",
@@ -64,28 +65,28 @@ function EditKelas() {
         <form onSubmit={handleSubmit}>
 
           <div className="mb-4">
-            <label htmlFor="Kelas" className="block text-gray-700 mb-2">
+            <label htmlFor="kelas" className="block text-gray-700 mb-2">
               Kelas
             </label>
             <input
-              id="Kelas"
-              name="Kelas"
-              type="Kelas"
-              value={formData.Kelas}
+              id="kelas"
+              name="kelas"
+              type="kelas"
+              value={formData.kelas}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
               required
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="Jurusan" className="block text-gray-700 mb-2">
+            <label htmlFor="jurusan" className="block text-gray-700 mb-2">
               Jurusan
             </label>
             <input
-              id="Jurusan"
-              name="Jurusan"
-              type="Jurusan"
-              value={formData.Jurusan}
+              id="jurusan"
+              name="jurusan"
+              type="jurusan"
+              value={formData.jurusan}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
               required

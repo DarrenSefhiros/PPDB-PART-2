@@ -2,23 +2,24 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import api from "../config/api";
 
 function Editkategori() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    Nama: "",
-    Email: "",
-    Kategori: "",
-    Jabatan: "",
+    nama: "",
+    email: "",
+    kategori: "",
+    jabatan: "",
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Ambil data kategori yang mau diedit
-        const res = await axios.get(`http://localhost:5000/Kesiswaan/${id}`);
+        const res = await api.get(`/masterdata/${id}`);
         setFormData(res.data);
       } catch (err) {
         console.error("Gagal mengambil data:", err);
@@ -39,7 +40,7 @@ function Editkategori() {
     e.preventDefault();
     try {
       // Update data kategori
-      await axios.put(`http://localhost:5000/Kesiswaan/${id}`, formData);
+      await api.put(`/masterdata/${id}`, formData);
 
       await Swal.fire({
         position: "center",
@@ -56,8 +57,8 @@ function Editkategori() {
     }
   };
 
-    const jabatanLabel = formData.Kategori === 'Siswa' ? 'Kelas' : 'Jabatan';
-  const jabatanPlaceholder = formData.Kategori === 'Siswa' 
+    const jabatanLabel = formData.kategori === 'Siswa' ? 'Kelas' : 'Jabatan';
+  const jabatanPlaceholder = formData.kategori === 'Siswa' 
     ? 'Masukan Kelas anda' 
     : 'Masukan Jabatan anda';
 
@@ -70,14 +71,14 @@ function Editkategori() {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="Nama" className="block text-gray-700 mb-2">
+            <label htmlFor="nama" className="block text-gray-700 mb-2">
               Nama
             </label>
             <input
-              id="Nama"
-              name="Nama"
+              id="nama"
+              name="nama"
               type="text"
-              value={formData.Nama}
+              value={formData.nama}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
               required
@@ -85,14 +86,14 @@ function Editkategori() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="Email" className="block text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-gray-700 mb-2">
               Email
             </label>
             <input
-              id="Email"
-              name="Email"
+              id="email"
+              name="email"
               type="email"
-              value={formData.Email}
+              value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
               required
@@ -100,13 +101,13 @@ function Editkategori() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="Kategori" className="block text-gray-700 mb-2">
+            <label htmlFor="kategori" className="block text-gray-700 mb-2">
               Pilih Kategori
             </label>
             <select
-              id="Kategori"
-              name="Kategori"
-              value={formData.Kategori}
+              id="kategori"
+              name="kategori"
+              value={formData.kategori}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
               required
@@ -118,15 +119,15 @@ function Editkategori() {
             </select>
           </div>
           <div className="mb-4">
-            <label htmlFor="Jabatan" className="block text-gray-700 mb-2">
+            <label htmlFor="jabatan" className="block text-gray-700 mb-2">
               {jabatanLabel}
             </label>
             <input
-              id="Jabatan"
-              name="Jabatan"
+              id="jabatan"
+              name="jabatan"
               type="text"
               placeholder={jabatanPlaceholder}
-              value={formData.Jabatan}
+              value={formData.jabatan}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required

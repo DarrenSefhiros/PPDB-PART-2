@@ -4,6 +4,7 @@ import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import api from "../config/api";
 
 function TabelKategori() {
   const [data, setData] = useState([]);
@@ -12,7 +13,7 @@ function TabelKategori() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/Kategori");
+        const res = await api.get("/Kategori")
         console.log("Kategori data:", res.data); // debug cek data
 
         // Jika data tidak array atau kosong, set default empty array
@@ -61,7 +62,7 @@ function TabelKategori() {
 
     if (konfirmasi.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/Kategori/${id}`);
+        await api.delete(`/Kategori/${id}`);
         setData((prev) => prev.filter((item) => item.id !== id));
         Swal.fire("Terhapus!", "Data anda telah dihapus", "success");
       } catch (err) {
@@ -122,7 +123,7 @@ function TabelKategori() {
                       <td className="border border-pink-200 px-2 py-2 text-center">{index + 1}</td>
                       <td className="border border-pink-200 px-4 py-2 text-left">
                         {/* Jika item.Level undefined, tampilkan fallback */}
-                        {item.Level || item.Status || "—"}
+                        {item.level || item.Status || "—"}
                       </td>
                       <td className="border border-pink-200 py-2 text-center">
                         <div className="flex justify-center space-x-2">

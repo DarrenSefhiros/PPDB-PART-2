@@ -7,7 +7,7 @@ import Tambahdata from './Components/Tambahdata'
 import Tagihan from './Components/Tagihan'
 import Jenistagihan from './Components/Jenistagihan'
 import EditData from './Components/editdata'
-import TambahJenisTagihan from './Components/Tambahjenistagihan'
+import Tambahjenistagihan from './Components/Tambahjenistagihan'
 import EditJenisTagihan from './Components/Editjenistagihan'
 import Rekaptagihan from './Components/Rekaptagihan'
 import Tabelsiswa from './Datasiswa/Tabelsiswa'
@@ -53,7 +53,7 @@ function App() {
       <Route path="/EditKategoriIjin/:id" element={<EditKategoriIjin />} />
       <Route path="/ijin" element={<PresensiIjin />} />
       <Route path="/AbsensiKeluar" element={<PresensiKeluar />} />
-      <Route path="/Tambahjenistagihan" element={<TambahJenisTagihan />} />
+      <Route path="/Tambahjenistagihan" element={<Tambahjenistagihan />} />
       <Route path="/Presensi" element={<Absensi />} />
       <Route path="/TambahMasterData" element={<TambahDataKategori />} />
       <Route path="/TambahDataKelas" element={<TambahDataKelas />} />

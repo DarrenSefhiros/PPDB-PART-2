@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
-import { BASE_URL } from "../config/api";
+import api from "../config/api";
 
 function EditJenisTagihan() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    JenisTagihan: "",
-    Keterangan: "",
-    Tagihan: "",
+    jenisTagihan: "",
+    keterangan: "",
+    tagihan: "",
+    jatuhTempo: "", // simpan di state dengan format yyyy-MM-dd
   });
 
   const [loading, setLoading] = useState(true);
@@ -20,11 +20,20 @@ function EditJenisTagihan() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/JenisTagihan${id}`);
+        const res = await api.get(`/jenistagihan/${id}`);
+
+        // backend kirim dd-MM-yyyy → konversi ke yyyy-MM-dd untuk input <date>
+        const convertToInputFormat = (dateStr) => {
+          if (!dateStr) return "";
+          const [day, month, year] = dateStr.split("-");
+          return `${year}-${month}-${day}`;
+        };
+
         setFormData({
-          JenisTagihan: res.data.JenisTagihan,
-          Keterangan: res.data.Keterangan,
-          Tagihan: res.data.Tagihan,
+          jenisTagihan: res.data.jenisTagihan,
+          keterangan: res.data.keterangan,
+          tagihan: res.data.tagihan.toString(),
+          jatuhTempo: convertToInputFormat(res.data.jatuhTempo),
         });
       } catch (err) {
         console.error("Gagal mengambil data:", err);
@@ -39,7 +48,7 @@ function EditJenisTagihan() {
   const handleChange = (e) => {
     let { name, value } = e.target;
 
-    if (name === "Tagihan") {
+    if (name === "tagihan") {
       value = value.replace(/[^0-9]/g, ""); // hanya angka
     }
 
@@ -49,25 +58,26 @@ function EditJenisTagihan() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // konversi yyyy-MM-dd → dd-MM-yyyy untuk backend
+    const convertToBackendFormat = (dateStr) => {
+      const [year, month, day] = dateStr.split("-");
+      return `${day}-${month}-${year}`;
+    };
+
+    const payload = {
+      jenisTagihan: formData.jenisTagihan,
+      keterangan: formData.keterangan,
+      tagihan: parseInt(formData.tagihan),
+      jatuhTempo: convertToBackendFormat(formData.jatuhTempo),
+    };
+
     try {
-      // Update Jenis Tagihan
-      await axios.put(`${BASE_URL}/JenisTagihan/${id}`, formData);
-
-      // Update semua siswa yang memakai jenis tagihan ini
-      const siswaRes = await axios.get(
-        `http://localhost:5000/login?Jenis=${formData.JenisTagihan}`
-      );
-
-      for (const siswa of siswaRes.data) {
-        await axios.patch(`http://localhost:5000/login/${siswa.id}`, {
-          Tagihan: formData.Tagihan,
-        });
-      }
+      await api.put(`/jenistagihan/${id}`, payload);
 
       await Swal.fire({
         icon: "success",
         title: "Berhasil!",
-        text: "Data jenis tagihan dan nominal siswa telah diperbarui.",
+        text: "Data jenis tagihan berhasil diperbarui.",
         timer: 1500,
         showConfirmButton: false,
       });
@@ -103,16 +113,16 @@ function EditJenisTagihan() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label
-                htmlFor="JenisTagihan"
+                htmlFor="jenisTagihan"
                 className="block text-pink-700 font-semibold mb-2"
               >
                 Jenis Tagihan
               </label>
               <input
                 type="text"
-                id="JenisTagihan"
-                name="JenisTagihan"
-                value={formData.JenisTagihan}
+                id="jenisTagihan"
+                name="jenisTagihan"
+                value={formData.jenisTagihan}
                 onChange={handleChange}
                 required
                 className="w-full border border-pink-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
@@ -121,15 +131,15 @@ function EditJenisTagihan() {
 
             <div>
               <label
-                htmlFor="Keterangan"
+                htmlFor="keterangan"
                 className="block text-pink-700 font-semibold mb-2"
               >
                 Keterangan
               </label>
               <textarea
-                id="Keterangan"
-                name="Keterangan"
-                value={formData.Keterangan}
+                id="keterangan"
+                name="keterangan"
+                value={formData.keterangan}
                 onChange={handleChange}
                 rows="3"
                 className="w-full border border-pink-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
@@ -138,18 +148,36 @@ function EditJenisTagihan() {
 
             <div>
               <label
-                htmlFor="Tagihan"
+                htmlFor="tagihan"
                 className="block text-pink-700 font-semibold mb-2"
               >
                 Nominal Tagihan (Rp)
               </label>
               <input
                 type="text"
-                id="Tagihan"
-                name="Tagihan"
-                value={formData.Tagihan}
+                id="tagihan"
+                name="tagihan"
+                value={formData.tagihan}
                 onChange={handleChange}
                 placeholder="Masukkan nominal (contoh: 500000)"
+                required
+                className="w-full border border-pink-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="jatuhTempo"
+                className="block text-pink-700 font-semibold mb-2"
+              >
+                Jatuh Tempo
+              </label>
+              <input
+                type="date"
+                id="jatuhTempo"
+                name="jatuhTempo"
+                value={formData.jatuhTempo}
+                onChange={handleChange}
                 required
                 className="w-full border border-pink-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
               />

@@ -4,12 +4,13 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
+import api from "../config/api";
 
 function EditKategoriData() {
   const { id } = useParams(); // ambil ID dari URL
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    Level: "",
+    level: "",
   });
   const [loading, setLoading] = useState(true);
 
@@ -17,10 +18,10 @@ function EditKategoriData() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/Kategori/${id}`);
+        const res = await axios.get(`http://localhost:8080/api/Kategori/${id}`);
         console.log("Data kategori untuk edit:", res.data);
         setForm({
-          Level: res.data.Level || res.data.Status || "",
+          level: res.data.level || res.data.Status || "",
         });
       } catch (err) {
         console.error("Gagal mengambil data kategori:", err);
@@ -51,7 +52,7 @@ function EditKategoriData() {
     e.preventDefault();
 
     try {
-      await axios.put(`http://localhost:5000/Kategori/${id}`, form);
+     await axios.put(`http://localhost:8080/api/Kategori/${id}`, form);
       Swal.fire({
         icon: "success",
         title: "Berhasil!",
@@ -89,15 +90,15 @@ function EditKategoriData() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-pink-700 font-semibold mb-2">
-                  Level / Status
+                  Level
                 </label>
                 <input
                   type="text"
-                  name="Level"
-                  value={form.Level}
+                  name="level"
+                  value={form.level}
                   onChange={handleChange}
                   className="w-full border border-pink-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
-                  placeholder="Masukkan Level / Status"
+                  placeholder="Masukkan level"
                 />
               </div>
               <div className="flex justify-between mt-6">

@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import api from '../config/api';
 
 function TambahDataKategori() {
   const [kategoriList, setKategoriList] = useState([]);
   const [kelasList, setKelasList] = useState([]);
   const [formData, setFormData] = useState({
-    Nama: '',
-    Email: '',
-    Jabatan: '',
-    Kategori: '',
-    RFID: '', // <<< DITAMBAHKAN
+    nama: '',
+    email: '',
+    jabatan: '',
+    kategori: '',
+    rfid: '', // <<< DITAMBAHKAN
   });
 
   const [loading, setLoading] = useState(false);
@@ -20,7 +21,7 @@ function TambahDataKategori() {
   useEffect(() => {
     const fetchKategori = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/Kategori');
+        const res = await api.get('/Kategori');
         setKategoriList(res.data);
       } catch (error) {
         console.error('Gagal fetch kategori:', error);
@@ -29,7 +30,7 @@ function TambahDataKategori() {
 
     const fetchKelas = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/Kelas');
+        const res = await api.get('/Kelas');
         setKelasList(res.data);
       } catch (error) {
         console.error('Gagal fetch kelas:', error);
@@ -51,20 +52,20 @@ function TambahDataKategori() {
     e.preventDefault();
     setLoading(true);
 
-    if (!formData.Nama || !formData.Email || !formData.Kategori || !formData.Jabatan || !formData.RFID) {
+    if (!formData.nama || !formData.email || !formData.jabatan || !formData.kategori || !formData.rfid) {
       Swal.fire('Error', 'Semua field wajib diisi!', 'error');
       setLoading(false);
       return;
     }
 
-    if (!isValidGmail(formData.Email)) {
-      Swal.fire('Error', 'Email harus Gmail valid!', 'error');
+    if (!isValidGmail(formData.email)) {
+      Swal.fire('Error', 'Email harus valid!', 'error');
       setLoading(false);
       return;
     }
 
     try {
-      await axios.post('http://localhost:5000/Kesiswaan', formData);
+      await api.post('/masterdata', formData);
 
       Swal.fire({
         icon: 'success',
@@ -83,40 +84,40 @@ function TambahDataKategori() {
     }
   };
 
-  let jabatanLabel = 'Jabatan';
+  let jabatanLabel = 'jabatan';
   let jabatanInput = (
     <input
-      id="Jabatan"
-      name="Jabatan"
+      id="jabatan"
+      name="jabatan"
       type="text"
       placeholder="Masukkan Jabatan"
-      value={formData.Jabatan}
+      value={formData.jabatan}
       onChange={handleChange}
       className="w-full px-4 py-2 border border-gray-300 rounded-md"
       required
     />
   );
 
-  if (formData.Kategori === 'Siswa') {
+  if (formData.kategori === 'Siswa') {
     jabatanLabel = 'Kelas';
     jabatanInput = (
       <select
-        id="Jabatan"
-        name="Jabatan"
-        value={formData.Jabatan}
+        id="jabatan"
+        name="jabatan"
+        value={formData.jabatan}
         onChange={handleChange}
         className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white"
         required
       >
         <option value="">Pilih Kelas</option>
         {kelasList.map((item) => (
-          <option key={item.id} value={item.Kelas}>
-            {item.Kelas}
+          <option key={item.id} value={item.kelas}>
+            {item.kelas}
           </option>
         ))}
       </select>
     );
-  } else if (formData.Kategori === 'Guru') {
+  } else if (formData.kategori === 'Guru') {
     jabatanLabel = 'Mata Pelajaran';
   }
 
@@ -129,9 +130,9 @@ function TambahDataKategori() {
           <div className="mb-4">
             <label className="block mb-1">Nama</label>
             <input
-              name="Nama"
+              name="nama"
               type="text"
-              value={formData.Nama}
+              value={formData.nama}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-md"
               required
@@ -141,9 +142,9 @@ function TambahDataKategori() {
           <div className="mb-4">
             <label className="block mb-1">Email</label>
             <input
-              name="Email"
+              name="email"
               type="email"
-              value={formData.Email}
+              value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-md"
               required
@@ -153,16 +154,16 @@ function TambahDataKategori() {
           <div className="mb-4">
             <label className="block mb-1">Kategori</label>
             <select
-              name="Kategori"
-              value={formData.Kategori}
+              name="kategori"
+              value={formData.kategori}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-md bg-white"
               required
             >
               <option value="">Pilih Kategori</option>
               {kategoriList.map((item) => (
-                <option key={item.id} value={item.Level}>
-                  {item.Level}
+                <option key={item.id} value={item.level}>
+                  {item.level}
                 </option>
               ))}
             </select>
@@ -177,10 +178,10 @@ function TambahDataKategori() {
           <div className="mb-4">
             <label className="block mb-1">RFID</label>
             <input
-              name="RFID"
+              name="rfid"
               type="text"
               placeholder="Masukkan RFID"
-              value={formData.RFID}
+              value={formData.rfid}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-md"
               required

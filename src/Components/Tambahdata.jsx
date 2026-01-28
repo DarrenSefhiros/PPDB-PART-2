@@ -1,38 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL } from "../config/api";
+import api from "../config/api";
 
 function TambahData() {
   const [jenisTagihanList, setJenisTagihanList] = useState([]);
-  const [masterDataList, setMasterDataList] = useState([]); // Ambil master data untuk Nama & Email
+  const [masterDataList, setMasterDataList] = useState([]);
   const [formData, setFormData] = useState({
-    Nama: '',
-    Jenis: '',
-    Tagihan: '',
-    Tanggal: '',
-    Email: '',
+    nama: '',
+    jenis: '',
+    tagihan: '',
+    tanggal: '',
+    email: '',
   });
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Ambil data Jenis Tagihan
     const fetchJenisTagihan = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/JenisTagihan`);
+        const res = await api.get(`/jenistagihan`);
         setJenisTagihanList(res.data);
       } catch (error) {
         console.error('Gagal fetch jenis tagihan:', error);
       }
     };
 
-    // Ambil Master Data (misal: Siswa/Guru)
     const fetchMasterData = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/Kesiswaan`); // endpoint master data
+        const res = await api.get(`/masterdata`);
         setMasterDataList(res.data);
       } catch (error) {
         console.error('Gagal fetch master data:', error);
@@ -46,23 +43,21 @@ function TambahData() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'Nama') {
-      // Cari master data yang dipilih
-      const selectedUser = masterDataList.find((item) => item.Nama === value);
-
+    if (name === 'nama') {
+      const selectedUser = masterDataList.find((item) => item.nama === value);
       setFormData({
         ...formData,
-        Nama: value,
-        Email: selectedUser ? selectedUser.Email : '',
+        nama: value,
+        email: selectedUser ? selectedUser.email : '',
       });
-    } else if (name === 'Jenis') {
+    } else if (name === 'jenis') {
       const selectedJenis = jenisTagihanList.find(
-        (item) => item.JenisTagihan === value
+        (item) => item.jenisTagihan === value
       );
       setFormData({
         ...formData,
-        Jenis: value,
-        Tagihan: selectedJenis ? selectedJenis.Tagihan || '' : '',
+        jenis: value,
+        tagihan: selectedJenis ? selectedJenis.tagihan || '' : '',
       });
     } else {
       setFormData({
@@ -77,7 +72,14 @@ function TambahData() {
     setLoading(true);
 
     try {
-      await axios.post(`${BASE_URL}/Keuangan`, formData);
+      await api.post(`/Keuangan`, {
+        nama: formData.nama,
+        email: formData.email,
+        jenis: formData.jenis,
+        status: "Belum Bayar", // default status
+        tagihan: parseFloat(formData.tagihan),
+        tanggal: formData.tanggal, // yyyy-MM-dd dari input <date>
+      });
 
       await Swal.fire({
         icon: 'success',
@@ -88,11 +90,11 @@ function TambahData() {
       });
 
       setFormData({
-        Nama: '',
-        Jenis: '',
-        Tagihan: '',
-        Tanggal: '',
-        Email: '',
+        nama: '',
+        jenis: '',
+        tagihan: '',
+        tanggal: '',
+        email: '',
       });
 
       navigate('/Tagihan');
@@ -111,100 +113,97 @@ function TambahData() {
           Tambah Data
         </h2>
         <form onSubmit={handleSubmit}>
-          {/* NAMA (dropdown dari master data) */}
-    {/* NAMA (dropdown dari master data) */}
-{/* NAMA (dropdown hanya untuk siswa) */}
-<div className="mb-4">
-  <label htmlFor="Nama" className="block text-gray-700 mb-2">
-    Nama Siswa
-  </label>
-  <select
-    id="Nama"
-    name="Nama"
-    value={formData.Nama}
-    onChange={handleChange}
-    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-    required
-  >
-    <option value="">Pilih Nama Siswa</option>
-    {masterDataList
-      .filter(item => item.Kategori === "Siswa" && item.Nama && item.Nama.trim() !== '') // filter siswa dan nama tidak kosong
-      .map((item) => (
-        <option key={item.id} value={item.Nama}>
-          {item.Nama}
-        </option>
-      ))}
-  </select>
-</div>
-
-
-
-          {/* Email otomatis dari master data */}
+          {/* Nama */}
           <div className="mb-4">
-            <label htmlFor="Email" className="block text-gray-700 mb-2">
+            <label htmlFor="nama" className="block text-gray-700 mb-2">
+              Nama Siswa
+            </label>
+            <select
+              id="nama"
+              name="nama"
+              value={formData.nama}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+              required
+            >
+              <option value="">Pilih Nama Siswa</option>
+              {masterDataList
+                .filter(item => item.kategori === "Siswa" && item.nama)
+                .map((item) => (
+                  <option key={item.id} value={item.nama}>
+                    {item.nama}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          {/* Email */}
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-gray-700 mb-2">
               Email
             </label>
             <input
-              id="Email"
-              name="Email"
+              id="email"
+              name="email"
               type="email"
-              value={formData.Email}
+              value={formData.email}
               readOnly
               className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
             />
           </div>
 
-          {/* JENIS TAGIHAN */}
+          {/* Jenis Tagihan */}
           <div className="mb-4">
-            <label htmlFor="Jenis" className="block text-gray-700 mb-2">
+            <label htmlFor="jenis" className="block text-gray-700 mb-2">
               Jenis Tagihan
             </label>
             <select
-              id="Jenis"
-              name="Jenis"
-              value={formData.Jenis}
+              id="jenis"
+              name="jenis"
+              value={formData.jenis}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             >
               <option value="">Pilih Jenis Tagihan</option>
               {jenisTagihanList.map((jenis) => (
-                <option key={jenis.id} value={jenis.JenisTagihan}>
-                  {jenis.JenisTagihan}
+                <option key={jenis.id} value={jenis.jenisTagihan}>
+                  {jenis.jenisTagihan}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* TOTAL TAGIHAN */}
+          {/* Total Tagihan */}
           <div className="mb-4">
-            <label htmlFor="Tagihan" className="block text-gray-700 mb-2">
+            <label htmlFor="tagihan" className="block text-gray-700 mb-2">
               Total Tagihan
             </label>
             <input
-              id="Tagihan"
-              name="Tagihan"
+              id="tagihan"
+              name="tagihan"
               type="text"
-              placeholder="Masukkan jenis tagihan"
-              value={formData.Tagihan}
+              value={formData.tagihan}
               readOnly
               className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
             />
-            {formData.Tagihan && !isNaN(formData.Tagihan) && (
-              <p className="text-sm text-gray-600 mt-1">Rp.{parseInt(formData.Tagihan).toLocaleString()}</p>
+            {formData.tagihan && !isNaN(formData.tagihan) && (
+              <p className="text-sm text-gray-600 mt-1">
+                Rp.{parseInt(formData.tagihan).toLocaleString()}
+              </p>
             )}
           </div>
 
-          {/* TANGGAL TAGIHAN */}
+          {/* Tanggal Tagihan */}
           <div className="mb-4">
-            <label htmlFor="Tanggal" className="block text-gray-700 mb-2">
+            <label htmlFor="tanggal" className="block text-gray-700 mb-2">
               Tanggal Tagihan
             </label>
             <input
-              id="Tanggal"
-              name="Tanggal"
+              id="tanggal"
+              name="tanggal"
               type="date"
-              value={formData.Tanggal}
+              value={formData.tanggal}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required

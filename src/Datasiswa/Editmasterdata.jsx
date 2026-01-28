@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
+import api from '../config/api';
 
 function EditMasterData() {
   const { id } = useParams();
   const [kategoriList, setKategoriList] = useState([]);
 
   const [formData, setFormData] = useState({
-    Nama: '',
-    Email: '',
-    Jabatan: '',
-    Kategori: '',
-    RFID: '', // ← TAMBAH RFID DI STATE
+    nama: '',
+    email: '',
+    jabatan: '',
+    kategori: '',
+    rfid: '', // ← TAMBAH RFID DI STATE
   });
 
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ function EditMasterData() {
   useEffect(() => {
     const fetchKategori = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/Kategori');
+        const res = await api.get('/Kategori');
         setKategoriList(res.data);
       } catch (error) {
         console.error('Gagal fetch kategori:', error);
@@ -30,14 +31,14 @@ function EditMasterData() {
 
     const fetchDataById = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/Kesiswaan/${id}`);
+        const res = await api.get(`/masterdata/${id}`);
 
         setFormData({
-          Nama: res.data.Nama || '',
-          Email: res.data.Email || '',
-          Jabatan: res.data.Jabatan || '',
-          Kategori: res.data.Kategori || '',
-          RFID: res.data.RFID || '', // ← RFID DITAMPILKAN
+          nama: res.data.nama || '',
+          email: res.data.email || '',
+          jabatan: res.data.jabatan || '',
+          kategori: res.data.kategori || '',
+          rfid: res.data.rfid || '', // ← RFID DITAMPILKAN
         });
       } catch (error) {
         console.error('Gagal fetch data:', error);
@@ -61,20 +62,20 @@ function EditMasterData() {
     e.preventDefault();
     setLoading(true);
 
-    if (!formData.Nama || !formData.Email || !formData.Kategori || !formData.Jabatan || !formData.RFID) {
+    if (!formData.nama || !formData.email || !formData.kategori || !formData.jabatan || !formData.rfid) {
       Swal.fire('Error', 'Semua field wajib diisi termasuk RFID!', 'error');
       setLoading(false);
       return;
     }
 
-    if (!isValidGmail(formData.Email)) {
-      Swal.fire('Error', 'Email harus Gmail valid!', 'error');
+    if (!isValidGmail(formData.email)) {
+      Swal.fire('Error', 'Email harus valid!', 'error');
       setLoading(false);
       return;
     }
 
     try {
-      await axios.put(`http://localhost:5000/Kesiswaan/${id}`, formData);
+      await api.put(`/masterdata/${id}`, formData);
 
       await Swal.fire({
         icon: 'success',
@@ -114,9 +115,9 @@ function EditMasterData() {
           <div className="mb-4">
             <label className="block mb-1">Nama</label>
             <input
-              name="Nama"
+              name="nama"
               type="text"
-              value={formData.Nama}
+              value={formData.nama}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-md"
               required
@@ -127,9 +128,9 @@ function EditMasterData() {
           <div className="mb-4">
             <label className="block mb-1">Email</label>
             <input
-              name="Email"
+              name="email"
               type="email"
-              value={formData.Email}
+              value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-md"
               required
@@ -140,10 +141,10 @@ function EditMasterData() {
           <div className="mb-4">
             <label className="block mb-1">RFID</label>
             <input
-              name="RFID"
+              name="Rfid"
               type="text"
-              placeholder="Masukkan RFID"
-              value={formData.RFID}
+              placeholder="Masukkan Rfid"
+              value={formData.rfid}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-md"
               required
@@ -154,15 +155,15 @@ function EditMasterData() {
           <div className="mb-4">
             <label className="block mb-1">Kategori</label>
             <select
-              name="Kategori"
-              value={formData.Kategori}
+              name="kategori"
+              value={formData.kategori}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-md bg-white"
               required
             >
               <option value="">Pilih Kategori</option>
               {kategoriList.map((item) => (
-                <option key={item.id} value={item.Level}>{item.Level}</option>
+                <option key={item.id} value={item.level}>{item.level}</option>
               ))}
             </select>
           </div>
@@ -171,10 +172,10 @@ function EditMasterData() {
           <div className="mb-4">
             <label className="block mb-1">{jabatanLabel}</label>
             <input
-              name="Jabatan"
+              name="jabatan"
               type="text"
               placeholder={jabatanPlaceholder}
-              value={formData.Jabatan}
+              value={formData.jabatan}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-md"
               required

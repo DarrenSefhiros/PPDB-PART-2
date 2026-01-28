@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Sidnav from "./Sidnav";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { BASE_URL } from "../config/api";
+import api from "../config/api";
 
 function JenisTagihan() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/JenisTagihan`);
+        const res = await api.get("/jenistagihan"); // endpoint GET
         setData(res.data);
       } catch (err) {
         console.error("Gagal mengambil data:", err);
@@ -26,7 +24,6 @@ function JenisTagihan() {
     fetchData();
   }, []);
 
-
   const handleDelete = async (id) => {
     const konfirmasi = await Swal.fire({
       title: "Serius Kamu?",
@@ -36,16 +33,18 @@ function JenisTagihan() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Hapus data",
-      cancelButtonText: "Batal", 
+      cancelButtonText: "Batal",
     });
 
     if (konfirmasi.isConfirmed) {
       try {
-        await axios.delete(`${BASE_URL}/JenisTagihan${id}`);
+        await api.delete(`/jenistagihan/${id}`); // perbaikan endpoint DELETE
         setData((prev) => prev.filter((item) => item.id !== id));
         Swal.fire("Terhapus!", "Data anda telah dihapus", "success");
       } catch (err) {
-        const errorMessage = err.response?.data?.message || "Terjadi kesalahan saat menghapus data.";
+        const errorMessage =
+          err.response?.data?.message ||
+          "Terjadi kesalahan saat menghapus data.";
         Swal.fire("Error!", errorMessage, "error");
       }
     }
@@ -61,8 +60,10 @@ function JenisTagihan() {
           transition={{ duration: 0.5 }}
           className="p-8 w-full max-w-5xl"
         >
-          <h1 className="text-3xl font-bold text-pink-800 mb-6">Kelola Jenis Tagihan</h1>
-          
+          <h1 className="text-3xl font-bold text-pink-800 mb-6">
+            Kelola Jenis Tagihan
+          </h1>
+
           <div className="flex justify-between items-center mb-4 gap-2">
             <div className="text-pink-700 font-semibold">
               Total Jenis Tagihan: {data.length}
@@ -86,8 +87,12 @@ function JenisTagihan() {
                 <thead className="bg-purple-200 text-purple-800">
                   <tr>
                     <th className="px-2 py-2 text-center font-bold">No</th>
-                    <th className="px-4 py-2 text-center font-bold">Jenis Tagihan</th>
-                    <th className="px-4 py-2 text-center font-bold">Keterangan</th>
+                    <th className="px-4 py-2 text-center font-bold">
+                      Jenis Tagihan
+                    </th>
+                    <th className="px-4 py-2 text-center font-bold">
+                      Keterangan
+                    </th>
                     <th className="px-4 py-2 text-center font-bold">Aksi</th>
                   </tr>
                 </thead>
@@ -104,10 +109,10 @@ function JenisTagihan() {
                         {index + 1}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.JenisTagihan}
+                        {item.jenisTagihan}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
-                        {item.Keterangan}
+                        {item.keterangan}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center">
                         <div className="flex justify-center space-x-2">

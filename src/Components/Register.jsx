@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Swal from 'sweetalert2';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { BASE_URL } from '../config/api';
+import api from '../config/api';
 
 function Register() {
 const [formData, setFormData] = useState({
@@ -16,6 +16,7 @@ const [formData, setFormData] = useState({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // 🔹 State baru
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -25,7 +26,12 @@ const [formData, setFormData] = useState({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (formData.Password !== formData.Konfirmasi) {
+      setError("Password dan Konfirmasi Password tidak cocok!");
+      return;
+    }
 
+    setError(""); // Clear error if validation passes
     setLoading(true);
     try {
 await axios.post(`${BASE_URL}/register`, {
@@ -140,6 +146,8 @@ await axios.post(`${BASE_URL}/register`, {
               {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
             </span>
           </div>
+
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
           {/* Tombol Submit */}
           <div className="flex justify-between mt-6">

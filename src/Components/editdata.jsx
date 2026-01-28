@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { BASE_URL } from "../config/api";
+import api from "../config/api";
 
 function EditData() {
   const { id } = useParams();

@@ -4,7 +4,7 @@
   import Swal from "sweetalert2";
   import Sidnav from "./Sidnav";
   import { motion } from "framer-motion";
-  import { BASE_URL } from "../config/api";
+  import api from "../config/api";
 
  function Rekaptagihan() {
   const [data, setData] = useState([]);

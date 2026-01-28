@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import api from '../config/api';
 
 function TambahDataKelas() {
   const [jenisTagihanList, setJenisTagihanList] = useState([]);
   const [formData, setFormData] = useState({
-    Kelas: '',
-    Jurusan: '',
+    kelas: '',
+    jurusan: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -17,7 +18,7 @@ function TambahDataKelas() {
     // 🔹 Ambil data dari tabel Kesiswaan
     const fetchJenisTagihan = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/Kelas');
+        const res = await api.get('/Kelas');
         setJenisTagihanList(res.data);
       } catch (error) {
         console.error('Gagal fetch jenis tagihan:', error);
@@ -51,19 +52,8 @@ const handleSubmit = async (e) => {
   setLoading(true);
 
   // Validasi Email
-  if (!formData.Email) {
-    Swal.fire('Error', 'Email wajib diisi!', 'error');
-    setLoading(false);
-    return;
-  }
-  if (!isValidGmail(formData.Email)) {
-    Swal.fire('Error', 'Email harus berupa Gmail yang valid!', 'error');
-    setLoading(false);
-    return;
-  }
-
   try {
-    await axios.post('http://localhost:5000/Kelas', formData);
+    await api.post("/Kelas", formData);
 
     await Swal.fire({
       icon: 'success',
@@ -74,8 +64,8 @@ const handleSubmit = async (e) => {
     });
 
     setFormData({
-      Kelas: '',
-      Jurusan: '',
+      kelas: '',
+      jurusan: '',
     });
 
     navigate('/Kelas');
@@ -99,26 +89,26 @@ const handleSubmit = async (e) => {
               Kelas
             </label>
             <input
-              id="Kelas"
-              name="Kelas"
+              id="kelas"
+              name="kelas"
               type="text"
               placeholder="Kelas yang ingin ditambahkan"
-              value={formData.Kelas}
+              value={formData.kelas}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="Jurusan" className="block text-gray-700 mb-2">
+            <label htmlFor="jurusan" className="block text-gray-700 mb-2">
               Jurusan
             </label>
             <input
-              id="Jurusan"
-              name="Jurusan"
+              id="jurusan"
+              name="jurusan"
               type="text"
-              placeholder="Jurusan yang ingin ditambahkan"
-              value={formData.Jurusan}
+              placeholder="jurusan yang ingin ditambahkan"
+              value={formData.jurusan}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Swal from "sweetalert2";
 import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
+import api from "../config/api";
 
 function MasterData() {
   const [data, setData] = useState([]);
@@ -14,37 +14,34 @@ function MasterData() {
   const [rfidVisible, setRfidVisible] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/Kesiswaan");
+ const fetchData = async () => {
+  try {
+    const res = await api.get("/masterdata");
+    
+    // Pastikan res.data adalah array sebelum menggunakan .filter
+    const data = Array.isArray(res.data) ? res.data : [];
+    setData(data);
 
-        const cleanedData = (res.data || [])
-          .filter((item) => item && item.Nama)
-          .reverse();
-
-        setData(cleanedData);
-
-        const uniqueKategori = [
-          ...new Set(cleanedData.map((item) => item.Kategori).filter(Boolean)),
-        ];
-        setKategoriList(uniqueKategori);
-      } catch (err) {
-        console.error("Gagal mengambil data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  } catch (err) {
+    console.error("Gagal mengambil data:", err);
+    Swal.fire("Error", "Gagal mengambil data", "error");
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchData();
   }, []);
 
-  const filteredData = data.filter((item) => {
+  const filteredData = useMemo(() => {
+  return data.filter((item) => {
     const nama = (item.Nama || "").toLowerCase();
-    const matchesKategori =
-      selectedKategori === "all" ? true : item.Kategori === selectedKategori;
+    const matchesKategori = selectedKategori === "all" ? true : item.Kategori === selectedKategori;
     const matchesSearch = nama.includes(searchTerm.toLowerCase());
     return matchesKategori && matchesSearch;
   });
+}, [data, selectedKategori, searchTerm]);
+
 
   const handleDelete = async (id) => {
     if (!id) return;
@@ -62,7 +59,7 @@ function MasterData() {
 
     if (konfirmasi.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/Kesiswaan/${id}`);
+        await api.delete(`/masterdata/${id}`);
         setData((prev) => prev.filter((item) => item.id !== id));
         Swal.fire("Berhasil!", "Data telah dihapus.", "success");
       } catch (err) {
@@ -74,11 +71,11 @@ function MasterData() {
   const getJabatanHeader = () => {
     if (selectedKategori === "Siswa") return "Kelas";
     if (selectedKategori === "Guru") return "Mata Pelajaran";
-    return "Jabatan";
+    return "jabatan";
   };
 
   const getJabatanValue = (item) => {
-    return item.Jabatan || "-";
+    return item.jabatan || "-";
   };
 
   return (
@@ -152,7 +149,7 @@ function MasterData() {
                 <thead className="bg-purple-200 text-purple-800">
                   <tr className="text-center">
                     <th className="px-3 py-2 w-10 font-bold">No</th>
-                    <th className="px-4 py-2 w-40 text-left font-bold">Nama</th>
+                    <th className="px-4 py-2 w-40 text-center font-bold">Nama</th>
                     <th className="px-4 py-2 w-52 font-bold">Email</th>
                     <th className="px-4 py-2 w-32 font-bold">Kategori</th>
                     <th className="px-4 py-2 w-32 font-bold">{getJabatanHeader()}</th>
@@ -163,7 +160,7 @@ function MasterData() {
                         onClick={() => setRfidVisible(!rfidVisible)}
                         className="ml-2 text-purple-800 hover:text-purple-600"
                         title={rfidVisible ? "Sembunyikan RFID" : "Tampilkan RFID"}
-                      >Ke
+                      >
                         {rfidVisible ? "👁️" : "🙈"}
                       </button>
                     </th>
@@ -181,14 +178,14 @@ function MasterData() {
                       className="bg-pink-100 hover:bg-pink-200 transition"
                     >
                       <td className="border border-pink-200 px-2 py-2 text-center">{index + 1}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-left">{item.Nama}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">{item.Email}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">{item.Kategori}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-center">{item.nama}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-center">{item.email}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-center">{item.kategori}</td>
                       <td className="border border-pink-200 px-4 py-2 text-center">{getJabatanValue(item)}</td>
 
                       {/* RFID VALUE */}
                       <td className="border border-pink-200 px-4 py-2 text-center">
-                        {rfidVisible ? (item.RFID || "-") : "****"}
+                        {rfidVisible ? (item.rfid || "-") : "****"}
                       </td>
 
                       <td className="border border-pink-200 px-4 py-2 text-center">

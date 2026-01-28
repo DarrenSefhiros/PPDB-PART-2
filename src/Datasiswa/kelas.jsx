@@ -4,6 +4,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
+import api from "../config/api";
 
 function Kelas() {
   const [data, setData] = useState([]);
@@ -15,7 +16,7 @@ function Kelas() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/Kelas");
+        const res = await api.get("/Kelas");
         const reversedData = res.data.reverse();
         setData(reversedData);
       } catch (err) {
@@ -55,7 +56,7 @@ function Kelas() {
 
     if (konfirmasi.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/Kelas/${id}`);
+        await api.delete(`/Kelas/${id}`);
         setData((prev) => prev.filter((item) => item?.id !== id));
         Swal.fire("Berhasil!", "Data telah dihapus.", "success");
       } catch (err) {
@@ -138,8 +139,8 @@ function Kelas() {
                       className="bg-pink-100 hover:bg-pink-200 transition"
                     >
                       <td className="border border-pink-200 px-2 py-2 text-center">{index + 1}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">{item?.Kelas}</td>
-                      <td className="border border-pink-200 px-4 py-2 text-center">{item?.Jurusan}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-center">{item?.kelas}</td>
+                      <td className="border border-pink-200 px-4 py-2 text-center">{item?.jurusan}</td>
                       <td className="border border-pink-200 px-4 py-2 text-center align-middle">
                         <div className="flex justify-center items-center gap-2">
                           <Link to={`/EditKelas/${item?.id}`}>
