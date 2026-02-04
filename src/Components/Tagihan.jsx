@@ -34,9 +34,9 @@ function Tagihan() {
     if (!itemToUpdate) return;
 
     const newStatus =
-      itemToUpdate.status?.toLowerCase() === "sudah lunas"
-        ? "Belum Lunas"
-        : "Sudah Lunas";
+      itemToUpdate.status?.toLowerCase() === "Sudah Bayar"
+        ? "Belum Bayar"
+        : "Sudah Bayar";
 
     const konfirmasi = await Swal.fire({
       title: "Ubah Status Pembayaran?",
@@ -202,7 +202,7 @@ function Tagihan() {
                       <td className="border border-pink-200 px-4 py-2 text-center align-middle">
                         {item.jenis}
                       </td>
-                      <td className="border border-pink-200 px-4 py-2 text-right align-middle">
+                      <td className="border border-pink-200 px-4 py-2 text-right text-nowrap align-middle">
                         Rp {Number(item.tagihan || 0).toLocaleString("id-ID")}
                       </td>
                       <td className="border border-pink-200 px-4 py-2 text-center align-middle">
@@ -210,12 +210,12 @@ function Tagihan() {
                       </td>
                       <td
                         className={`border border-pink-200 px-4 py-2 text-center font-semibold align-middle ${
-                          item.status === "Sudah Lunas"
+                          item.status === "Sudah Bayar"
                             ? "text-green-600"
                             : "text-yellow-600"
                         }`}
                       >
-                        {item.status || "Belum Lunas"}
+                        {item.status || "Belum Bayar"}
                       </td>
 
                       <td className="border border-pink-200 px-4 py-2 text-center align-middle">

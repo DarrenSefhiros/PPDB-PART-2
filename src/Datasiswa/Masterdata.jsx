@@ -19,7 +19,7 @@ function MasterData() {
     const res = await api.get("/masterdata");
     
     // Pastikan res.data adalah array sebelum menggunakan .filter
-    const data = Array.isArray(res.data) ? res.data : [];
+    const data = Array.isArray(res.data) ? res.data.reverse() : [];
     setData(data);
 
   } catch (err) {

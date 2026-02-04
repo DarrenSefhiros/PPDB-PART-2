@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Swal from "sweetalert2";
 import api from "../config/api";
 
@@ -9,25 +8,23 @@ function EditData() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    Email: "",
-    Nama: "",
-    Jenis: "",
-    Tagihan: "",
-    Status: "Belum Lunas",
+    email: "",
+    nama: "",
+    jenis: "",
+    tagihan: "",
   });
 
-  // 🔧 Tambahkan ini
   const [jenisTagihanList, setJenisTagihanList] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Ambil data tagihan yang mau diedit
-        const res = await axios.get(`${BASE_URL}/Keuangan${id}`);
+        // Ambil data keuangan yang mau diedit
+        const res = await api.get(`/keuangan/${id}`);
         setFormData(res.data);
 
         // Ambil semua jenis tagihan
-        const jenisRes = await axios.get(`${BASE_URL}/JenisTagihan`);
+        const jenisRes = await api.get(`/jenistagihan`);
         setJenisTagihanList(jenisRes.data);
       } catch (err) {
         console.error("Gagal mengambil data:", err);
@@ -37,19 +34,19 @@ function EditData() {
     fetchData();
   }, [id]);
 
-  // 🔧 Saat jenis dipilih, otomatis ubah nominal Tagihan sesuai data dari backend
+  // Saat jenis dipilih, otomatis ubah nominal Tagihan sesuai data dari backend
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "Jenis") {
+    if (name === "jenis") {
       const selectedJenis = jenisTagihanList.find(
-        (item) => item.JenisTagihan === value
+        (item) => item.jenisTagihan === value
       );
 
       setFormData({
         ...formData,
-        Jenis: value,
-        Tagihan: selectedJenis ? selectedJenis.Tagihan || "" : "",
+        jenis: value,
+        tagihan: selectedJenis ? selectedJenis.tagihan || "" : "",
       });
     } else {
       setFormData({
@@ -63,7 +60,7 @@ function EditData() {
     e.preventDefault();
 
     try {
-      await axios.put(`http://localhost:5000/login/${id}`, formData);
+      await api.put(`/keuangan/${id}`, formData);
 
       await Swal.fire({
         position: "center",
@@ -89,14 +86,14 @@ function EditData() {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="Nama" className="block text-gray-700 mb-2">
+            <label htmlFor="nama" className="block text-gray-700 mb-2">
               Nama
             </label>
             <input
-              id="Nama"
-              name="Nama"
+              id="nama"
+              name="nama"
               type="text"
-              value={formData.Nama}
+              value={formData.nama || ""}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md"
               required
@@ -104,39 +101,40 @@ function EditData() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="Jenis" className="block text-gray-700 mb-2">
+            <label htmlFor="jenis" className="block text-gray-700 mb-2">
               Jenis Tagihan
             </label>
             <select
-              id="Jenis"
-              name="Jenis"
-              value={formData.Jenis}
+              id="jenis"
+              name="jenis"
+              value={formData.jenis || ""}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             >
               <option value="">Pilih Jenis Tagihan</option>
               {jenisTagihanList.map((jenis) => (
-                <option key={jenis.id} value={jenis.JenisTagihan}>
-                  {jenis.JenisTagihan}
+                <option key={jenis.id} value={jenis.jenisTagihan}>
+                  {jenis.jenisTagihan}
                 </option>
               ))}
             </select>
           </div>
 
           <div className="mb-4">
-            <label htmlFor="Tagihan" className="block text-gray-700 mb-2">
+            <label htmlFor="tagihan" className="block text-gray-700 mb-2">
               Tagihan
             </label>
             <input
-              id="Tagihan"
-              name="Tagihan"
+              id="tagihan"
+              name="tagihan"
               type="text"
-              value={formData.Tagihan}
+              value={formData.tagihan || ""}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md"
             />
           </div>
+
 
           <div className="flex justify-between mt-6">
             <button

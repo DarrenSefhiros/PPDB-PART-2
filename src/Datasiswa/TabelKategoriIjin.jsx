@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import Sidnav from "../Components/Sidnav";
+import api from "../config/api";
 
 function TabelKategoriIjin() {
   const [kategoriIjinList, setKategoriIjinList] = useState([]);
@@ -15,7 +16,7 @@ function TabelKategoriIjin() {
 
   const loadKategoriIjin = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/KategoriIjin");
+      const res = await api.get("/kategoriijin");
       setKategoriIjinList(res.data);
     } catch (err) {
       console.error("Gagal mengambil data kategori ijin:", err);
@@ -36,7 +37,7 @@ function TabelKategoriIjin() {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/KategoriIjin/${id}`);
+        await api.delete(`/kategoriijin/${id}`);
         Swal.fire("Berhasil!", "Kategori ijin berhasil dihapus.", "success");
         loadKategoriIjin();
       } catch (err) {

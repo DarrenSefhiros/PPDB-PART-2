@@ -4,6 +4,7 @@ import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import api from "../config/api";
 
 function Presensi() {
   const [kesiswaan, setKesiswaan] = useState([]);
@@ -35,7 +36,7 @@ function Presensi() {
 
   // Ambil data Kesiswaan
   const loadKesiswaan = async () => {
-    const res = await axios.get("http://localhost:5000/Kesiswaan");
+    const res = await api.get("/masterdata");
 
     const cleaned = (res.data || [])
       .filter(Boolean)
@@ -113,7 +114,7 @@ else if (s.lastPresensi?.jamMasuk) status = "masuk";
 
     if (!confirm.isConfirmed) return;
 
-    await axios.put(`http://localhost:5000/Kesiswaan/${entry.kesiswaanId}`, {
+    await api.put(`/masterdata/${entry.kesiswaanId}`, {
       ...kesiswaan.find((k) => k.id === entry.kesiswaanId),
       lastPresensi: null,
     });

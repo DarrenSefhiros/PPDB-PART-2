@@ -16,7 +16,6 @@ import TambahDataKategori from './Datasiswa/Tambahdatakategori'
 import TambahKategoriIjin from './Datasiswa/TambahKategoriIjin'
 import Editkategori from './Datasiswa/Editkategori'
 import Masterdata from './Datasiswa/Masterdata'
-import Kelas from './Datasiswa/kelas'
 import TambahDataKelas from './Datasiswa/Tambahdatakelas'
 import EditKelas from './Datasiswa/EditKelas'
 import TambahData2 from './Datasiswa/TambahData2'
@@ -29,6 +28,7 @@ import Absensi from './Datasiswa/Absensi'
 import PresensiKeluar from './Datasiswa/Absenkeluar'
 import PresensiIjin from './Datasiswa/Absenijin'
 import EditRekapPresensi from './Datasiswa/EditRekapPresensi'
+import Kelas from './Datasiswa/kelas'
 
 
 function App() {

@@ -21,7 +21,7 @@ function TabelKategori() {
           console.error("Data Kategori bukan array:", res.data);
           setData([]);
         } else {
-          setData(res.data);
+          setData(res.data.reverse());
         }
       } catch (err) {
         if (err.response && err.response.status === 404) {

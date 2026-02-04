@@ -91,9 +91,9 @@ function Kelas() {
               >
                 <option value="all">Semua Data</option>
                 {[...new Set(data.map((item) => item?.Kelas).filter(Boolean))].map(
-                  (kelas, index) => (
-                    <option key={index} value={kelas}>
-                      {kelas}
+                  (Kelas, index) => (
+                    <option key={index} value={Kelas}>
+                      {Kelas}
                     </option>
                   )
                 )}

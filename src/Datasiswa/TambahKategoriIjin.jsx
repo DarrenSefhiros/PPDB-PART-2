@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import api from "../config/api";
 
 function TambahKategoriIjin() {
   const [kategori, setKategori] = useState("");
@@ -19,7 +20,7 @@ function TambahKategoriIjin() {
     }
 
     try {
-      await axios.post("http://localhost:5000/KategoriIjin", {
+      await api.post("/kategoriijin", {
         KategoriIjin: kategori.trim(),
       });
 

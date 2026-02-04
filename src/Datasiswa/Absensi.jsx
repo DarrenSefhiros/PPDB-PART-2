@@ -3,6 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import api from "../config/api";
 
 function Absensi() {
   const [rfidInput, setRfidInput] = useState("");
@@ -37,8 +38,8 @@ function Absensi() {
   // LOAD KATEGORI IJIN
   // ===============================
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/KategoriIjin")
+    api
+      .get("/kategoriijin")
       .then((res) => setKategoriIjinList(res.data || []))
       .catch(() => setKategoriIjinList([]));
   }, []);
@@ -51,9 +52,9 @@ function Absensi() {
 
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:5000/Kesiswaan");
+      const res = await api.get("/masterdata");
       let user = res.data.find(
-        (u) => String(u.RFID) === String(rfid)
+        (u) => String(u.rfid) === String(rfid)
       );
 
       if (!user) {
@@ -72,8 +73,8 @@ function Absensi() {
           lastPresensi: null,
         };
 
-        await axios.put(
-          `http://localhost:5000/Kesiswaan/${user.id}`,
+        await api.put(
+          `/masterdata/${user.id}`,
           user
         );
       }
@@ -156,8 +157,8 @@ if (!userData.lastPresensi?.jamMasuk) {
     },
   };
 
-  await axios.put(
-    `http://localhost:5000/Kesiswaan/${userData.id}`,
+  await api.put(
+    `/masterdata/${userData.id}`,
     updatedUser
   );
 
@@ -188,8 +189,8 @@ if (userData.lastPresensi?.jamMasuk && !userData.lastPresensi?.jamPulang) {
     },
   };
 
-  await axios.put(
-    `http://localhost:5000/Kesiswaan/${userData.id}`,
+  await api.put(
+    `/masterdata/${userData.id}`,
     updatedUser
   );
 
@@ -261,15 +262,13 @@ if (userData.lastPresensi?.jamMasuk && !userData.lastPresensi?.jamPulang) {
         date,
         jamMasuk: null,
         jamPulang: null,
-        ijin: {
-          alasan: form.alasan,
-          keterangan: form.keterangan,
-        },
+        ijinAlasan: form.alasan,
+        ijinKeterangan: form.keterangan,
       },
     };
 
-    await axios.put(
-      `http://localhost:5000/Kesiswaan/${userData.id}`,
+    await api.put(
+      `/masterdata/${userData.id}`,
       updatedUser
     );
 
@@ -311,10 +310,10 @@ if (userData.lastPresensi?.jamMasuk && !userData.lastPresensi?.jamPulang) {
 
         {userData && (
           <div className="mt-6 text-left bg-pink-100 p-4 rounded-lg">
-            <p><b>Nama:</b> {userData.Nama}</p>
-            <p><b>Email:</b> {userData.Email}</p>
-            <p><b>Kategori:</b> {userData.Kategori}</p>
-            <p><b>Jabatan/Kelas:</b> {userData.Jabatan}</p>
+            <p><b>Nama:</b> {userData.nama}</p>
+            <p><b>Email:</b> {userData.email}</p>
+            <p><b>Kategori:</b> {userData.kategori}</p>
+            <p><b>Jabatan/Kelas:</b> {userData.jabatan}</p>
             <p><b>Status Hari Ini:</b> {userData.status || "Belum presensi"}</p>
           </div>
         )}

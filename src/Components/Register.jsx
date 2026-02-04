@@ -10,6 +10,7 @@ const [formData, setFormData] = useState({
   email: "",
   username: "",
   password: "",
+  konfirmasi: "",
 });
 
 
@@ -26,7 +27,7 @@ const [formData, setFormData] = useState({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.Password !== formData.Konfirmasi) {
+    if (formData.password !== formData.konfirmasi) {
       setError("Password dan Konfirmasi Password tidak cocok!");
       return;
     }
@@ -34,10 +35,11 @@ const [formData, setFormData] = useState({
     setError(""); // Clear error if validation passes
     setLoading(true);
     try {
-await axios.post(`${BASE_URL}/register`, {
-  email: formData.Email,
-  username: formData.Username,
-  password: formData.Password
+await api.post(`/register`, {
+  email: formData.email,
+  username: formData.username,
+  password: formData.password,
+  konfirmasi: formData.konfirmasi,
 });
 
 
@@ -52,9 +54,10 @@ await axios.post(`${BASE_URL}/register`, {
       localStorage.setItem("loginData", JSON.stringify(formData));
 
       setFormData({
-        Email: "",
-        Username: "",
-        Password: "",
+        email: "",
+        username: "",
+        password: "",
+        konfirmasi: "",
       });
 
       navigate("/");
@@ -79,26 +82,26 @@ await axios.post(`${BASE_URL}/register`, {
         <form onSubmit={handleSubmit}>
           {/* Email */}
           <div className="mb-4">
-            <label htmlFor="Email" className="block text-gray-700 mb-2 font-bold">Email</label>
+            <label htmlFor="email" className="block text-gray-700 mb-2 font-bold">Email</label>
             <input
-              id="Email"
-              name="Email"
+              id="email"
+              name="email"
               type="email"
               placeholder="Masukan Email anda"
-              value={formData.Email}
+              value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="Username" className="block text-gray-700 mb-2 font-bold">Username</label>
+            <label htmlFor="username" className="block text-gray-700 mb-2 font-bold">Username</label>
             <input
-              id="Username"
-              name="Username"
-              type="Username"
-              placeholder="Masukan Username anda"
-              value={formData.Username}
+              id="username"
+              name="username"
+              type="username"
+              placeholder="Masukan username anda"
+              value={formData.username}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
@@ -107,13 +110,13 @@ await axios.post(`${BASE_URL}/register`, {
 
           {/* Password */}
           <div className="mb-4 relative">
-            <label htmlFor="Password" className="block text-gray-700 mb-2 font-bold">Password</label>
+            <label htmlFor="password" className="block text-gray-700 mb-2 font-bold">Password</label>
             <input
-              id="Password"
-              name="Password"
+              id="password"
+              name="password"
               type={showPassword ? "text" : "password"}
               placeholder="Masukan Password anda"
-              value={formData.Password}
+              value={formData.password}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400 pr-10"
               required
@@ -128,13 +131,13 @@ await axios.post(`${BASE_URL}/register`, {
 
           {/* Konfirmasi Password */}
           <div className="mb-4 relative">
-            <label htmlFor="Konfirmasi" className="block text-gray-700 mb-2 font-bold">Konfirmasi Password</label>
+            <label htmlFor="konfirmasi" className="block text-gray-700 mb-2 font-bold">Konfirmasi Password</label>
             <input
-              id="Konfirmasi"
-              name="Konfirmasi"
+              id="konfirmasi"
+              name="konfirmasi"
               type={showConfirmPassword ? "text" : "password"} // ✅ diperbaiki
-              placeholder="Konfirmasi Password anda"
-              value={formData.Konfirmasi}
+              placeholder="konfirmasi Password anda"
+              value={formData.konfirmasi}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400 pr-10"
               required

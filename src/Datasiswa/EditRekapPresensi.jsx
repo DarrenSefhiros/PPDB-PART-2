@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
+import api from "../config/api";
 
 function EditRekapPresensi() {
   const { id } = useParams();
@@ -22,8 +23,8 @@ function EditRekapPresensi() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/Kesiswaan/${id}`
+        const res = await api.get(
+          `/masterdata/${id}`
         );
         const user = res.data;
 
@@ -36,7 +37,7 @@ function EditRekapPresensi() {
         setUserData(user);
 
         let status = "masuk";
-        if (user.lastPresensi.ijin) status = "ijin";
+        if (user.lastPresensi.ijinAlasan) status = "ijin";
         else if (user.lastPresensi.jamPulang) status = "keluar";
 
         setFormData({
@@ -83,7 +84,7 @@ function EditRekapPresensi() {
 
     setLoading(true);
     try {
-      await axios.put(`http://localhost:5000/Kesiswaan/${id}`, {
+      await api.put(`/masterdata/${id}`, {
         ...userData, // 🔥 PENTING
         lastPresensi: {
           ...userData.lastPresensi, // 🔥 MERGE DATA LAMA

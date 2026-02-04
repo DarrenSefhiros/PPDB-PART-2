@@ -4,6 +4,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Sidnav from "../Components/Sidnav";
 import { motion } from "framer-motion";
+import api from "../config/api";
 
 function RekapPresensi() {
   const [kesiswaan, setKesiswaan] = useState([]);
@@ -39,11 +40,11 @@ function RekapPresensi() {
     const fetchAll = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:5000/Kesiswaan");
+        const res = await api.get("/masterdata");
 
         const cleaned = (res.data || [])
           .filter(Boolean)
-          .filter((d) => d.Nama && d.Nama.trim() !== "");
+          .filter((d) => d.nama && d.nama.trim() !== "");
 
         setKesiswaan(cleaned);
 
@@ -52,17 +53,17 @@ function RekapPresensi() {
           .filter((u) => u.lastPresensi?.date)
           .map((u) => {
             let status = "—";
-            if (u.lastPresensi.ijin) status = "ijin";
+            if (u.lastPresensi.ijinAlasan) status = "ijin";
             else if (u.lastPresensi.jamPulang) status = "pulang";
             else if (u.lastPresensi.jamMasuk) status = "masuk";
 
             return {
               id: u.id,
-              nama: u.Nama,
-              level: u.Kategori,
+              nama: u.nama,
+              level: u.kategori,
               date: u.lastPresensi.date,
               status,
-              alasanIjin: u.lastPresensi.ijin?.alasan || "-",
+              alasanIjin: u.lastPresensi.ijinAlasan || "-",
               jamMasuk: u.lastPresensi.jamMasuk || null,
               jamPulang: u.lastPresensi.jamPulang || null,
             };
@@ -163,7 +164,7 @@ function RekapPresensi() {
       // Hapus lastPresensi di backend
       const siswa = kesiswaan.find((k) => k.id === id);
       if (siswa) {
-        await axios.put(`http://localhost:5000/Kesiswaan/${id}`, {
+        await api.put(`/masterdata/${id}`, {
           ...siswa,
           status: "",
           alasanIjin: "",

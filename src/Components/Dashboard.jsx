@@ -3,6 +3,7 @@ import axios from "axios";
 import Sidnav from "./Sidnav";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
+import api from "../config/api";
 import {
   FaCheckCircle,
   FaTimesCircle,
@@ -46,8 +47,8 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resTagihan = await axios.get("http://localhost:5000/login");
-        const resKesiswaan = await axios.get("http://localhost:5000/Kesiswaan");
+        const resTagihan = await api.get("/keuangan");
+        const resKesiswaan = await api.get("/masterdata");
         setTagihanData(resTagihan.data.reverse());
         setKesiswaanData(resKesiswaan.data.reverse());
 
@@ -64,13 +65,13 @@ function Dashboard() {
           .map((u) => {
             let status = "—";
             if (u.lastPresensi.ijin) status = "ijin";
-            else if (u.lastPresensi.jamPulang) status = "keluar";
+            else if (u.lastPresensi.jamPulang) status = "pulang";
             else if (u.lastPresensi.jamMasuk) status = "masuk";
 
             return {
               id: u.id,
-              nama: u.Nama,
-              level: u.Kategori,
+              nama: u.nama,
+              level: u.kategori,
               date: u.lastPresensi.date,
               status,
               alasanIjin: u.lastPresensi.ijin?.alasan || "-",
@@ -168,16 +169,16 @@ function Dashboard() {
     return `${d}/${m}/${y}`;
   }
 
-  const totalSiswa = kesiswaanData.filter((i) => i.Kategori === "Siswa").length;
-  const totalGuru = kesiswaanData.filter((i) => i.Kategori === "Guru").length;
-  const totalKaryawan = kesiswaanData.filter((i) => i.Kategori === "Karyawan").length;
+  const totalSiswa = kesiswaanData.filter((i) => i.kategori === "Siswa").length;
+  const totalGuru = kesiswaanData.filter((i) => i.kategori === "Guru").length;
+  const totalKaryawan = kesiswaanData.filter((i) => i.kategori === "Karyawan").length;
 
   const totalTagihan = tagihanData.reduce(
-    (acc, item) => acc + Number(String(item.Tagihan).replace(/\./g, "") || 0),
+    (acc, item) => acc + Number(String(item.tagihan).replace(/\./g, "") || 0),
     0
   );
-  const totalSudahLunas = tagihanData.filter((i) => i.Status === "Sudah Lunas").length;
-  const totalBelumLunas = tagihanData.filter((i) => i.Status !== "Sudah Lunas").length;
+  const totalSudahLunas = tagihanData.filter((i) => i.Status === "Sudah Bayar").length;
+  const totalBelumLunas = tagihanData.filter((i) => i.Status !== "Sudah Bayar").length;
 
   return (
     <div className="flex">
@@ -221,7 +222,7 @@ function Dashboard() {
                   <th>No</th>
                   <th>Nama</th>
                   <th>Email</th>
-                  <th>Jenis</th>
+                  <th>Jenis Tagihan</th>
                   <th>Tagihan</th>
                   <th>Tanggal</th>
                   <th>Status</th>
@@ -232,19 +233,19 @@ function Dashboard() {
                 {tagihanData.map((item, index) => (
                   <tr key={item.id} className="bg-pink-100 hover:bg-pink-200 transition">
                     <td className="border px-2 py-2 text-center">{index + 1}</td>
-                    <td className="border px-4 py-2">{item.Nama}</td>
-                    <td className="border px-4 py-2">{item.Email}</td>
-                    <td className="border px-4 py-2">{item.Jenis}</td>
+                    <td className="border px-4 py-2 text-center">{item.nama}</td>
+                    <td className="border px-4 py-2 text-center">{item.email}</td>
+                    <td className="border px-4 py-2 text-center">{item.jenis}</td>
                     <td className="border px-4 py-2 text-right">
-                      Rp {Number(String(item.Tagihan).replace(/\./g, "") || 0).toLocaleString("id-ID")}
+                      Rp {Number(String(item.tagihan).replace(/\./g, "") || 0).toLocaleString("id-ID")}
                     </td>
-                    <td className="border px-4 py-2 text-center">{formatDate(item.Tanggal)}</td>
+                    <td className="border px-4 py-2 text-center">{formatDate(item.tanggal)}</td>
                     <td
                       className={`border px-4 py-2 text-center font-semibold ${
-                        item.Status === "Sudah Lunas" ? "text-green-600" : "text-yellow-600"
+                        item.Status === "Sudah Bayar" ? "text-green-600" : "text-yellow-600"
                       }`}
                     >
-                      {item.Status || "Belum Lunas"}
+                      {item.Status || "Belum Bayar"}
                     </td>
                   </tr>
                 ))}
@@ -270,7 +271,7 @@ function Dashboard() {
               </thead>
 
               <tbody>
-                {kesiswaanData.filter((i) => i.Kategori === kategori).length === 0 ? (
+                {kesiswaanData.filter((i) => i.kategori === kategori).length === 0 ? (
                   <tr>
                     <td colSpan="5" className="text-center py-4 text-pink-600 font-medium">
                       Belum ada data
@@ -278,14 +279,14 @@ function Dashboard() {
                   </tr>
                 ) : (
                   kesiswaanData
-                    .filter((i) => i.Kategori === kategori)
+                    .filter((i) => i.kategori === kategori)
                     .map((i, idx) => (
-                      <tr key={i.id} className="bg-pink-100 hover:bg-ppink-200 transition">
+                      <tr key={i.id} className="bg-pink-100 hover:bg-pink-200 transition">
                         <td className="border px-2 py-2 text-center">{idx + 1}</td>
-                        <td className="border px-4 py-2 text-left">{i.Nama}</td>
-                        <td className="border px-4 py-2 text-center">{i.Email}</td>
-                        <td className="border px-4 py-2 text-center">{i.Jabatan}</td>
-                        <td className="border px-4 py-2 text-center">{i.Kategori}</td>
+                        <td className="border px-4 py-2 text-left">{i.nama}</td>
+                        <td className="border px-4 py-2 text-center">{i.email}</td>
+                        <td className="border px-4 py-2 text-center">{i.jabatan}</td>
+                        <td className="border px-4 py-2 text-center">{i.kategori}</td>
                       </tr>
                     ))
                 )}

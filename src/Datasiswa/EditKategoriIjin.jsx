@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
+import api from "../config/api";
 
 function EditKategoriIjin() {
   const [kategori, setKategori] = useState("");
@@ -12,7 +13,7 @@ function EditKategoriIjin() {
   useEffect(() => {
     const loadKategori = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/KategoriIjin/${id}`);
+        const res = await api.get(`/kategoriijin/${id}`);
         setKategori(res.data.KategoriIjin);
       } catch (err) {
         console.error("Gagal mengambil data kategori ijin:", err);
@@ -34,7 +35,7 @@ function EditKategoriIjin() {
     }
 
     try {
-      await axios.put(`http://localhost:5000/KategoriIjin/${id}`, {
+      await api.put(`/kategoriijin/${id}`, {
         KategoriIjin: kategori.trim(),
       });
 

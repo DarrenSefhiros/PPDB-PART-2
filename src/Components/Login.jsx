@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // 🔹 tambahkan Link
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import api from "../config/api";
@@ -24,7 +24,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const res = await api.post("/login", formData);
+      const res = await api.post("/api/login", formData);
 
       Swal.fire({
         icon: "success",
@@ -98,6 +98,14 @@ function Login() {
             {loading ? "Loading..." : "Login"}
           </button>
         </form>
+
+        {/* 🔹 Tambahan teks di bawah tombol */}
+        <div className="text-center mt-6">
+          <span>Belum punya akun? </span>
+          <Link to="/register" className="text-blue-700 underline">
+            Masuk
+          </Link>
+        </div>
       </div>
     </div>
   );
